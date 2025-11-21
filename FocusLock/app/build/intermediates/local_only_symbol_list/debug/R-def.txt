@@ -1,0 +1,26 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color purple_500
+color teal_200
+color white
+id countdownText
+id forceUnlockButton
+id overlayMessage
+id startServiceButton
+id statusText
+layout activity_main
+layout overlay_view
+string accessibility_description
+string app_name
+string force_unlock
+string lock_countdown_label
+string open_settings_button
+string overlay_lock_message
+string permission_missing_message
+string permission_missing_title
+string service_notification_text
+string service_notification_title
+string start_button
+style Theme.FocusLock
+xml accessibility_service_config

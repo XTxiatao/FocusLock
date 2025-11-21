@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-30:/layout/activity_main.xml",
+        "source": "com.focuslock.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-30:/layout/overlay_view.xml",
+        "source": "com.focuslock.app-main-33:/layout/overlay_view.xml"
+    }
+]

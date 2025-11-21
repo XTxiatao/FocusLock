@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FocusLock</string>
+    <string name="start_button">Start Lock Session</string>
+    <string name="service_notification_title">FocusLock Active</string>
+    <string name="service_notification_text">Keep overlay and input interception online.</string>
+    <string name="lock_countdown_label">Lock expires in %1$d seconds</string>
+    <string name="force_unlock">Force Unlock</string>
+    <string name="overlay_lock_message">Touch input is locked. Tap force unlock when ready.</string>
+    <string name="accessibility_description">Monitor window content and keep coverage in place.</string>
+    <string name="permission_missing_title">Permissions Required</string>
+    <string name="permission_missing_message">The app needs this access to run properly. Open settings?</string>
+    <string name="open_settings_button">Open Settings</string>
+</resources>

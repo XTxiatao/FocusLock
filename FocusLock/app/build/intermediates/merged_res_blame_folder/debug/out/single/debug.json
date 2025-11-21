@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.focuslock.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "com.focuslock.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.focuslock.app-merged_res-31:/xml_accessibility_service_config.xml.flat",
+        "source": "com.focuslock.app-main-33:/xml/accessibility_service_config.xml"
+    },
+    {
+        "merged": "com.focuslock.app-merged_res-31:/layout_overlay_view.xml.flat",
+        "source": "com.focuslock.app-main-33:/layout/overlay_view.xml"
+    }
+]
