@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/dialogStartTimeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start time"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/dialogStartTimeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22:00"
+            android:textColor="@color/white"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp">
+
+        <Button
+            android:id="@+id/dialogEndTimeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End time"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/dialogEndTimeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="06:00"
+            android:textColor="@color/white"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Repeat days"
+        android:textColor="@color/teal_200"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/dialogDayGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:chipSpacing="6dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipMonday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mon" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipTuesday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tue" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipWednesday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wed" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipThursday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thu" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipFriday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fri" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipSaturday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sat" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/dialogChipSunday"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sun" />
+    </com.google.android.material.chip.ChipGroup>
+
+</LinearLayout>

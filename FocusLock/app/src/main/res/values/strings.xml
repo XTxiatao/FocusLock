@@ -11,4 +11,14 @@
     <string name="permission_missing_title">Permissions Required</string>
     <string name="permission_missing_message">The app needs this access to run properly. Open settings?</string>
     <string name="open_settings_button">Open Settings</string>
+    <string name="temporary_lock_title">Temporary Lock</string>
+    <string name="temporary_lock_duration_label">Duration (minutes)</string>
+    <string name="temporary_lock_button">Quick Lock</string>
+    <string name="temporary_lock_dialog_confirm">Start Lock</string>
+    <string name="delete_plan">Delete</string>
+    <string name="plan_disabled_force_unlock">Plan disabled after force unlock.</string>
+    <string name="plan_section_title">Scheduled Locks</string>
+    <string name="add_plan_button">Add Plan</string>
+    <string name="save_plan_button">Save Plan</string>
+    <string name="temporary_lock_section_title">Temporary Lock</string>
 </resources>

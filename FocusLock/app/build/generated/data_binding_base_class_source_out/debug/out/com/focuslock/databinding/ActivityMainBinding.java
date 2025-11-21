@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
@@ -21,16 +22,38 @@ public final class ActivityMainBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final Button startServiceButton;
+  public final Button addPlanButton;
+
+  @NonNull
+  public final LinearLayout planContainer;
+
+  @NonNull
+  public final RecyclerView scheduleList;
+
+  @NonNull
+  public final TextView statusDescription;
 
   @NonNull
   public final TextView statusText;
 
-  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button startServiceButton,
-      @NonNull TextView statusText) {
+  @NonNull
+  public final Button tempLockButton;
+
+  @NonNull
+  public final LinearLayout tempLockContainer;
+
+  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button addPlanButton,
+      @NonNull LinearLayout planContainer, @NonNull RecyclerView scheduleList,
+      @NonNull TextView statusDescription, @NonNull TextView statusText,
+      @NonNull Button tempLockButton, @NonNull LinearLayout tempLockContainer) {
     this.rootView = rootView;
-    this.startServiceButton = startServiceButton;
+    this.addPlanButton = addPlanButton;
+    this.planContainer = planContainer;
+    this.scheduleList = scheduleList;
+    this.statusDescription = statusDescription;
     this.statusText = statusText;
+    this.tempLockButton = tempLockButton;
+    this.tempLockContainer = tempLockContainer;
   }
 
   @Override
@@ -60,9 +83,27 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.startServiceButton;
-      Button startServiceButton = ViewBindings.findChildViewById(rootView, id);
-      if (startServiceButton == null) {
+      id = R.id.addPlanButton;
+      Button addPlanButton = ViewBindings.findChildViewById(rootView, id);
+      if (addPlanButton == null) {
+        break missingId;
+      }
+
+      id = R.id.planContainer;
+      LinearLayout planContainer = ViewBindings.findChildViewById(rootView, id);
+      if (planContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.scheduleList;
+      RecyclerView scheduleList = ViewBindings.findChildViewById(rootView, id);
+      if (scheduleList == null) {
+        break missingId;
+      }
+
+      id = R.id.statusDescription;
+      TextView statusDescription = ViewBindings.findChildViewById(rootView, id);
+      if (statusDescription == null) {
         break missingId;
       }
 
@@ -72,7 +113,20 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, startServiceButton, statusText);
+      id = R.id.tempLockButton;
+      Button tempLockButton = ViewBindings.findChildViewById(rootView, id);
+      if (tempLockButton == null) {
+        break missingId;
+      }
+
+      id = R.id.tempLockContainer;
+      LinearLayout tempLockContainer = ViewBindings.findChildViewById(rootView, id);
+      if (tempLockContainer == null) {
+        break missingId;
+      }
+
+      return new ActivityMainBinding((LinearLayout) rootView, addPlanButton, planContainer,
+          scheduleList, statusDescription, statusText, tempLockButton, tempLockContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

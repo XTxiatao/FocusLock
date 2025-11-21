@@ -1,14 +1,30 @@
 [
     {
-        "merged": "com.focuslock.app-merged_res-31:/layout_activity_main.xml.flat",
-        "source": "com.focuslock.app-main-33:/layout/activity_main.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_add_plan.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-31:/xml_accessibility_service_config.xml.flat",
-        "source": "com.focuslock.app-main-33:/xml/accessibility_service_config.xml"
+        "merged": "com.focuslock.app-merged_res-37:/layout_dialog_add_plan.xml.flat",
+        "source": "com.focuslock.app-main-39:/layout/dialog_add_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-31:/layout_overlay_view.xml.flat",
-        "source": "com.focuslock.app-main-33:/layout/overlay_view.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_temporary_lock.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_temporary_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_overlay_view.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\overlay_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\xml_accessibility_service_config.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\xml\\accessibility_service_config.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_lock_schedule.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_lock_schedule.xml"
     }
 ]
