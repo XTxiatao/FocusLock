@@ -18,15 +18,27 @@ data class LockSchedule(
     }
 
     fun matches(now: LocalDateTime): Boolean {
-        if (!isDaySelected(now.dayOfWeek)) {
+        val currentMinute = now.hour * 60 + now.minute
+        if (startMinutes <= endMinutes) {
+            return isDaySelected(now.dayOfWeek) && currentMinute in startMinutes..endMinutes
+        }
+
+        val todaySelected = isDaySelected(now.dayOfWeek)
+        val previousDay = now.dayOfWeek.minus(1)
+        val previousSelected = isDaySelected(previousDay)
+
+        if (!todaySelected && !previousSelected) {
             return false
         }
-        val currentMinute = now.hour * 60 + now.minute
-        return if (startMinutes <= endMinutes) {
-            currentMinute in startMinutes..endMinutes
-        } else {
-            currentMinute >= startMinutes || currentMinute <= endMinutes
+
+        val spansOvernight = startMinutes > endMinutes
+        if (!spansOvernight) {
+            return false
         }
+
+        val inTodaySegment = todaySelected && currentMinute >= startMinutes
+        val inOvernightSegment = previousSelected && currentMinute <= endMinutes
+        return inTodaySegment || inOvernightSegment
     }
 
     fun dayLabels(): String {

@@ -1945,6 +1945,7 @@
     <string name="fab_transformation_sheet_behavior" translatable="false">com.google.android.material.transformation.FabTransformationSheetBehavior</string>
     <string name="force_unlock">Force Unlock</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
+    <string name="hours_label">Hours</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
     <string name="item_view_role_description">Tab</string>
     <string name="lock_countdown_label">Lock expires in %1$d seconds</string>
@@ -1986,6 +1987,7 @@
     <string description="Suffix for time in 12-hour standard, after noon. [CHAR_LIMIT=2]" name="material_timepicker_pm">PM</string>
     <string description="Title for the dialog with a time picker. [CHAR_LIMIT=32]" name="material_timepicker_select_time">Select time</string>
     <string name="material_timepicker_text_input_mode_description">Switch to text input mode for the time input.</string>
+    <string name="minutes_label">Minutes</string>
     <string description="Content description for new notification (no number count) [CHAR_LIMIT=NONE]" name="mtrl_badge_numberless_content_description">New notification</string>
     <string name="mtrl_checkbox_button_icon_path_checked" translatable="false">M14,18.2 11.4,15.6 10,17 14,21 22,13 20.6,11.6z</string>
     <string name="mtrl_checkbox_button_icon_path_group_name" translatable="false">icon</string>
@@ -2095,6 +2097,7 @@
     <string name="status_on">ON</string>
     <string name="temporary_lock_button">Quick Lock</string>
     <string name="temporary_lock_dialog_confirm">Start Lock</string>
+    <string name="temporary_lock_duration_error">Select a duration greater than zero.</string>
     <string name="temporary_lock_duration_label">Duration (minutes)</string>
     <string name="temporary_lock_section_title">Temporary Lock</string>
     <string name="temporary_lock_title">Temporary Lock</string>

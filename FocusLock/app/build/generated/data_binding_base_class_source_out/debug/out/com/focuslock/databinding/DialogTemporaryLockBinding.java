@@ -21,16 +21,21 @@ public final class DialogTemporaryLockBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final NumberPicker durationHourPicker;
+
+  @NonNull
   public final TextView durationLabel;
 
   @NonNull
-  public final NumberPicker durationPicker;
+  public final NumberPicker durationMinutePicker;
 
   private DialogTemporaryLockBinding(@NonNull LinearLayout rootView,
-      @NonNull TextView durationLabel, @NonNull NumberPicker durationPicker) {
+      @NonNull NumberPicker durationHourPicker, @NonNull TextView durationLabel,
+      @NonNull NumberPicker durationMinutePicker) {
     this.rootView = rootView;
+    this.durationHourPicker = durationHourPicker;
     this.durationLabel = durationLabel;
-    this.durationPicker = durationPicker;
+    this.durationMinutePicker = durationMinutePicker;
   }
 
   @Override
@@ -60,19 +65,26 @@ public final class DialogTemporaryLockBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.durationHourPicker;
+      NumberPicker durationHourPicker = ViewBindings.findChildViewById(rootView, id);
+      if (durationHourPicker == null) {
+        break missingId;
+      }
+
       id = R.id.durationLabel;
       TextView durationLabel = ViewBindings.findChildViewById(rootView, id);
       if (durationLabel == null) {
         break missingId;
       }
 
-      id = R.id.durationPicker;
-      NumberPicker durationPicker = ViewBindings.findChildViewById(rootView, id);
-      if (durationPicker == null) {
+      id = R.id.durationMinutePicker;
+      NumberPicker durationMinutePicker = ViewBindings.findChildViewById(rootView, id);
+      if (durationMinutePicker == null) {
         break missingId;
       }
 
-      return new DialogTemporaryLockBinding((LinearLayout) rootView, durationLabel, durationPicker);
+      return new DialogTemporaryLockBinding((LinearLayout) rootView, durationHourPicker,
+          durationLabel, durationMinutePicker);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -216,19 +216,38 @@ class DeviceLockFragment : Fragment() {
 
     private fun showTemporaryLockDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_temporary_lock, null)
-        val picker = dialogView.findViewById<NumberPicker>(R.id.durationPicker)
-        picker.minValue = 5
-        picker.maxValue = 120
-        picker.value = 30
+        val hourPicker = dialogView.findViewById<NumberPicker>(R.id.durationHourPicker).apply {
+            minValue = 0
+            maxValue = 24
+            value = 0
+            setFormatter { String.format("%02d", it) }
+        }
+        val minutePicker = dialogView.findViewById<NumberPicker>(R.id.durationMinutePicker).apply {
+            minValue = 0
+            maxValue = 59
+            value = 30
+            setFormatter { String.format("%02d", it) }
+        }
 
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.temporary_lock_title)
             .setView(dialogView)
-            .setPositiveButton(R.string.temporary_lock_dialog_confirm) { _, _ ->
-                startTemporaryLock(picker.value)
-            }
+            .setPositiveButton(R.string.temporary_lock_dialog_confirm, null)
             .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val totalMinutes = hourPicker.value * 60 + minutePicker.value
+                if (totalMinutes <= 0) {
+                    Toast.makeText(requireContext(), R.string.temporary_lock_duration_error, Toast.LENGTH_SHORT).show()
+                } else {
+                    startTemporaryLock(totalMinutes)
+                    dialog.dismiss()
+                }
+            }
+        }
+        dialog.show()
     }
 
     private fun startTemporaryLock(durationMinutes: Int) {

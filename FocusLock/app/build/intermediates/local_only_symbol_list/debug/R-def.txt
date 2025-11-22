@@ -31,8 +31,9 @@ id dialogChipThursday
 id dialogChipTuesday
 id dialogChipWednesday
 id dialogDayGroup
+id durationHourPicker
 id durationLabel
-id durationPicker
+id durationMinutePicker
 id endHourPicker
 id endMinutePicker
 id forceUnlockButton
@@ -93,7 +94,9 @@ string edit_plan_button
 string edit_restriction_plan_title
 string end_time_label
 string force_unlock
+string hours_label
 string lock_countdown_label
+string minutes_label
 string open_settings_button
 string open_whitelist_app
 string overlay_lock_message
@@ -121,6 +124,7 @@ string status_off
 string status_on
 string temporary_lock_button
 string temporary_lock_dialog_confirm
+string temporary_lock_duration_error
 string temporary_lock_duration_label
 string temporary_lock_section_title
 string temporary_lock_title

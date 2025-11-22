@@ -14,15 +14,21 @@ data class AppRestrictionPlan(
 ) {
 
     fun matches(now: LocalDateTime): Boolean {
-        if (!isEnabled || !isDaySelected(now.dayOfWeek)) {
+        if (!isEnabled) {
             return false
         }
         val currentMinute = now.hour * 60 + now.minute
-        return if (startMinutes <= endMinutes) {
-            currentMinute in startMinutes..endMinutes
-        } else {
-            currentMinute >= startMinutes || currentMinute <= endMinutes
+        if (startMinutes <= endMinutes) {
+            return isDaySelected(now.dayOfWeek) && currentMinute in startMinutes..endMinutes
         }
+        val todaySelected = isDaySelected(now.dayOfWeek)
+        val previousSelected = isDaySelected(now.dayOfWeek.minus(1))
+        if (!todaySelected && !previousSelected) {
+            return false
+        }
+        val inTodaySegment = todaySelected && currentMinute >= startMinutes
+        val inPreviousSegment = previousSelected && currentMinute <= endMinutes
+        return inTodaySegment || inPreviousSegment
     }
 
     fun isDaySelected(day: DayOfWeek): Boolean {

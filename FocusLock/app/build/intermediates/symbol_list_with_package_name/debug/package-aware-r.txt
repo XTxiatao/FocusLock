@@ -3204,8 +3204,9 @@ id dragRight
 id dragStart
 id dragUp
 id dropdown_menu
+id durationHourPicker
 id durationLabel
-id durationPicker
+id durationMinutePicker
 id easeIn
 id easeInOut
 id easeOut
@@ -3832,6 +3833,7 @@ string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string force_unlock
 string hide_bottom_view_on_scroll_behavior
+string hours_label
 string icon_content_description
 string item_view_role_description
 string lock_countdown_label
@@ -3873,6 +3875,7 @@ string material_timepicker_minute
 string material_timepicker_pm
 string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
+string minutes_label
 string mtrl_badge_numberless_content_description
 string mtrl_checkbox_button_icon_path_checked
 string mtrl_checkbox_button_icon_path_group_name
@@ -3974,6 +3977,7 @@ string status_off
 string status_on
 string temporary_lock_button
 string temporary_lock_dialog_confirm
+string temporary_lock_duration_error
 string temporary_lock_duration_label
 string temporary_lock_section_title
 string temporary_lock_title
