@@ -17,11 +17,8 @@ data class Reminder(
     val anchorDateTimeMillis: Long,
     val recurrence: ReminderRecurrence,
     val weeklyDaysMask: Int,
-    val isActive: Boolean,
     val isCompleted: Boolean,
-    val isArchived: Boolean,
-    val createdAtMillis: Long,
-    val updatedAtMillis: Long
+    val endDateTimeMillis: Long?
 ) {
 
     fun anchorDateTime(zoneId: ZoneId = ZoneId.systemDefault()): ZonedDateTime {
@@ -53,7 +50,50 @@ data class Reminder(
 
     val isRepeating: Boolean
         get() = recurrence.isRepeating
+
+    fun nextCycleAnchorMillis(): Long {
+        if (!isRepeating) {
+            return anchorDateTimeMillis
+        }
+        val anchor = anchorDateTime()
+        return when (recurrence) {
+            ReminderRecurrence.DAILY -> anchor.plusDays(1).toInstant().toEpochMilli()
+            ReminderRecurrence.WEEKLY -> computeNextWeeklyAnchor(anchor)
+            ReminderRecurrence.MONTHLY -> computeNextMonthlyAnchor(anchor)
+            ReminderRecurrence.YEARLY -> computeNextYearlyAnchor(anchor)
+            ReminderRecurrence.NONE -> anchorDateTimeMillis
+        }
+    }
 }
+
+private fun Reminder.computeNextWeeklyAnchor(anchor: ZonedDateTime): Long {
+    val days = selectedDays().ifEmpty { listOf(anchor.dayOfWeek) }.sortedBy { it.ordinal }
+    val current = anchor.dayOfWeek
+    val nextDay = days.firstOrNull { it.ordinal > current.ordinal } ?: days.first()
+    val delta = ((nextDay.ordinal - current.ordinal + 7) % 7).let { if (it == 0) 7 else it }
+    return anchor.plusDays(delta.toLong()).toInstant().toEpochMilli()
+}
+
+private fun Reminder.computeNextMonthlyAnchor(anchor: ZonedDateTime): Long {
+    val currentDay = anchor.dayOfMonth
+    val nextMonth = anchor.plusMonths(1)
+    val ym = YearMonth.of(nextMonth.year, nextMonth.month)
+    val safeDay = min(currentDay, ym.lengthOfMonth())
+    val adjusted = nextMonth.withDayOfMonth(safeDay)
+    return adjusted.toInstant().toEpochMilli()
+}
+
+private fun Reminder.computeNextYearlyAnchor(anchor: ZonedDateTime): Long {
+    val currentDay = anchor.dayOfMonth
+    val currentMonth = anchor.monthValue
+    val nextYear = anchor.plusYears(1)
+    val ym = YearMonth.of(nextYear.year, currentMonth)
+    val safeDay = min(currentDay, ym.lengthOfMonth())
+    val date = LocalDate.of(nextYear.year, currentMonth, safeDay)
+    return date.atTime(anchor.toLocalTime()).atZone(anchor.zone).toInstant().toEpochMilli()
+}
+
+private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000L
 
 private fun computeDailyOccurrence(reference: ZonedDateTime, time: LocalTime): Long {
     var candidate = reference.withHour(time.hour).withMinute(time.minute).withSecond(0).withNano(0)

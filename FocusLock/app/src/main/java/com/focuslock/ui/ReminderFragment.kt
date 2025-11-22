@@ -38,16 +38,16 @@ class ReminderFragment : Fragment() {
         (requireActivity().application as FocusLockApplication).reminderRepository
     }
 
-    private val reminderAdapter by lazy {
-        ReminderAdapter(::toggleReminder, ::completeReminder, ::archiveReminder, ::showReminderEditor)
+    private val dayAdapter by lazy {
+        ReminderDayAdapter(::showReminderEditor, ::completeReminderFromPill)
     }
-    private val archivedAdapter by lazy {
-        ArchivedReminderAdapter(::restoreReminder, ::confirmDeleteReminder, ::showReminderEditor)
+    private val completedAdapter by lazy {
+        CompletedDayAdapter(::showReminderEditor, ::attachSwipeToCompletedRecycler)
     }
 
+    private var latestReminders: List<Reminder> = emptyList()
     private var archivedDialog: AlertDialog? = null
     private var archivedDialogBinding: DialogArchivedRemindersBinding? = null
-    private var latestReminders: List<Reminder> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,115 +61,94 @@ class ReminderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.reminderRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.reminderRecyclerView.adapter = reminderAdapter
+        binding.reminderRecyclerView.adapter = dayAdapter
         binding.archivedCard.setOnClickListener { showArchivedDialog() }
         binding.addReminderFab.setOnClickListener { showReminderEditor() }
-        binding.archivedSubtitle.text = resources.getQuantityString(R.plurals.reminder_archived_count, 0, 0)
+        binding.archivedSubtitle.text =
+            resources.getQuantityString(R.plurals.reminder_archived_count, 0, 0)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 reminderRepository.remindersFlow.collect { reminders ->
                     latestReminders = reminders
-                    val archived = reminders.filter { it.isArchived }.orderByActivation()
-                    val nonArchived = reminders.filterNot { it.isArchived }
-                    val orderedActive = nonArchived.orderByActivation()
-                    reminderAdapter.submitList(orderedActive)
-                    archivedAdapter.submitList(archived)
-                    binding.reminderRecyclerView.isVisible = orderedActive.isNotEmpty()
-                    binding.emptyRemindersView.isVisible = orderedActive.isEmpty()
+                    val activeGroups = buildDayGroups(reminders.filter { !it.isCompleted })
+                    dayAdapter.submitList(activeGroups)
+                    binding.reminderRecyclerView.isVisible = activeGroups.isNotEmpty()
+                    binding.emptyRemindersView.isVisible = activeGroups.isEmpty()
+
+                    val completedList = reminders.filter { it.isCompleted }
+                    val completedGroups = buildCompletedGroups(completedList)
+                    completedAdapter.submitList(completedGroups)
                     val subtitle = resources.getQuantityString(
                         R.plurals.reminder_archived_count,
-                        archived.size,
-                        archived.size
+                        completedList.size,
+                        completedList.size
                     )
                     binding.archivedSubtitle.text = subtitle
                     archivedDialogBinding?.let { dialogBinding ->
-                        dialogBinding.archivedEmptyText.isVisible = archived.isEmpty()
+                        dialogBinding.archivedEmptyText.isVisible = completedGroups.isEmpty()
                     }
                 }
             }
         }
     }
 
-    private fun toggleReminder(reminder: Reminder) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val now = System.currentTimeMillis()
-            val updated = reminder.copy(
-                isActive = !reminder.isActive,
-                updatedAtMillis = now
-            )
-            reminderRepository.updateReminder(updated)
-        }
-    }
-
-    private fun completeReminder(reminder: Reminder) {
-        if (reminder.isRepeating) {
-            Toast.makeText(requireContext(), R.string.reminder_completed_blocked, Toast.LENGTH_SHORT).show()
-            return
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            val now = System.currentTimeMillis()
-            reminderRepository.updateReminder(
-                reminder.copy(
-                    isCompleted = true,
-                    isActive = false,
-                    isArchived = true,
-                    updatedAtMillis = now
+    private fun buildDayGroups(reminders: List<Reminder>): List<ReminderDayGroup> {
+        val zone = ZoneId.systemDefault()
+        return reminders
+            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis).atZone(zone).toLocalDate() }
+            .toSortedMap()
+            .map { (date, list) ->
+                val startOfDay = date.atStartOfDay(zone).toInstant().toEpochMilli()
+                ReminderDayGroup(
+                    dateMillis = startOfDay,
+                    reminders = list.sortedBy { it.anchorDateTimeMillis }
                 )
-            )
-        }
-    }
-
-    private fun archiveReminder(reminder: Reminder) {
-        if (!reminder.isCompleted && reminder.isActive) {
-            Toast.makeText(requireContext(), R.string.reminder_archive_blocked, Toast.LENGTH_SHORT).show()
-            return
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            val now = System.currentTimeMillis()
-            reminderRepository.updateReminder(
-                reminder.copy(
-                    isArchived = true,
-                    isActive = false,
-                    updatedAtMillis = now
-                )
-            )
-        }
-    }
-
-    private fun restoreReminder(reminder: Reminder) {
-        if (reminder.isCompleted) {
-            Toast.makeText(requireContext(), R.string.reminder_restore_blocked, Toast.LENGTH_SHORT).show()
-            return
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            reminderRepository.updateReminder(
-                reminder.copy(
-                    isArchived = false,
-                    updatedAtMillis = System.currentTimeMillis()
-                )
-            )
-        }
-    }
-
-    private fun confirmDeleteReminder(reminder: Reminder) {
-        AlertDialog.Builder(requireContext())
-            .setMessage(R.string.reminder_delete_confirm)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    reminderRepository.deleteReminder(reminder)
-                }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+    }
+
+    private fun buildCompletedGroups(reminders: List<Reminder>): List<CompletedDayGroup> {
+        val zone = ZoneId.systemDefault()
+        return reminders
+            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis).atZone(zone).toLocalDate() }
+            .toSortedMap()
+            .map { (date, list) ->
+                val startOfDay = date.atStartOfDay(zone).toInstant().toEpochMilli()
+                CompletedDayGroup(
+                    dateMillis = startOfDay,
+                    reminders = list.sortedBy { it.anchorDateTimeMillis }
+                )
+            }
+    }
+
+    private fun completeReminderFromPill(reminder: Reminder) {
+        if (reminder.isCompleted) return
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (!reminder.isRepeating) {
+                reminderRepository.updateReminder(reminder.copy(isCompleted = true))
+            } else {
+                val nextAnchor = reminder.nextCycleAnchorMillis()
+                val endReached = reminder.endDateTimeMillis?.let { nextAnchor > it } ?: false
+                val updated = if (endReached) {
+                    reminder.copy(
+                        anchorDateTimeMillis = nextAnchor,
+                        isCompleted = true
+                    )
+                } else {
+                    reminder.copy(
+                        anchorDateTimeMillis = nextAnchor
+                    )
+                }
+                reminderRepository.updateReminder(updated)
+            }
+        }
     }
 
     private fun showArchivedDialog() {
         val dialogBinding = DialogArchivedRemindersBinding.inflate(layoutInflater)
         dialogBinding.archivedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        dialogBinding.archivedRecyclerView.adapter = archivedAdapter
-        val archived = latestReminders.filter { it.isArchived }.orderByActivation()
-        dialogBinding.archivedEmptyText.isVisible = archived.isEmpty()
+        dialogBinding.archivedRecyclerView.adapter = completedAdapter
+        dialogBinding.archivedEmptyText.isVisible = completedAdapter.currentList.isEmpty()
         archivedDialogBinding = dialogBinding
         archivedDialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.reminder_archived_card_title)
@@ -200,6 +179,9 @@ class ReminderFragment : Fragment() {
         val zone = ZoneId.systemDefault()
         var selectedDateTime = reminder?.anchorDateTime(zone)
             ?: ZonedDateTime.now(zone).plusMinutes(30).withSecond(0).withNano(0)
+        var selectedEndDateTime = reminder?.endDateTimeMillis?.let {
+            java.time.Instant.ofEpochMilli(it).atZone(zone)
+        }
         val weeklySelection = reminder?.selectedDays()?.toMutableSet()
             ?: mutableSetOf(selectedDateTime.dayOfWeek)
 
@@ -227,7 +209,18 @@ class ReminderFragment : Fragment() {
             dialogBinding.dateButton.text = selectedDateTime.format(DATE_FORMATTER)
             dialogBinding.timeButton.text = selectedDateTime.format(TIME_FORMATTER)
         }
+        fun updateEndDateLabel() {
+            val hasEnd = selectedEndDateTime != null
+            dialogBinding.endDateSwitch.isChecked = hasEnd
+            dialogBinding.endDateButton.isEnabled = hasEnd
+            dialogBinding.endTimeButton.isEnabled = hasEnd
+            dialogBinding.endDateButton.text = selectedEndDateTime?.format(DATE_FORMATTER)
+                ?: getString(R.string.reminder_pick_date)
+            dialogBinding.endTimeButton.text = selectedEndDateTime?.format(TIME_FORMATTER)
+                ?: getString(R.string.reminder_pick_time)
+        }
         updateDateLabel()
+        updateEndDateLabel()
 
         dialogBinding.dateButton.setOnClickListener {
             val currentDate = selectedDateTime.toLocalDate()
@@ -235,7 +228,6 @@ class ReminderFragment : Fragment() {
                 requireContext(),
                 { _, year, month, dayOfMonth ->
                     selectedDateTime = selectedDateTime
-                        .withDayOfMonth(1)
                         .withYear(year)
                         .withMonth(month + 1)
                         .withDayOfMonth(dayOfMonth)
@@ -261,13 +253,49 @@ class ReminderFragment : Fragment() {
             ).show()
         }
 
+        dialogBinding.endDateSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (!isChecked) {
+                selectedEndDateTime = null
+            } else if (selectedEndDateTime == null) {
+                selectedEndDateTime = selectedDateTime
+            }
+            updateEndDateLabel()
+        }
+
+        dialogBinding.endDateButton.setOnClickListener {
+            val base = selectedEndDateTime ?: selectedDateTime
+            DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    selectedEndDateTime = base
+                        .withYear(year)
+                        .withMonth(month + 1)
+                        .withDayOfMonth(dayOfMonth)
+                    updateEndDateLabel()
+                },
+                base.year,
+                base.monthValue - 1,
+                base.dayOfMonth
+            ).show()
+        }
+
+        dialogBinding.endTimeButton.setOnClickListener {
+            val base = selectedEndDateTime ?: selectedDateTime
+            TimePickerDialog(
+                requireContext(),
+                { _, hourOfDay, minute ->
+                    selectedEndDateTime = base.withHour(hourOfDay).withMinute(minute)
+                    updateEndDateLabel()
+                },
+                base.hour,
+                base.minute,
+                true
+            ).show()
+        }
+
         dialogBinding.recurrenceSpinner.setSelection(recurrenceOptions.indexOf(selectedRecurrence))
         fun updateRecurrenceUi() {
             dialogBinding.weeklyContainer.isVisible = selectedRecurrence == ReminderRecurrence.WEEKLY
-            dialogBinding.completedSwitch.isEnabled = !selectedRecurrence.isRepeating
-            if (selectedRecurrence.isRepeating) {
-                dialogBinding.completedSwitch.isChecked = false
-            }
             if (selectedRecurrence != ReminderRecurrence.WEEKLY) {
                 if (weeklySelection.isEmpty()) {
                     weeklySelection.add(selectedDateTime.dayOfWeek)
@@ -283,30 +311,6 @@ class ReminderFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-        }
-
-        dialogBinding.activeSwitch.isChecked = reminder?.isActive ?: true
-        dialogBinding.completedSwitch.isChecked = reminder?.isCompleted ?: false
-        var archivedState = reminder?.isArchived ?: false
-        var suppressActiveSwitchChange = false
-        fun resetActiveSwitch() {
-            suppressActiveSwitchChange = true
-            dialogBinding.activeSwitch.isChecked = false
-            suppressActiveSwitchChange = false
-        }
-
-        dialogBinding.activeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (suppressActiveSwitchChange) {
-                return@setOnCheckedChangeListener
-            }
-            if (reminder?.isArchived == true && isChecked && archivedState) {
-                AlertDialog.Builder(requireContext())
-                    .setMessage(R.string.reminder_unarchive_prompt)
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        resetActiveSwitch()
-                    }
-                    .show()
-            }
         }
 
         val dialogTitle = if (reminder == null) {
@@ -338,19 +342,20 @@ class ReminderFragment : Fragment() {
                 } else {
                     0
                 }
+                val endMillis = if (dialogBinding.endDateSwitch.isChecked) {
+                    selectedEndDateTime?.withSecond(0)?.withNano(0)?.toInstant()?.toEpochMilli()
+                        ?: run {
+                            Toast.makeText(requireContext(), R.string.reminder_end_required, Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                } else {
+                    null
+                }
                 viewLifecycleOwner.lifecycleScope.launch {
                     val unique = reminderRepository.ensureUniqueTitle(title, reminder?.id)
                     if (!unique) {
                         Toast.makeText(requireContext(), R.string.reminder_duplicate_title, Toast.LENGTH_SHORT).show()
                         return@launch
-                    }
-                    val now = System.currentTimeMillis()
-                    val completedChecked = (!selectedRecurrence.isRepeating) && dialogBinding.completedSwitch.isChecked
-                    val activeChecked = dialogBinding.activeSwitch.isChecked
-                    val shouldArchive = when {
-                        completedChecked -> true
-                        archivedState -> true
-                        else -> false
                     }
                     val updatedReminder = Reminder(
                         id = reminder?.id ?: 0,
@@ -359,11 +364,8 @@ class ReminderFragment : Fragment() {
                         anchorDateTimeMillis = selectedDateTime.withSecond(0).withNano(0).toInstant().toEpochMilli(),
                         recurrence = selectedRecurrence,
                         weeklyDaysMask = weeklyMask,
-                        isActive = if (shouldArchive) false else activeChecked,
-                        isCompleted = completedChecked,
-                        isArchived = shouldArchive,
-                        createdAtMillis = reminder?.createdAtMillis ?: now,
-                        updatedAtMillis = now
+                        isCompleted = reminder?.isCompleted ?: false,
+                        endDateTimeMillis = endMillis
                     )
                     if (reminder == null) {
                         reminderRepository.addReminder(updatedReminder)
@@ -385,10 +387,84 @@ class ReminderFragment : Fragment() {
         return mask
     }
 
-    private fun List<Reminder>.orderByActivation(): List<Reminder> {
-        val active = filter { it.isActive }
-        val inactive = filterNot { it.isActive }
-        return active + inactive
+    private fun attachSwipeToCompletedRecycler(
+        recyclerView: androidx.recyclerview.widget.RecyclerView,
+        adapter: CompletedEntryAdapter
+    ) {
+        val existing = recyclerView.getTag(R.id.tag_completed_swipe_helper) as? androidx.recyclerview.widget.ItemTouchHelper
+        existing?.attachToRecyclerView(null)
+        val callback = object : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(0,
+            androidx.recyclerview.widget.ItemTouchHelper.LEFT or androidx.recyclerview.widget.ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                target: androidx.recyclerview.widget.RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun clearView(
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.translationX = 0f
+                viewHolder.itemView.alpha = 1f
+            }
+
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.bindingAdapterPosition
+                val reminder = adapter.reminderAt(position)
+                if (reminder == null) {
+                    adapter.notifyItemChanged(position)
+                    return
+                }
+                when (direction) {
+                    androidx.recyclerview.widget.ItemTouchHelper.LEFT ->
+                        promptRestoreCompleted(reminder, adapter, position)
+                    androidx.recyclerview.widget.ItemTouchHelper.RIGHT ->
+                        promptDeleteCompleted(reminder, adapter, position)
+                    else -> adapter.notifyItemChanged(position)
+                }
+            }
+        }
+        val helper = androidx.recyclerview.widget.ItemTouchHelper(callback)
+        helper.attachToRecyclerView(recyclerView)
+        recyclerView.setTag(R.id.tag_completed_swipe_helper, helper)
+    }
+
+    private fun promptRestoreCompleted(reminder: Reminder, adapter: CompletedEntryAdapter, position: Int) {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.reminder_restore_completed_confirm)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                adapter.notifyItemChanged(position)
+                restoreCompletedReminder(reminder)
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                adapter.notifyItemChanged(position)
+            }
+            .setOnCancelListener { adapter.notifyItemChanged(position) }
+            .show()
+    }
+
+    private fun promptDeleteCompleted(reminder: Reminder, adapter: CompletedEntryAdapter, position: Int) {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.reminder_delete_confirm)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                adapter.notifyItemChanged(position)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    reminderRepository.deleteReminder(reminder)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                adapter.notifyItemChanged(position)
+            }
+            .setOnCancelListener { adapter.notifyItemChanged(position) }
+            .show()
+    }
+
+    private fun restoreCompletedReminder(reminder: Reminder) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            reminderRepository.updateReminder(reminder.copy(isCompleted = false))
+        }
     }
 
     override fun onDestroyView() {

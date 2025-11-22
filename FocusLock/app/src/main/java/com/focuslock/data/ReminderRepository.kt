@@ -55,11 +55,8 @@ private fun ReminderEntity.toModel(): Reminder {
         anchorDateTimeMillis = anchorDateTime,
         recurrence = ReminderRecurrence.valueOf(recurrenceType),
         weeklyDaysMask = weeklyDaysMask,
-        isActive = isActive,
         isCompleted = isCompleted,
-        isArchived = isArchived,
-        createdAtMillis = createdAt,
-        updatedAtMillis = updatedAt
+        endDateTimeMillis = endDateTime
     )
 }
 
@@ -71,11 +68,8 @@ private fun Reminder.toEntity(): ReminderEntity {
         anchorDateTime = anchorDateTimeMillis,
         recurrenceType = recurrence.name,
         weeklyDaysMask = weeklyDaysMask,
-        isActive = isActive,
         isCompleted = isCompleted,
-        isArchived = isArchived,
-        createdAt = createdAtMillis,
-        updatedAt = updatedAtMillis
+        endDateTime = endDateTimeMillis
     )
 }
 

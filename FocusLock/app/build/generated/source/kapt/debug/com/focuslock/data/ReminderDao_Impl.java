@@ -11,6 +11,7 @@ import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import java.lang.Class;
 import java.lang.Exception;
+import java.lang.Long;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
@@ -37,7 +38,7 @@ public final class ReminderDao_Impl implements ReminderDao {
     this.__insertionAdapterOfReminderEntity = new EntityInsertionAdapter<ReminderEntity>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR ABORT INTO `reminders` (`id`,`title`,`description`,`anchor_date_time`,`recurrence_type`,`weekly_days_mask`,`is_active`,`is_completed`,`is_archived`,`created_at`,`updated_at`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `reminders` (`id`,`title`,`description`,`anchor_date_time`,`recurrence_type`,`weekly_days_mask`,`is_completed`,`end_date_time`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -60,14 +61,13 @@ public final class ReminderDao_Impl implements ReminderDao {
           stmt.bindString(5, value.getRecurrenceType());
         }
         stmt.bindLong(6, value.getWeeklyDaysMask());
-        final int _tmp = value.isActive() ? 1 : 0;
+        final int _tmp = value.isCompleted() ? 1 : 0;
         stmt.bindLong(7, _tmp);
-        final int _tmp_1 = value.isCompleted() ? 1 : 0;
-        stmt.bindLong(8, _tmp_1);
-        final int _tmp_2 = value.isArchived() ? 1 : 0;
-        stmt.bindLong(9, _tmp_2);
-        stmt.bindLong(10, value.getCreatedAt());
-        stmt.bindLong(11, value.getUpdatedAt());
+        if (value.getEndDateTime() == null) {
+          stmt.bindNull(8);
+        } else {
+          stmt.bindLong(8, value.getEndDateTime());
+        }
       }
     };
     this.__deletionAdapterOfReminderEntity = new EntityDeletionOrUpdateAdapter<ReminderEntity>(__db) {
@@ -84,7 +84,7 @@ public final class ReminderDao_Impl implements ReminderDao {
     this.__updateAdapterOfReminderEntity = new EntityDeletionOrUpdateAdapter<ReminderEntity>(__db) {
       @Override
       public String createQuery() {
-        return "UPDATE OR ABORT `reminders` SET `id` = ?,`title` = ?,`description` = ?,`anchor_date_time` = ?,`recurrence_type` = ?,`weekly_days_mask` = ?,`is_active` = ?,`is_completed` = ?,`is_archived` = ?,`created_at` = ?,`updated_at` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `reminders` SET `id` = ?,`title` = ?,`description` = ?,`anchor_date_time` = ?,`recurrence_type` = ?,`weekly_days_mask` = ?,`is_completed` = ?,`end_date_time` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -107,15 +107,14 @@ public final class ReminderDao_Impl implements ReminderDao {
           stmt.bindString(5, value.getRecurrenceType());
         }
         stmt.bindLong(6, value.getWeeklyDaysMask());
-        final int _tmp = value.isActive() ? 1 : 0;
+        final int _tmp = value.isCompleted() ? 1 : 0;
         stmt.bindLong(7, _tmp);
-        final int _tmp_1 = value.isCompleted() ? 1 : 0;
-        stmt.bindLong(8, _tmp_1);
-        final int _tmp_2 = value.isArchived() ? 1 : 0;
-        stmt.bindLong(9, _tmp_2);
-        stmt.bindLong(10, value.getCreatedAt());
-        stmt.bindLong(11, value.getUpdatedAt());
-        stmt.bindLong(12, value.getId());
+        if (value.getEndDateTime() == null) {
+          stmt.bindNull(8);
+        } else {
+          stmt.bindLong(8, value.getEndDateTime());
+        }
+        stmt.bindLong(9, value.getId());
       }
     };
   }
@@ -172,11 +171,8 @@ public final class ReminderDao_Impl implements ReminderDao {
           final int _cursorIndexOfAnchorDateTime = CursorUtil.getColumnIndexOrThrow(_cursor, "anchor_date_time");
           final int _cursorIndexOfRecurrenceType = CursorUtil.getColumnIndexOrThrow(_cursor, "recurrence_type");
           final int _cursorIndexOfWeeklyDaysMask = CursorUtil.getColumnIndexOrThrow(_cursor, "weekly_days_mask");
-          final int _cursorIndexOfIsActive = CursorUtil.getColumnIndexOrThrow(_cursor, "is_active");
           final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "is_completed");
-          final int _cursorIndexOfIsArchived = CursorUtil.getColumnIndexOrThrow(_cursor, "is_archived");
-          final int _cursorIndexOfCreatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "created_at");
-          final int _cursorIndexOfUpdatedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "updated_at");
+          final int _cursorIndexOfEndDateTime = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date_time");
           final List<ReminderEntity> _result = new ArrayList<ReminderEntity>(_cursor.getCount());
           while(_cursor.moveToNext()) {
             final ReminderEntity _item;
@@ -204,23 +200,17 @@ public final class ReminderDao_Impl implements ReminderDao {
             }
             final int _tmpWeeklyDaysMask;
             _tmpWeeklyDaysMask = _cursor.getInt(_cursorIndexOfWeeklyDaysMask);
-            final boolean _tmpIsActive;
-            final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfIsActive);
-            _tmpIsActive = _tmp != 0;
             final boolean _tmpIsCompleted;
-            final int _tmp_1;
-            _tmp_1 = _cursor.getInt(_cursorIndexOfIsCompleted);
-            _tmpIsCompleted = _tmp_1 != 0;
-            final boolean _tmpIsArchived;
-            final int _tmp_2;
-            _tmp_2 = _cursor.getInt(_cursorIndexOfIsArchived);
-            _tmpIsArchived = _tmp_2 != 0;
-            final long _tmpCreatedAt;
-            _tmpCreatedAt = _cursor.getLong(_cursorIndexOfCreatedAt);
-            final long _tmpUpdatedAt;
-            _tmpUpdatedAt = _cursor.getLong(_cursorIndexOfUpdatedAt);
-            _item = new ReminderEntity(_tmpId,_tmpTitle,_tmpDescription,_tmpAnchorDateTime,_tmpRecurrenceType,_tmpWeeklyDaysMask,_tmpIsActive,_tmpIsCompleted,_tmpIsArchived,_tmpCreatedAt,_tmpUpdatedAt);
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final Long _tmpEndDateTime;
+            if (_cursor.isNull(_cursorIndexOfEndDateTime)) {
+              _tmpEndDateTime = null;
+            } else {
+              _tmpEndDateTime = _cursor.getLong(_cursorIndexOfEndDateTime);
+            }
+            _item = new ReminderEntity(_tmpId,_tmpTitle,_tmpDescription,_tmpAnchorDateTime,_tmpRecurrenceType,_tmpWeeklyDaysMask,_tmpIsCompleted,_tmpEndDateTime);
             _result.add(_item);
           }
           return _result;

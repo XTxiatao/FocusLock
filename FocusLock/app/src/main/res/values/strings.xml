@@ -91,6 +91,10 @@
     <string name="reminder_restore_blocked">Unmark completed before restoring.</string>
     <string name="reminder_delete_confirm">Delete this archived reminder?</string>
     <string name="reminder_archive_blocked">Only completed or inactive reminders can be archived.</string>
+    <string name="reminder_complete_single_confirm">Complete this one-time reminder and archive it?</string>
+    <string name="reminder_complete_recurring_confirm">Mark this reminder occurrence as done and move to the next cycle?</string>
+    <string name="reminder_cancel_and_archive_confirm">Cancel this reminder and archive it?</string>
+    <string name="reminder_restore_completed_confirm">Restore this reminder?</string>
     <string name="reminder_due_prefix">Due %1$s</string>
     <string name="reminder_repeat_once">One time</string>
     <string name="reminder_repeat_daily">Repeats daily</string>
@@ -101,6 +105,9 @@
     <string name="reminder_status_archived">Archived</string>
     <string name="reminder_status_inactive">Inactive</string>
     <string name="reminder_unarchive_prompt">Enable after restoring from archive. Unarchive first in the archive list.</string>
+    <string name="reminder_end_label">End date (optional)</string>
+    <string name="reminder_end_switch">Set end date/time</string>
+    <string name="reminder_end_required">Pick an end date/time</string>
     <string-array name="reminder_recurrence_entries">
         <item>One time</item>
         <item>Daily</item>

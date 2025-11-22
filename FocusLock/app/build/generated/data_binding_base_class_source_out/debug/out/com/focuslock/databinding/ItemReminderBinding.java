@@ -4,7 +4,6 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,12 +19,6 @@ import java.lang.String;
 public final class ItemReminderBinding implements ViewBinding {
   @NonNull
   private final MaterialCardView rootView;
-
-  @NonNull
-  public final Button archiveButton;
-
-  @NonNull
-  public final Button completeButton;
 
   @NonNull
   public final TextView reminderDescription;
@@ -45,14 +38,11 @@ public final class ItemReminderBinding implements ViewBinding {
   @NonNull
   public final MaterialButton reminderToggle;
 
-  private ItemReminderBinding(@NonNull MaterialCardView rootView, @NonNull Button archiveButton,
-      @NonNull Button completeButton, @NonNull TextView reminderDescription,
-      @NonNull TextView reminderDue, @NonNull TextView reminderRecurrence,
-      @NonNull TextView reminderStatus, @NonNull TextView reminderTitle,
-      @NonNull MaterialButton reminderToggle) {
+  private ItemReminderBinding(@NonNull MaterialCardView rootView,
+      @NonNull TextView reminderDescription, @NonNull TextView reminderDue,
+      @NonNull TextView reminderRecurrence, @NonNull TextView reminderStatus,
+      @NonNull TextView reminderTitle, @NonNull MaterialButton reminderToggle) {
     this.rootView = rootView;
-    this.archiveButton = archiveButton;
-    this.completeButton = completeButton;
     this.reminderDescription = reminderDescription;
     this.reminderDue = reminderDue;
     this.reminderRecurrence = reminderRecurrence;
@@ -88,18 +78,6 @@ public final class ItemReminderBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.archiveButton;
-      Button archiveButton = ViewBindings.findChildViewById(rootView, id);
-      if (archiveButton == null) {
-        break missingId;
-      }
-
-      id = R.id.completeButton;
-      Button completeButton = ViewBindings.findChildViewById(rootView, id);
-      if (completeButton == null) {
-        break missingId;
-      }
-
       id = R.id.reminderDescription;
       TextView reminderDescription = ViewBindings.findChildViewById(rootView, id);
       if (reminderDescription == null) {
@@ -136,9 +114,8 @@ public final class ItemReminderBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemReminderBinding((MaterialCardView) rootView, archiveButton, completeButton,
-          reminderDescription, reminderDue, reminderRecurrence, reminderStatus, reminderTitle,
-          reminderToggle);
+      return new ItemReminderBinding((MaterialCardView) rootView, reminderDescription, reminderDue,
+          reminderRecurrence, reminderStatus, reminderTitle, reminderToggle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

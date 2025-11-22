@@ -145,19 +145,31 @@
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/activeSwitch"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/reminder_active_label" />
+            android:text="@string/reminder_end_label" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/completedSwitch"
+            android:id="@+id/endDateSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reminder_end_switch" />
+
+        <Button
+            android:id="@+id/endDateButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/reminder_completed_label" />
+            android:text="@string/reminder_pick_date" />
+
+        <Button
+            android:id="@+id/endTimeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/reminder_pick_time" />
 
     </LinearLayout>
 </ScrollView>

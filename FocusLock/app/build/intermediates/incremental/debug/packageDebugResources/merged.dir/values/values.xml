@@ -11,6 +11,7 @@
     <color name="plan_active_green">#4CAF50</color>
     <color name="plan_inactive_gray">#666666</color>
     <color name="purple_500">#6200EE</color>
+    <color name="reminder_due_overdue">#FF5252</color>
     <color name="reminder_status_archived">#FFC107</color>
     <color name="reminder_status_completed">#4CAF50</color>
     <color name="reminder_status_inactive">#9E9E9E</color>
@@ -20,6 +21,7 @@
     <color name="white">#FFFFFF</color>
     <dimen name="app_icon_item_width">72dp</dimen>
     <dimen name="whitelist_dialog_max_height">320dp</dimen>
+    <item name="tag_completed_swipe_helper" type="id"/>
     <plurals name="reminder_archived_count">
         <item quantity="one">%d archived item</item>
         <item quantity="other">%d archived items</item>
@@ -57,8 +59,11 @@
     <string name="reminder_archived_card_subtitle">Tap to review archived items</string>
     <string name="reminder_archived_card_title">Archived reminders</string>
     <string name="reminder_archived_empty">Nothing archived yet.</string>
+    <string name="reminder_cancel_and_archive_confirm">Cancel this reminder and archive it?</string>
     <string name="reminder_cancel_button">Cancel</string>
     <string name="reminder_complete_action">Complete</string>
+    <string name="reminder_complete_recurring_confirm">Mark this reminder occurrence as done and move to the next cycle?</string>
+    <string name="reminder_complete_single_confirm">Complete this one-time reminder and archive it?</string>
     <string name="reminder_completed_blocked">Repeating reminders cannot be marked complete.</string>
     <string name="reminder_completed_label">Mark as completed</string>
     <string name="reminder_delete_action">Delete</string>
@@ -69,6 +74,9 @@
     <string name="reminder_duplicate_title">Title already exists. Pick another name.</string>
     <string name="reminder_edit_title">Edit reminder</string>
     <string name="reminder_empty_state">No reminders yet. Tap + to create one.</string>
+    <string name="reminder_end_label">End date (optional)</string>
+    <string name="reminder_end_required">Pick an end date/time</string>
+    <string name="reminder_end_switch">Set end date/time</string>
     <string name="reminder_pick_date">Pick date</string>
     <string name="reminder_pick_time">Pick time</string>
     <string name="reminder_recurrence_label">Repeat</string>
@@ -79,6 +87,7 @@
     <string name="reminder_repeat_yearly">Repeats yearly</string>
     <string name="reminder_restore_action">Restore</string>
     <string name="reminder_restore_blocked">Unmark completed before restoring.</string>
+    <string name="reminder_restore_completed_confirm">Restore this reminder?</string>
     <string name="reminder_save_button">Save reminder</string>
     <string name="reminder_status_archived">Archived</string>
     <string name="reminder_status_completed">Completed</string>

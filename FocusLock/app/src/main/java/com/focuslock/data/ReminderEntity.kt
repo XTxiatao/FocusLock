@@ -22,14 +22,8 @@ data class ReminderEntity(
     val recurrenceType: String,
     @ColumnInfo(name = "weekly_days_mask")
     val weeklyDaysMask: Int,
-    @ColumnInfo(name = "is_active")
-    val isActive: Boolean,
     @ColumnInfo(name = "is_completed")
     val isCompleted: Boolean,
-    @ColumnInfo(name = "is_archived")
-    val isArchived: Boolean,
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long,
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
+    @ColumnInfo(name = "end_date_time")
+    val endDateTime: Long?
 )

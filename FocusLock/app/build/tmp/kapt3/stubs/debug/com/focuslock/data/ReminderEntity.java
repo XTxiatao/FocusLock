@@ -1,6 +1,6 @@
 package com.focuslock.data;
 
-@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\"\b\u0087\b\u0018\u00002\u00020\u0001Ba\u0012\b\b\u0002\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0005\u0012\u0006\u0010\u0007\u001a\u00020\u0003\u0012\u0006\u0010\b\u001a\u00020\u0005\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\f\u0012\u0006\u0010\u000e\u001a\u00020\f\u0012\u0006\u0010\u000f\u001a\u00020\u0003\u0012\u0006\u0010\u0010\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0011J\t\u0010\u001e\u001a\u00020\u0003H\u00c6\u0003J\t\u0010\u001f\u001a\u00020\u0003H\u00c6\u0003J\t\u0010 \u001a\u00020\u0003H\u00c6\u0003J\t\u0010!\u001a\u00020\u0005H\u00c6\u0003J\u000b\u0010\"\u001a\u0004\u0018\u00010\u0005H\u00c6\u0003J\t\u0010#\u001a\u00020\u0003H\u00c6\u0003J\t\u0010$\u001a\u00020\u0005H\u00c6\u0003J\t\u0010%\u001a\u00020\nH\u00c6\u0003J\t\u0010&\u001a\u00020\fH\u00c6\u0003J\t\u0010\'\u001a\u00020\fH\u00c6\u0003J\t\u0010(\u001a\u00020\fH\u00c6\u0003Jy\u0010)\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\n\b\u0002\u0010\u0006\u001a\u0004\u0018\u00010\u00052\b\b\u0002\u0010\u0007\u001a\u00020\u00032\b\b\u0002\u0010\b\u001a\u00020\u00052\b\b\u0002\u0010\t\u001a\u00020\n2\b\b\u0002\u0010\u000b\u001a\u00020\f2\b\b\u0002\u0010\r\u001a\u00020\f2\b\b\u0002\u0010\u000e\u001a\u00020\f2\b\b\u0002\u0010\u000f\u001a\u00020\u00032\b\b\u0002\u0010\u0010\u001a\u00020\u0003H\u00c6\u0001J\u0013\u0010*\u001a\u00020\f2\b\u0010+\u001a\u0004\u0018\u00010\u0001H\u00d6\u0003J\t\u0010,\u001a\u00020\nH\u00d6\u0001J\t\u0010-\u001a\u00020\u0005H\u00d6\u0001R\u0016\u0010\u0007\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0012\u0010\u0013R\u0016\u0010\u000f\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\u0013R\u0013\u0010\u0006\u001a\u0004\u0018\u00010\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0015\u0010\u0016R\u0016\u0010\u0002\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0013R\u0016\u0010\u000b\u001a\u00020\f8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\u0018R\u0016\u0010\u000e\u001a\u00020\f8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u0018R\u0016\u0010\r\u001a\u00020\f8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\r\u0010\u0018R\u0016\u0010\b\u001a\u00020\u00058\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u0016R\u0011\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001a\u0010\u0016R\u0016\u0010\u0010\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001b\u0010\u0013R\u0016\u0010\t\u001a\u00020\n8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001d\u00a8\u0006."}, d2 = {"Lcom/focuslock/data/ReminderEntity;", "", "id", "", "title", "", "description", "anchorDateTime", "recurrenceType", "weeklyDaysMask", "", "isActive", "", "isCompleted", "isArchived", "createdAt", "updatedAt", "(JLjava/lang/String;Ljava/lang/String;JLjava/lang/String;IZZZJJ)V", "getAnchorDateTime", "()J", "getCreatedAt", "getDescription", "()Ljava/lang/String;", "getId", "()Z", "getRecurrenceType", "getTitle", "getUpdatedAt", "getWeeklyDaysMask", "()I", "component1", "component10", "component11", "component2", "component3", "component4", "component5", "component6", "component7", "component8", "component9", "copy", "equals", "other", "hashCode", "toString", "app_debug"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u001e\b\u0087\b\u0018\u00002\u00020\u0001BK\u0012\b\b\u0002\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0005\u0012\u0006\u0010\u0007\u001a\u00020\u0003\u0012\u0006\u0010\b\u001a\u00020\u0005\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\b\u0010\r\u001a\u0004\u0018\u00010\u0003\u00a2\u0006\u0002\u0010\u000eJ\t\u0010\u001c\u001a\u00020\u0003H\u00c6\u0003J\t\u0010\u001d\u001a\u00020\u0005H\u00c6\u0003J\u000b\u0010\u001e\u001a\u0004\u0018\u00010\u0005H\u00c6\u0003J\t\u0010\u001f\u001a\u00020\u0003H\u00c6\u0003J\t\u0010 \u001a\u00020\u0005H\u00c6\u0003J\t\u0010!\u001a\u00020\nH\u00c6\u0003J\t\u0010\"\u001a\u00020\fH\u00c6\u0003J\u0010\u0010#\u001a\u0004\u0018\u00010\u0003H\u00c6\u0003\u00a2\u0006\u0002\u0010\u0014Jb\u0010$\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\n\b\u0002\u0010\u0006\u001a\u0004\u0018\u00010\u00052\b\b\u0002\u0010\u0007\u001a\u00020\u00032\b\b\u0002\u0010\b\u001a\u00020\u00052\b\b\u0002\u0010\t\u001a\u00020\n2\b\b\u0002\u0010\u000b\u001a\u00020\f2\n\b\u0002\u0010\r\u001a\u0004\u0018\u00010\u0003H\u00c6\u0001\u00a2\u0006\u0002\u0010%J\u0013\u0010&\u001a\u00020\f2\b\u0010\'\u001a\u0004\u0018\u00010\u0001H\u00d6\u0003J\t\u0010(\u001a\u00020\nH\u00d6\u0001J\t\u0010)\u001a\u00020\u0005H\u00d6\u0001R\u0016\u0010\u0007\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u0013\u0010\u0006\u001a\u0004\u0018\u00010\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u001a\u0010\r\u001a\u0004\u0018\u00010\u00038\u0006X\u0087\u0004\u00a2\u0006\n\n\u0002\u0010\u0015\u001a\u0004\b\u0013\u0010\u0014R\u0016\u0010\u0002\u001a\u00020\u00038\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0010R\u0016\u0010\u000b\u001a\u00020\f8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\u0017R\u0016\u0010\b\u001a\u00020\u00058\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u0012R\u0011\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u0012R\u0016\u0010\t\u001a\u00020\n8\u0006X\u0087\u0004\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001a\u0010\u001b\u00a8\u0006*"}, d2 = {"Lcom/focuslock/data/ReminderEntity;", "", "id", "", "title", "", "description", "anchorDateTime", "recurrenceType", "weeklyDaysMask", "", "isCompleted", "", "endDateTime", "(JLjava/lang/String;Ljava/lang/String;JLjava/lang/String;IZLjava/lang/Long;)V", "getAnchorDateTime", "()J", "getDescription", "()Ljava/lang/String;", "getEndDateTime", "()Ljava/lang/Long;", "Ljava/lang/Long;", "getId", "()Z", "getRecurrenceType", "getTitle", "getWeeklyDaysMask", "()I", "component1", "component2", "component3", "component4", "component5", "component6", "component7", "component8", "copy", "(JLjava/lang/String;Ljava/lang/String;JLjava/lang/String;IZLjava/lang/Long;)Lcom/focuslock/data/ReminderEntity;", "equals", "other", "hashCode", "toString", "app_debug"})
 @androidx.room.Entity(tableName = "reminders", indices = {@androidx.room.Index(value = {"title"}, unique = true)})
 public final class ReminderEntity {
     @androidx.room.PrimaryKey(autoGenerate = true)
@@ -16,21 +16,17 @@ public final class ReminderEntity {
     private final java.lang.String recurrenceType = null;
     @androidx.room.ColumnInfo(name = "weekly_days_mask")
     private final int weeklyDaysMask = 0;
-    @androidx.room.ColumnInfo(name = "is_active")
-    private final boolean isActive = false;
     @androidx.room.ColumnInfo(name = "is_completed")
     private final boolean isCompleted = false;
-    @androidx.room.ColumnInfo(name = "is_archived")
-    private final boolean isArchived = false;
-    @androidx.room.ColumnInfo(name = "created_at")
-    private final long createdAt = 0L;
-    @androidx.room.ColumnInfo(name = "updated_at")
-    private final long updatedAt = 0L;
+    @androidx.room.ColumnInfo(name = "end_date_time")
+    @org.jetbrains.annotations.Nullable()
+    private final java.lang.Long endDateTime = null;
     
     public ReminderEntity(long id, @org.jetbrains.annotations.NotNull()
     java.lang.String title, @org.jetbrains.annotations.Nullable()
     java.lang.String description, long anchorDateTime, @org.jetbrains.annotations.NotNull()
-    java.lang.String recurrenceType, int weeklyDaysMask, boolean isActive, boolean isCompleted, boolean isArchived, long createdAt, long updatedAt) {
+    java.lang.String recurrenceType, int weeklyDaysMask, boolean isCompleted, @org.jetbrains.annotations.Nullable()
+    java.lang.Long endDateTime) {
         super();
     }
     
@@ -61,35 +57,16 @@ public final class ReminderEntity {
         return 0;
     }
     
-    public final boolean isActive() {
-        return false;
-    }
-    
     public final boolean isCompleted() {
         return false;
     }
     
-    public final boolean isArchived() {
-        return false;
-    }
-    
-    public final long getCreatedAt() {
-        return 0L;
-    }
-    
-    public final long getUpdatedAt() {
-        return 0L;
+    @org.jetbrains.annotations.Nullable()
+    public final java.lang.Long getEndDateTime() {
+        return null;
     }
     
     public final long component1() {
-        return 0L;
-    }
-    
-    public final long component10() {
-        return 0L;
-    }
-    
-    public final long component11() {
         return 0L;
     }
     
@@ -120,19 +97,17 @@ public final class ReminderEntity {
         return false;
     }
     
-    public final boolean component8() {
-        return false;
-    }
-    
-    public final boolean component9() {
-        return false;
+    @org.jetbrains.annotations.Nullable()
+    public final java.lang.Long component8() {
+        return null;
     }
     
     @org.jetbrains.annotations.NotNull()
     public final com.focuslock.data.ReminderEntity copy(long id, @org.jetbrains.annotations.NotNull()
     java.lang.String title, @org.jetbrains.annotations.Nullable()
     java.lang.String description, long anchorDateTime, @org.jetbrains.annotations.NotNull()
-    java.lang.String recurrenceType, int weeklyDaysMask, boolean isActive, boolean isCompleted, boolean isArchived, long createdAt, long updatedAt) {
+    java.lang.String recurrenceType, int weeklyDaysMask, boolean isCompleted, @org.jetbrains.annotations.Nullable()
+    java.lang.Long endDateTime) {
         return null;
     }
     
