@@ -105,7 +105,7 @@
     <string name="reminder_status_archived">已归档</string>
     <string name="reminder_status_inactive">未激活</string>
     <string name="reminder_unarchive_prompt">恢复后才能启用，请先在归档列表解除。</string>
-    <string name="reminder_no_due_time">任意时间</string>
+    <string name="reminder_no_due_time"></string>
     <string name="reminder_floating_group_title">任意时间提醒</string>
     <string name="reminder_completed_floating_group_title">已完成的任意时间提醒</string>
     <string name="reminder_end_toggle">结束时间</string>

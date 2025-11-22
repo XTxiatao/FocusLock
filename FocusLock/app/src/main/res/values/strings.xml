@@ -107,12 +107,12 @@
     <string name="reminder_status_archived">Archived</string>
     <string name="reminder_status_inactive">Inactive</string>
     <string name="reminder_unarchive_prompt">Enable after restoring from archive. Unarchive first in the archive list.</string>
-    <string name="reminder_no_due_time">Any time</string>
+    <string name="reminder_no_due_time"></string>
     <string name="reminder_floating_group_title">Any time reminders</string>
     <string name="reminder_completed_floating_group_title">Completed any-time reminders</string>
     <string name="reminder_end_toggle">End time</string>
     <string name="reminder_end_required">Pick an end date/time</string>
-    <string name="reminder_no_end_time">No end</string>
+    <string name="reminder_no_end_time"></string>
     <string-array name="reminder_recurrence_entries">
         <item>One time</item>
         <item>Daily</item>

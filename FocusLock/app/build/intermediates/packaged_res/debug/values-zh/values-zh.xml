@@ -65,7 +65,7 @@
     <string name="reminder_end_required">请选择结束日期和时间</string>
     <string name="reminder_end_toggle">结束时间</string>
     <string name="reminder_floating_group_title">任意时间提醒</string>
-    <string name="reminder_no_due_time">任意时间</string>
+    <string name="reminder_no_due_time"/>
     <string name="reminder_no_end_time">无结束</string>
     <string name="reminder_pick_date">选择日期</string>
     <string name="reminder_pick_time">选择时间</string>

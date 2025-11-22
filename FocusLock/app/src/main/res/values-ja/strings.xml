@@ -105,12 +105,12 @@
     <string name="reminder_status_archived">アーカイブ済み</string>
     <string name="reminder_status_inactive">無効</string>
     <string name="reminder_unarchive_prompt">再有効化するにはアーカイブから戻してください。</string>
-    <string name="reminder_no_due_time">任意の時間</string>
+    <string name="reminder_no_due_time"></string>
     <string name="reminder_floating_group_title">任意時間のリマインダー</string>
     <string name="reminder_completed_floating_group_title">完了済み任意時間リマインダー</string>
     <string name="reminder_end_toggle">終了時間</string>
     <string name="reminder_end_required">終了日時を選択してください</string>
-    <string name="reminder_no_end_time">終了なし</string>
+    <string name="reminder_no_end_time"></string>
     <string name="lock_force_unlock_confirm">今すぐ解除して現在のロックを無効にしますか？</string>
     <string name="lock_force_unlock_unavailable">今週の強制解除は既に使用しています。しばらくしてから再試行してください。</string>
     <string-array name="reminder_recurrence_entries">

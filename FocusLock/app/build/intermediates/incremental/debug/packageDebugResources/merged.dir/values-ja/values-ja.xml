@@ -65,8 +65,8 @@
     <string name="reminder_end_required">終了日時を選択してください</string>
     <string name="reminder_end_toggle">終了時間</string>
     <string name="reminder_floating_group_title">任意時間のリマインダー</string>
-    <string name="reminder_no_due_time">任意の時間</string>
-    <string name="reminder_no_end_time">終了なし</string>
+    <string name="reminder_no_due_time"/>
+    <string name="reminder_no_end_time"/>
     <string name="reminder_pick_date">日付を選択</string>
     <string name="reminder_pick_time">時間を選択</string>
     <string name="reminder_recurrence_label">繰り返し</string>
