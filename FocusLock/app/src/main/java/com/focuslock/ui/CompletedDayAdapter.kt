@@ -1,6 +1,7 @@
 package com.focuslock.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -45,14 +46,14 @@ class CompletedDayAdapter(
 
         fun bind(group: CompletedDayGroup) {
             val zone = ZoneId.systemDefault()
-            val label = if (group.dateMillis == Long.MAX_VALUE) {
-                binding.root.context.getString(R.string.reminder_completed_floating_group_title)
+            if (group.dateMillis == Long.MAX_VALUE) {
+                binding.completedDateLabel.visibility = View.GONE
             } else {
-                DATE_FORMATTER.format(
+                binding.completedDateLabel.visibility = View.VISIBLE
+                binding.completedDateLabel.text = DATE_FORMATTER.format(
                     java.time.Instant.ofEpochMilli(group.dateMillis).atZone(zone)
                 )
             }
-            binding.completedDateLabel.text = label
             entryAdapter.submitList(group.reminders)
         }
     }
