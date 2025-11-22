@@ -166,10 +166,16 @@ class LockOverlayService : Service() {
             WindowManager.LayoutParams.MATCH_PARENT,
             type,
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
         }
 
         binding.overlayReminderRecycler.layoutManager = LinearLayoutManager(overlayContext)
@@ -288,11 +294,7 @@ class LockOverlayService : Service() {
         val adapter = OverlayWhitelistAdapter { item ->
             if (item.isRestricted()) {
                 val unlockTime = item.restrictedUntil?.let { formatUnlockClock(it) } ?: "later"
-                Toast.makeText(
-                    this,
-                    getString(R.string.restriction_app_not_allowed, unlockTime),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showOverlayAlert(getString(R.string.restriction_app_not_allowed, unlockTime))
             } else {
                 val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
                 if (launchIntent != null) {
@@ -550,10 +552,12 @@ class LockOverlayService : Service() {
                 val restricted = item.isRestricted(now)
                 if (restricted && item.restrictedUntil != null) {
                     val remaining = item.restrictedUntil - now
+                    binding.appCountdownIcon.visibility = View.VISIBLE
                     binding.appCountdown.visibility = View.VISIBLE
                     binding.appCountdown.text = formatDuration(remaining)
                     binding.root.alpha = 0.4f
                 } else {
+                    binding.appCountdownIcon.visibility = View.GONE
                     binding.appCountdown.visibility = View.GONE
                     binding.root.alpha = 1f
                 }
@@ -666,6 +670,15 @@ class LockOverlayService : Service() {
                 onDismiss = { reminderEditorDialog = null }
             )
         }
+    }
+
+    private fun showOverlayAlert(message: CharSequence) {
+        val dialog = AlertDialog.Builder(overlayContext)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok, null)
+            .create()
+        dialog.window?.setType(dialogWindowType())
+        dialog.show()
     }
 
     private fun completeReminderFromOverlay(reminder: Reminder) {

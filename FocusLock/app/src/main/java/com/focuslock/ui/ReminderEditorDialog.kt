@@ -9,6 +9,7 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -220,16 +221,30 @@ fun showReminderEditorDialog(
         dialog.window?.setType(type)
     }
 
+    fun showMessage(@StringRes messageId: Int) {
+        if (overlayWindow) {
+            AlertDialog.Builder(context)
+                .setMessage(messageId)
+                .setPositiveButton(android.R.string.ok, null)
+                .create().also {
+                    it.window?.setType(overlayWindowType())
+                }
+                .show()
+        } else {
+            Toast.makeText(context, messageId, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     dialog.setOnShowListener {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val title = dialogBinding.titleInput.text?.toString()?.trim().orEmpty()
             if (title.isBlank()) {
-                Toast.makeText(context, R.string.reminder_title_required, Toast.LENGTH_SHORT).show()
+                showMessage(R.string.reminder_title_required)
                 return@setOnClickListener
             }
             val weeklyMask = if (selectedRecurrence == ReminderRecurrence.WEEKLY) {
                 if (weeklySelection.isEmpty()) {
-                    Toast.makeText(context, R.string.reminder_weekly_required, Toast.LENGTH_SHORT).show()
+                    showMessage(R.string.reminder_weekly_required)
                     return@setOnClickListener
                 }
                 encodeWeekDays(weeklySelection)
@@ -241,7 +256,7 @@ fun showReminderEditorDialog(
             saveScope.launch {
                 val unique = repository.ensureUniqueTitle(title, reminder?.id)
                 if (!unique) {
-                    Toast.makeText(context, R.string.reminder_duplicate_title, Toast.LENGTH_SHORT).show()
+                    showMessage(R.string.reminder_duplicate_title)
                     return@launch
                 }
                 val updatedReminder = Reminder(

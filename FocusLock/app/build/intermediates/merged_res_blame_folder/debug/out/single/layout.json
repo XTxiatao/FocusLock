@@ -24,12 +24,12 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_app_restriction_plan.xml"
     },
     {
-        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_whitelist_picker.xml",
-        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_whitelist_picker.xml"
-    },
-    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_completed_entry.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_completed_entry.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_whitelist_picker.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_whitelist_picker.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_reminder_entry.xml",

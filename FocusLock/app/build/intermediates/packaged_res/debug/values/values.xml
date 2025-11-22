@@ -8,6 +8,7 @@
         <item>Yearly</item>
     </string-array>
     <color name="black">#000000</color>
+    <color name="ic_launcher_background">#1F1F1F</color>
     <color name="plan_active_green">#4CAF50</color>
     <color name="plan_inactive_gray">#666666</color>
     <color name="purple_500">#6200EE</color>

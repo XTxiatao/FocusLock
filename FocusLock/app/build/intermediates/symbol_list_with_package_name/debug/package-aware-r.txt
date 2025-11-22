@@ -1447,6 +1447,7 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
+color ic_launcher_background
 color m3_appbar_overlay_color
 color m3_assist_chip_icon_tint_color
 color m3_assist_chip_stroke_color
@@ -3042,11 +3043,13 @@ drawable ic_call_answer_video
 drawable ic_call_answer_video_low
 drawable ic_call_decline
 drawable ic_call_decline_low
+drawable ic_caretaker
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
 drawable ic_clover
 drawable ic_hourglass
 drawable ic_keyboard_black_24dp
+drawable ic_launcher_foreground
 drawable ic_lock
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
@@ -3220,6 +3223,7 @@ id antiClockwise
 id anticipate
 id appCheckBox
 id appCountdown
+id appCountdownIcon
 id appIcon
 id appLabel
 id appListContainer
@@ -3964,6 +3968,8 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 menu bottom_nav_menu
+mipmap ic_launcher
+mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 plurals reminder_archived_count
 string abc_action_bar_home_description

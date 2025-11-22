@@ -2,6 +2,7 @@ R_DEF: Internal format may change without notice
 local
 array reminder_recurrence_entries
 color black
+color ic_launcher_background
 color plan_active_green
 color plan_inactive_gray
 color purple_500
@@ -15,8 +16,10 @@ color teal_200
 color white
 dimen app_icon_item_width
 dimen whitelist_dialog_max_height
+drawable ic_caretaker
 drawable ic_clover
 drawable ic_hourglass
+drawable ic_launcher_foreground
 drawable ic_lock
 drawable panel_background
 drawable reminder_pill_background
@@ -26,6 +29,7 @@ id addPlanButton
 id addReminderFab
 id appCheckBox
 id appCountdown
+id appCountdownIcon
 id appIcon
 id appLabel
 id appListContainer
@@ -144,6 +148,8 @@ layout item_whitelist_app
 layout item_whitelist_dialog
 layout overlay_view
 menu bottom_nav_menu
+mipmap ic_launcher
+mipmap ic_launcher_round
 plurals reminder_archived_count
 string accessibility_description
 string add_plan_button
