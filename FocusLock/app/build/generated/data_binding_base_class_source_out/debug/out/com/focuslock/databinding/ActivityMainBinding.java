@@ -4,15 +4,14 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -22,38 +21,16 @@ public final class ActivityMainBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final Button addPlanButton;
+  public final BottomNavigationView bottomNavigation;
 
   @NonNull
-  public final LinearLayout planContainer;
+  public final FrameLayout fragmentContainer;
 
-  @NonNull
-  public final RecyclerView scheduleList;
-
-  @NonNull
-  public final TextView statusDescription;
-
-  @NonNull
-  public final TextView statusText;
-
-  @NonNull
-  public final Button tempLockButton;
-
-  @NonNull
-  public final LinearLayout tempLockContainer;
-
-  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button addPlanButton,
-      @NonNull LinearLayout planContainer, @NonNull RecyclerView scheduleList,
-      @NonNull TextView statusDescription, @NonNull TextView statusText,
-      @NonNull Button tempLockButton, @NonNull LinearLayout tempLockContainer) {
+  private ActivityMainBinding(@NonNull LinearLayout rootView,
+      @NonNull BottomNavigationView bottomNavigation, @NonNull FrameLayout fragmentContainer) {
     this.rootView = rootView;
-    this.addPlanButton = addPlanButton;
-    this.planContainer = planContainer;
-    this.scheduleList = scheduleList;
-    this.statusDescription = statusDescription;
-    this.statusText = statusText;
-    this.tempLockButton = tempLockButton;
-    this.tempLockContainer = tempLockContainer;
+    this.bottomNavigation = bottomNavigation;
+    this.fragmentContainer = fragmentContainer;
   }
 
   @Override
@@ -83,50 +60,19 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.addPlanButton;
-      Button addPlanButton = ViewBindings.findChildViewById(rootView, id);
-      if (addPlanButton == null) {
+      id = R.id.bottomNavigation;
+      BottomNavigationView bottomNavigation = ViewBindings.findChildViewById(rootView, id);
+      if (bottomNavigation == null) {
         break missingId;
       }
 
-      id = R.id.planContainer;
-      LinearLayout planContainer = ViewBindings.findChildViewById(rootView, id);
-      if (planContainer == null) {
+      id = R.id.fragmentContainer;
+      FrameLayout fragmentContainer = ViewBindings.findChildViewById(rootView, id);
+      if (fragmentContainer == null) {
         break missingId;
       }
 
-      id = R.id.scheduleList;
-      RecyclerView scheduleList = ViewBindings.findChildViewById(rootView, id);
-      if (scheduleList == null) {
-        break missingId;
-      }
-
-      id = R.id.statusDescription;
-      TextView statusDescription = ViewBindings.findChildViewById(rootView, id);
-      if (statusDescription == null) {
-        break missingId;
-      }
-
-      id = R.id.statusText;
-      TextView statusText = ViewBindings.findChildViewById(rootView, id);
-      if (statusText == null) {
-        break missingId;
-      }
-
-      id = R.id.tempLockButton;
-      Button tempLockButton = ViewBindings.findChildViewById(rootView, id);
-      if (tempLockButton == null) {
-        break missingId;
-      }
-
-      id = R.id.tempLockContainer;
-      LinearLayout tempLockContainer = ViewBindings.findChildViewById(rootView, id);
-      if (tempLockContainer == null) {
-        break missingId;
-      }
-
-      return new ActivityMainBinding((LinearLayout) rootView, addPlanButton, planContainer,
-          scheduleList, statusDescription, statusText, tempLockButton, tempLockContainer);
+      return new ActivityMainBinding((LinearLayout) rootView, bottomNavigation, fragmentContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -8,19 +8,31 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\overlay_view.xml"
     },
     {
+        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/activity_main.xml",
+        "source": "com.focuslock.app-main-39:/layout/activity_main.xml"
+    },
+    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_temporary_lock.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_temporary_lock.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_reminder.xml",
+        "source": "com.focuslock.app-main-39:/layout/fragment_reminder.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_add_plan.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
     },
     {
-        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_lock_schedule.xml",
-        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_lock_schedule.xml"
+        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_app_lock.xml",
+        "source": "com.focuslock.app-main-39:/layout/fragment_app_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/dialog_add_plan.xml",
-        "source": "com.focuslock.app-main-39:/layout/dialog_add_plan.xml"
+        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_device_lock.xml",
+        "source": "com.focuslock.app-main-39:/layout/fragment_device_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_lock_schedule.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_lock_schedule.xml"
     }
 ]
