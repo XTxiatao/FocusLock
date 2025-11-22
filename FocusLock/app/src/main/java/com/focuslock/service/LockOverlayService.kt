@@ -23,6 +23,7 @@ import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
+import com.focuslock.util.LockStateTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -97,6 +98,7 @@ class LockOverlayService : Service() {
                 temporaryLockExpiryMillis = 0L
                 hideOverlay()
                 stopCountdown()
+                LockStateTracker.enforceHome = false
                 stopSelf()
             }
         }
@@ -128,6 +130,7 @@ class LockOverlayService : Service() {
             )
             hideOverlay()
             stopCountdown()
+            LockStateTracker.enforceHome = false
             return
         }
 
@@ -142,6 +145,7 @@ class LockOverlayService : Service() {
         )
         currentSchedule = activeSchedule
         val shouldLock = tempActive || scheduleActive
+        LockStateTracker.enforceHome = shouldLock
         if (shouldLock) {
             showOverlay()
             val targetMillis = when {
@@ -327,6 +331,7 @@ class LockOverlayService : Service() {
         Log.d(SERVICE_LOG_TAG, "onDestroy")
         hideOverlay()
         serviceScope.cancel()
+        LockStateTracker.enforceHome = false
         super.onDestroy()
     }
 
