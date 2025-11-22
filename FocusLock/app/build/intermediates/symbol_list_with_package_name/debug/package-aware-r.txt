@@ -4172,6 +4172,7 @@ string reminder_status_inactive
 string reminder_title_hint
 string reminder_title_required
 string reminder_toggle_label
+string reminder_unarchive_prompt
 string reminder_week_friday
 string reminder_week_monday
 string reminder_week_saturday

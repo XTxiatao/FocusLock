@@ -11621,7 +11621,7 @@
         <item>Weekly</item>
         <item>Monthly</item>
         <item>Yearly</item>
-    </string-array></file><file path="D:\focusLock\kotlin-manager\FocusLock\app\src\main\res\values\themes.xml" qualifiers=""><style name="Theme.FocusLock" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </string-array><string name="reminder_unarchive_prompt">Enable after restoring from archive. Unarchive first in the archive list.</string></file><file path="D:\focusLock\kotlin-manager\FocusLock\app\src\main\res\values\themes.xml" qualifiers=""><style name="Theme.FocusLock" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/teal_200</item>

@@ -100,6 +100,7 @@
     <string name="reminder_status_completed">Completed</string>
     <string name="reminder_status_archived">Archived</string>
     <string name="reminder_status_inactive">Inactive</string>
+    <string name="reminder_unarchive_prompt">Enable after restoring from archive. Unarchive first in the archive list.</string>
     <string-array name="reminder_recurrence_entries">
         <item>One time</item>
         <item>Daily</item>

@@ -70,12 +70,13 @@ class ReminderFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 reminderRepository.remindersFlow.collect { reminders ->
                     latestReminders = reminders
-                    val archived = reminders.filter { it.isArchived }
-                    val active = reminders.filterNot { it.isArchived }
-                    reminderAdapter.submitList(active)
+                    val archived = reminders.filter { it.isArchived }.orderByActivation()
+                    val nonArchived = reminders.filterNot { it.isArchived }
+                    val orderedActive = nonArchived.orderByActivation()
+                    reminderAdapter.submitList(orderedActive)
                     archivedAdapter.submitList(archived)
-                    binding.reminderRecyclerView.isVisible = active.isNotEmpty()
-                    binding.emptyRemindersView.isVisible = active.isEmpty()
+                    binding.reminderRecyclerView.isVisible = orderedActive.isNotEmpty()
+                    binding.emptyRemindersView.isVisible = orderedActive.isEmpty()
                     val subtitle = resources.getQuantityString(
                         R.plurals.reminder_archived_count,
                         archived.size,
@@ -167,7 +168,7 @@ class ReminderFragment : Fragment() {
         val dialogBinding = DialogArchivedRemindersBinding.inflate(layoutInflater)
         dialogBinding.archivedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         dialogBinding.archivedRecyclerView.adapter = archivedAdapter
-        val archived = latestReminders.filter { it.isArchived }
+        val archived = latestReminders.filter { it.isArchived }.orderByActivation()
         dialogBinding.archivedEmptyText.isVisible = archived.isEmpty()
         archivedDialogBinding = dialogBinding
         archivedDialog = AlertDialog.Builder(requireContext())
@@ -286,6 +287,27 @@ class ReminderFragment : Fragment() {
 
         dialogBinding.activeSwitch.isChecked = reminder?.isActive ?: true
         dialogBinding.completedSwitch.isChecked = reminder?.isCompleted ?: false
+        var archivedState = reminder?.isArchived ?: false
+        var suppressActiveSwitchChange = false
+        fun resetActiveSwitch() {
+            suppressActiveSwitchChange = true
+            dialogBinding.activeSwitch.isChecked = false
+            suppressActiveSwitchChange = false
+        }
+
+        dialogBinding.activeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (suppressActiveSwitchChange) {
+                return@setOnCheckedChangeListener
+            }
+            if (reminder?.isArchived == true && isChecked && archivedState) {
+                AlertDialog.Builder(requireContext())
+                    .setMessage(R.string.reminder_unarchive_prompt)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        resetActiveSwitch()
+                    }
+                    .show()
+            }
+        }
 
         val dialogTitle = if (reminder == null) {
             getString(R.string.reminder_add_button)
@@ -326,8 +348,8 @@ class ReminderFragment : Fragment() {
                     val completedChecked = (!selectedRecurrence.isRepeating) && dialogBinding.completedSwitch.isChecked
                     val activeChecked = dialogBinding.activeSwitch.isChecked
                     val shouldArchive = when {
-                        reminder?.isArchived == true -> true
                         completedChecked -> true
+                        archivedState -> true
                         else -> false
                     }
                     val updatedReminder = Reminder(
@@ -361,6 +383,12 @@ class ReminderFragment : Fragment() {
             mask = mask or (1 shl day.ordinal)
         }
         return mask
+    }
+
+    private fun List<Reminder>.orderByActivation(): List<Reminder> {
+        val active = filter { it.isActive }
+        val inactive = filterNot { it.isActive }
+        return active + inactive
     }
 
     override fun onDestroyView() {
