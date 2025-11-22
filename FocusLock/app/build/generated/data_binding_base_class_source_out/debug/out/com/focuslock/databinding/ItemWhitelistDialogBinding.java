@@ -21,20 +21,20 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final TextView appCountdown;
+
+  @NonNull
   public final ImageView appIcon;
 
   @NonNull
   public final TextView appLabel;
 
-  @NonNull
-  public final TextView appPackage;
-
-  private ItemWhitelistDialogBinding(@NonNull LinearLayout rootView, @NonNull ImageView appIcon,
-      @NonNull TextView appLabel, @NonNull TextView appPackage) {
+  private ItemWhitelistDialogBinding(@NonNull LinearLayout rootView, @NonNull TextView appCountdown,
+      @NonNull ImageView appIcon, @NonNull TextView appLabel) {
     this.rootView = rootView;
+    this.appCountdown = appCountdown;
     this.appIcon = appIcon;
     this.appLabel = appLabel;
-    this.appPackage = appPackage;
   }
 
   @Override
@@ -64,6 +64,12 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.appCountdown;
+      TextView appCountdown = ViewBindings.findChildViewById(rootView, id);
+      if (appCountdown == null) {
+        break missingId;
+      }
+
       id = R.id.appIcon;
       ImageView appIcon = ViewBindings.findChildViewById(rootView, id);
       if (appIcon == null) {
@@ -76,13 +82,8 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.appPackage;
-      TextView appPackage = ViewBindings.findChildViewById(rootView, id);
-      if (appPackage == null) {
-        break missingId;
-      }
-
-      return new ItemWhitelistDialogBinding((LinearLayout) rootView, appIcon, appLabel, appPackage);
+      return new ItemWhitelistDialogBinding((LinearLayout) rootView, appCountdown, appIcon,
+          appLabel);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

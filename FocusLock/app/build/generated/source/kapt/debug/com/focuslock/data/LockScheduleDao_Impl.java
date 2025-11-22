@@ -81,11 +81,11 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
   }
 
   @Override
-  public long insert(final LockScheduleEntity arg0) {
+  public long insert(final LockScheduleEntity schedule) {
     __db.assertNotSuspendingTransaction();
     __db.beginTransaction();
     try {
-      long _result = __insertionAdapterOfLockScheduleEntity.insertAndReturnId(arg0);
+      long _result = __insertionAdapterOfLockScheduleEntity.insertAndReturnId(schedule);
       __db.setTransactionSuccessful();
       return _result;
     } finally {
@@ -94,11 +94,11 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
   }
 
   @Override
-  public void delete(final LockScheduleEntity arg0) {
+  public void delete(final LockScheduleEntity schedule) {
     __db.assertNotSuspendingTransaction();
     __db.beginTransaction();
     try {
-      __deletionAdapterOfLockScheduleEntity.handle(arg0);
+      __deletionAdapterOfLockScheduleEntity.handle(schedule);
       __db.setTransactionSuccessful();
     } finally {
       __db.endTransaction();
@@ -106,11 +106,11 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
   }
 
   @Override
-  public void update(final LockScheduleEntity arg0) {
+  public void update(final LockScheduleEntity schedule) {
     __db.assertNotSuspendingTransaction();
     __db.beginTransaction();
     try {
-      __updateAdapterOfLockScheduleEntity.handle(arg0);
+      __updateAdapterOfLockScheduleEntity.handle(schedule);
       __db.setTransactionSuccessful();
     } finally {
       __db.endTransaction();

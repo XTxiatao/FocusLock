@@ -27,8 +27,10 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.NotificationCompat
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
+import com.focuslock.data.AppRestrictionPlanRepository
 import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
+import com.focuslock.model.AppRestrictionPlan
 import com.focuslock.model.WhitelistedApp
 import com.focuslock.util.LockStateTracker
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +41,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -57,14 +60,19 @@ class LockOverlayService : Service() {
     private lateinit var binding: OverlayViewBinding
     private lateinit var repository: com.focuslock.data.LockScheduleRepository
     private lateinit var whitelistRepository: com.focuslock.data.WhitelistedAppRepository
+    private lateinit var restrictionPlanRepository: AppRestrictionPlanRepository
     private var enabledSchedules = emptyList<LockSchedule>()
     private var whitelistedApps = emptyList<WhitelistedApp>()
+    private var appRestrictionPlans = emptyList<AppRestrictionPlan>()
     private lateinit var windowParams: WindowManager.LayoutParams
     private var foregroundStarted = false
     private var temporaryLockExpiryMillis = 0L
     private var evaluationRunning = false
     private var nextUnlockTimeMillis = 0L
     private var currentSchedule: LockSchedule? = null
+    private var activeRestrictions: Map<String, Long> = emptyMap()
+    private var whitelistDialog: AlertDialog? = null
+    private var whitelistDialogAdapter: WhitelistDialogAdapter? = null
     private var lastForegroundPackage: String? = null
 
     override fun onCreate() {
@@ -74,6 +82,7 @@ class LockOverlayService : Service() {
         val app = application as FocusLockApplication
         repository = app.lockScheduleRepository
         whitelistRepository = app.whitelistedAppRepository
+        restrictionPlanRepository = app.appRestrictionPlanRepository
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         binding = OverlayViewBinding.inflate(LayoutInflater.from(this))
         prepareOverlay()
@@ -94,6 +103,17 @@ class LockOverlayService : Service() {
             whitelistRepository.whitelistFlow.collect { apps ->
                 whitelistedApps = apps
                 Log.d(SERVICE_LOG_TAG, "Whitelist updated: ${apps.map { it.packageName }}")
+                evaluateSchedule()
+            }
+        }
+
+        serviceScope.launch {
+            restrictionPlanRepository.plansFlow.collect { plans ->
+                appRestrictionPlans = plans
+                Log.d(
+                    SERVICE_LOG_TAG,
+                    "Restriction plans updated: ${plans.map { it.id to it.apps.map(WhitelistedApp::packageName) }}"
+                )
                 evaluateSchedule()
             }
         }
@@ -144,18 +164,21 @@ class LockOverlayService : Service() {
 
     private fun evaluateSchedule() {
         val tempActive = isTemporaryLockActive()
-        if (!tempActive && enabledSchedules.isEmpty()) {
+        val now = LocalDateTime.now()
+        activeRestrictions = computeActiveRestrictions(now)
+
+        if (!tempActive && enabledSchedules.isEmpty() && activeRestrictions.isEmpty()) {
             Log.d(
                 SERVICE_LOG_TAG,
-                "No active schedules or temporary lock; keeping service alive without overlay"
+                "No active schedules, temporary lock, or app restrictions; keeping service idle"
             )
             hideOverlay()
             stopCountdown()
             LockStateTracker.enforceHome = false
+            refreshWhitelistDialog()
             return
         }
 
-        val now = LocalDateTime.now()
         val activeSchedule = enabledSchedules.firstOrNull { it.matches(now) }
         val scheduleActive = activeSchedule != null
         val overlayState = if (overlayAdded) "visible" else "hidden"
@@ -165,26 +188,29 @@ class LockOverlayService : Service() {
             LockStateTracker.currentForegroundPackage = foregroundPackage
         }
         val foregroundWhitelisted = isPackageWhitelisted(foregroundPackage)
+        val foregroundRestricted = foregroundPackage != null && activeRestrictions.containsKey(foregroundPackage)
         Log.d(
             SERVICE_LOG_TAG,
             "Evaluating now=$timeLabel tempActive=$tempActive scheduleActive=$scheduleActive overlay=$overlayState enabledCount=${enabledSchedules.size} " +
-                "foreground=${foregroundPackage ?: "unknown"} whitelisted=$foregroundWhitelisted"
+                "foreground=${foregroundPackage ?: "unknown"} whitelisted=$foregroundWhitelisted restricted=$foregroundRestricted restrictions=${activeRestrictions.size}"
         )
         currentSchedule = activeSchedule
-        if (foregroundWhitelisted) {
+        if (foregroundWhitelisted && !foregroundRestricted) {
             Log.d(SERVICE_LOG_TAG, "Foreground app is whitelisted, suppressing overlay")
             hideOverlay()
             stopCountdown()
             LockStateTracker.enforceHome = false
+            refreshWhitelistDialog()
             return
         }
 
-        val shouldLock = tempActive || scheduleActive
+        val shouldLock = tempActive || scheduleActive || foregroundRestricted
         LockStateTracker.enforceHome = shouldLock
         if (shouldLock) {
             showOverlay()
             val targetMillis = when {
                 tempActive -> temporaryLockExpiryMillis
+                foregroundRestricted -> activeRestrictions[foregroundPackage] ?: System.currentTimeMillis()
                 activeSchedule != null -> planEndMillis(activeSchedule, now)
                 else -> System.currentTimeMillis()
             }
@@ -193,6 +219,7 @@ class LockOverlayService : Service() {
             hideOverlay()
             stopCountdown()
         }
+        refreshWhitelistDialog()
     }
 
     private fun showOverlay() {
@@ -239,30 +266,63 @@ class LockOverlayService : Service() {
             return
         }
 
+        whitelistDialog?.dismiss()
+
         val builder = AlertDialog.Builder(
             ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         )
             .setTitle(R.string.select_whitelist_app_title)
-        val adapter = WhitelistDialogAdapter(whitelistedApps)
+        val adapter = WhitelistDialogAdapter(buildWhitelistDialogItems())
         builder.setAdapter(adapter) { dialog, which ->
-            val app = whitelistedApps.getOrNull(which) ?: return@setAdapter
-            val launchIntent = packageManager.getLaunchIntentForPackage(app.packageName)
+            val item = adapter.getItem(which)
+            if (item.isRestricted()) {
+                val unlockTime = item.restrictedUntil?.let { formatUnlockClock(it) } ?: "later"
+                Toast.makeText(
+                    this,
+                    getString(R.string.restriction_app_not_allowed, unlockTime),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setAdapter
+            }
+            val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
             if (launchIntent != null) {
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(launchIntent)
             } else {
-                Toast.makeText(this, "Cannot launch ${app.label}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Cannot launch ${item.app.label}", Toast.LENGTH_SHORT).show()
             }
             dialog.dismiss()
         }
         val dialog = builder.create()
+        whitelistDialogAdapter = adapter
+        whitelistDialog = dialog
         dialog.window?.setType(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else
                 WindowManager.LayoutParams.TYPE_PHONE
         )
+        dialog.setOnDismissListener {
+            whitelistDialogAdapter = null
+            whitelistDialog = null
+        }
         dialog.show()
+    }
+
+    private fun refreshWhitelistDialog() {
+        val items = buildWhitelistDialogItems()
+        mainHandler.post {
+            whitelistDialogAdapter?.update(items)
+        }
+    }
+
+    private fun buildWhitelistDialogItems(): List<WhitelistDialogItem> {
+        val now = System.currentTimeMillis()
+        return whitelistedApps.map { app ->
+            val unlock = activeRestrictions[app.packageName]
+            val validUnlock = unlock?.takeIf { it > now }
+            WhitelistDialogItem(app, validUnlock)
+        }
     }
 
     private fun startCountdownFor(targetMillis: Long) {
@@ -296,25 +356,50 @@ class LockOverlayService : Service() {
         return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
 
+    private fun formatUnlockClock(unlockMillis: Long): String {
+        val localTime = Instant.ofEpochMilli(unlockMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+        return String.format("%02d:%02d", localTime.hour, localTime.minute)
+    }
+
     private fun planEndMillis(schedule: LockSchedule, now: LocalDateTime): Long {
-        val nextEndDay = if (schedule.startMinutes <= schedule.endMinutes) {
+        return calculateEndMillis(schedule.startMinutes, schedule.endMinutes, now)
+    }
+
+    private fun calculateEndMillis(startMinutes: Int, endMinutes: Int, now: LocalDateTime): Long {
+        val nextEndDay = if (startMinutes <= endMinutes) {
             now
         } else {
             val currentMinute = now.hour * 60 + now.minute
-            if (currentMinute >= schedule.startMinutes) {
+            if (currentMinute >= startMinutes) {
                 now.plusDays(1)
             } else {
                 now
             }
         }
-        val endHour = schedule.endMinutes / 60
-        val endMinute = schedule.endMinutes % 60
+        val endHour = endMinutes / 60
+        val endMinute = endMinutes % 60
         val endDateTime = nextEndDay
             .withHour(endHour)
             .withMinute(endMinute)
             .withSecond(0)
             .withNano(0)
         return endDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    }
+
+    private fun computeActiveRestrictions(now: LocalDateTime): Map<String, Long> {
+        val restrictionMap = mutableMapOf<String, Long>()
+        appRestrictionPlans.filter { it.matches(now) }.forEach { plan ->
+            val endMillis = calculateEndMillis(plan.startMinutes, plan.endMinutes, now)
+            plan.apps.forEach { app ->
+                val existing = restrictionMap[app.packageName]
+                if (existing == null || endMillis > existing) {
+                    restrictionMap[app.packageName] = endMillis
+                }
+            }
+        }
+        return restrictionMap
     }
 
     private fun handleTemporaryLockIntent(intent: Intent?) {
@@ -376,24 +461,48 @@ class LockOverlayService : Service() {
     }
 
     private inner class WhitelistDialogAdapter(
-        private val apps: List<WhitelistedApp>
+        private var items: List<WhitelistDialogItem>
     ) : android.widget.BaseAdapter() {
-        override fun getCount(): Int = apps.size
-        override fun getItem(position: Int): WhitelistedApp = apps[position]
+        override fun getCount(): Int = items.size
+        override fun getItem(position: Int): WhitelistDialogItem = items[position]
         override fun getItemId(position: Int): Long = position.toLong()
+
+        fun update(newItems: List<WhitelistDialogItem>) {
+            items = newItems
+            notifyDataSetChanged()
+        }
 
         override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
             val view = convertView ?: LayoutInflater.from(this@LockOverlayService)
                 .inflate(R.layout.item_whitelist_dialog, parent, false)
-            val app = getItem(position)
+            val item = getItem(position)
             val iconView = view.findViewById<ImageView>(R.id.appIcon)
             val labelView = view.findViewById<TextView>(R.id.appLabel)
-            val packageView = view.findViewById<TextView>(R.id.appPackage)
-            val icon = runCatching { packageManager.getApplicationIcon(app.packageName) }.getOrNull()
+            val countdownView = view.findViewById<TextView>(R.id.appCountdown)
+            val icon = runCatching { packageManager.getApplicationIcon(item.app.packageName) }.getOrNull()
             iconView.setImageDrawable(icon ?: getDrawable(android.R.drawable.sym_def_app_icon))
-            labelView.text = app.label
-            packageView.text = app.packageName
+            labelView.text = item.app.label
+            val now = System.currentTimeMillis()
+            val restricted = item.isRestricted(now)
+            if (restricted && item.restrictedUntil != null) {
+                val remaining = item.restrictedUntil - now
+                countdownView.visibility = View.VISIBLE
+                countdownView.text = getString(R.string.restriction_available_in, formatDuration(remaining))
+                view.alpha = 0.4f
+            } else {
+                countdownView.visibility = View.GONE
+                view.alpha = 1f
+            }
             return view
+        }
+    }
+
+    private data class WhitelistDialogItem(
+        val app: WhitelistedApp,
+        val restrictedUntil: Long?
+    ) {
+        fun isRestricted(now: Long = System.currentTimeMillis()): Boolean {
+            return restrictedUntil != null && restrictedUntil > now
         }
     }
 
@@ -455,6 +564,7 @@ class LockOverlayService : Service() {
     override fun onDestroy() {
         Log.d(SERVICE_LOG_TAG, "onDestroy")
         hideOverlay()
+        whitelistDialog?.dismiss()
         serviceScope.cancel()
         LockStateTracker.enforceHome = false
         super.onDestroy()

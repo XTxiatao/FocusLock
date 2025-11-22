@@ -36,21 +36,29 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
 
   private volatile WhitelistedAppDao _whitelistedAppDao;
 
+  private volatile AppRestrictionPlanDao _appRestrictionPlanDao;
+
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `lock_schedule` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_minutes` INTEGER NOT NULL, `end_minutes` INTEGER NOT NULL, `days_bitmask` INTEGER NOT NULL, `is_enabled` INTEGER NOT NULL)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `whitelisted_apps` (`packageName` TEXT NOT NULL, `label` TEXT NOT NULL, PRIMARY KEY(`packageName`))");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `app_restriction_plans` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `startMinutes` INTEGER NOT NULL, `endMinutes` INTEGER NOT NULL, `daysBitmask` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `app_restriction_plan_apps` (`planId` INTEGER NOT NULL, `packageName` TEXT NOT NULL, PRIMARY KEY(`planId`, `packageName`), FOREIGN KEY(`planId`) REFERENCES `app_restriction_plans`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`packageName`) REFERENCES `whitelisted_apps`(`packageName`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_planId` ON `app_restriction_plan_apps` (`planId`)");
+        _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_packageName` ON `app_restriction_plan_apps` (`packageName`)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b1f4613ff74903768bad4f3a2e021a4')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '52e85d74bdc4f15733985cf70abdbed8')");
       }
 
       @Override
       public void dropAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("DROP TABLE IF EXISTS `lock_schedule`");
         _db.execSQL("DROP TABLE IF EXISTS `whitelisted_apps`");
+        _db.execSQL("DROP TABLE IF EXISTS `app_restriction_plans`");
+        _db.execSQL("DROP TABLE IF EXISTS `app_restriction_plan_apps`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -70,6 +78,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
       @Override
       public void onOpen(SupportSQLiteDatabase _db) {
         mDatabase = _db;
+        _db.execSQL("PRAGMA foreign_keys = ON");
         internalInitInvalidationTracker(_db);
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
@@ -116,9 +125,40 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
                   + " Expected:\n" + _infoWhitelistedApps + "\n"
                   + " Found:\n" + _existingWhitelistedApps);
         }
+        final HashMap<String, TableInfo.Column> _columnsAppRestrictionPlans = new HashMap<String, TableInfo.Column>(5);
+        _columnsAppRestrictionPlans.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppRestrictionPlans.put("startMinutes", new TableInfo.Column("startMinutes", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppRestrictionPlans.put("endMinutes", new TableInfo.Column("endMinutes", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppRestrictionPlans.put("daysBitmask", new TableInfo.Column("daysBitmask", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppRestrictionPlans.put("isEnabled", new TableInfo.Column("isEnabled", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysAppRestrictionPlans = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesAppRestrictionPlans = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoAppRestrictionPlans = new TableInfo("app_restriction_plans", _columnsAppRestrictionPlans, _foreignKeysAppRestrictionPlans, _indicesAppRestrictionPlans);
+        final TableInfo _existingAppRestrictionPlans = TableInfo.read(_db, "app_restriction_plans");
+        if (! _infoAppRestrictionPlans.equals(_existingAppRestrictionPlans)) {
+          return new RoomOpenHelper.ValidationResult(false, "app_restriction_plans(com.focuslock.data.AppRestrictionPlanEntity).\n"
+                  + " Expected:\n" + _infoAppRestrictionPlans + "\n"
+                  + " Found:\n" + _existingAppRestrictionPlans);
+        }
+        final HashMap<String, TableInfo.Column> _columnsAppRestrictionPlanApps = new HashMap<String, TableInfo.Column>(2);
+        _columnsAppRestrictionPlanApps.put("planId", new TableInfo.Column("planId", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppRestrictionPlanApps.put("packageName", new TableInfo.Column("packageName", "TEXT", true, 2, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysAppRestrictionPlanApps = new HashSet<TableInfo.ForeignKey>(2);
+        _foreignKeysAppRestrictionPlanApps.add(new TableInfo.ForeignKey("app_restriction_plans", "CASCADE", "NO ACTION",Arrays.asList("planId"), Arrays.asList("id")));
+        _foreignKeysAppRestrictionPlanApps.add(new TableInfo.ForeignKey("whitelisted_apps", "CASCADE", "NO ACTION",Arrays.asList("packageName"), Arrays.asList("packageName")));
+        final HashSet<TableInfo.Index> _indicesAppRestrictionPlanApps = new HashSet<TableInfo.Index>(2);
+        _indicesAppRestrictionPlanApps.add(new TableInfo.Index("index_app_restriction_plan_apps_planId", false, Arrays.asList("planId"), Arrays.asList("ASC")));
+        _indicesAppRestrictionPlanApps.add(new TableInfo.Index("index_app_restriction_plan_apps_packageName", false, Arrays.asList("packageName"), Arrays.asList("ASC")));
+        final TableInfo _infoAppRestrictionPlanApps = new TableInfo("app_restriction_plan_apps", _columnsAppRestrictionPlanApps, _foreignKeysAppRestrictionPlanApps, _indicesAppRestrictionPlanApps);
+        final TableInfo _existingAppRestrictionPlanApps = TableInfo.read(_db, "app_restriction_plan_apps");
+        if (! _infoAppRestrictionPlanApps.equals(_existingAppRestrictionPlanApps)) {
+          return new RoomOpenHelper.ValidationResult(false, "app_restriction_plan_apps(com.focuslock.data.AppRestrictionPlanAppCrossRef).\n"
+                  + " Expected:\n" + _infoAppRestrictionPlanApps + "\n"
+                  + " Found:\n" + _existingAppRestrictionPlanApps);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "5b1f4613ff74903768bad4f3a2e021a4", "552d4feac33cec04583383daf0cb928c");
+    }, "52e85d74bdc4f15733985cf70abdbed8", "b1f6aceb3152c6d8e2865e9f42abefc6");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -131,20 +171,32 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule","whitelisted_apps");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule","whitelisted_apps","app_restriction_plans","app_restriction_plan_apps");
   }
 
   @Override
   public void clearAllTables() {
     super.assertNotMainThread();
     final SupportSQLiteDatabase _db = super.getOpenHelper().getWritableDatabase();
+    boolean _supportsDeferForeignKeys = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
     try {
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = FALSE");
+      }
       super.beginTransaction();
+      if (_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA defer_foreign_keys = TRUE");
+      }
       _db.execSQL("DELETE FROM `lock_schedule`");
       _db.execSQL("DELETE FROM `whitelisted_apps`");
+      _db.execSQL("DELETE FROM `app_restriction_plans`");
+      _db.execSQL("DELETE FROM `app_restriction_plan_apps`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = TRUE");
+      }
       _db.query("PRAGMA wal_checkpoint(FULL)").close();
       if (!_db.inTransaction()) {
         _db.execSQL("VACUUM");
@@ -157,6 +209,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(LockScheduleDao.class, LockScheduleDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(WhitelistedAppDao.class, WhitelistedAppDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(AppRestrictionPlanDao.class, AppRestrictionPlanDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -196,6 +249,20 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
           _whitelistedAppDao = new WhitelistedAppDao_Impl(this);
         }
         return _whitelistedAppDao;
+      }
+    }
+  }
+
+  @Override
+  public AppRestrictionPlanDao appRestrictionPlanDao() {
+    if (_appRestrictionPlanDao != null) {
+      return _appRestrictionPlanDao;
+    } else {
+      synchronized(this) {
+        if(_appRestrictionPlanDao == null) {
+          _appRestrictionPlanDao = new AppRestrictionPlanDao_Impl(this);
+        }
+        return _appRestrictionPlanDao;
       }
     }
   }

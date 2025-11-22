@@ -35,7 +35,6 @@ class WhitelistDisplayAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(app: WhitelistedApp) {
             binding.appLabel.text = app.label
-            binding.appPackage.text = app.packageName
             val icon = iconProvider(app.packageName)
             binding.appIcon.setImageDrawable(
                 icon ?: ContextCompat.getDrawable(

@@ -22,6 +22,22 @@
     <string name="save_plan_button">Save Plan</string>
     <string name="temporary_lock_section_title">Temporary Lock</string>
     <string name="configure_whitelist">Configure Whitelist</string>
+    <string name="current_whitelist">Whitelist</string>
     <string name="open_whitelist_app">Open allowed app</string>
     <string name="select_whitelist_app_title">Allowed apps</string>
+    <string name="app_plan_section_title">Restriction Plans</string>
+    <string name="add_restriction_plan">Add restriction plan</string>
+    <string name="select_restricted_apps">Select apps</string>
+    <string name="selected_app_count">Selected: %1$d</string>
+    <string name="restriction_plan_dialog_title">Restrict apps</string>
+    <string name="restriction_plan_saved">Restriction plan saved</string>
+    <string name="restriction_plan_deleted">Restriction plan deleted</string>
+    <string name="restriction_app_not_allowed">This app is paused until %1$s</string>
+    <string name="restriction_requires_whitelist">Whitelist is empty. Add allowed apps first.</string>
+    <string name="enable_plan">Enable</string>
+    <string name="disable_plan">Disable</string>
+    <string name="restricted_app_list_title">Apps</string>
+    <string name="select_days_hint">Select at least one day</string>
+    <string name="select_apps_hint">Select at least one app</string>
+    <string name="restriction_available_in">Ready in %1$s</string>
 </resources>

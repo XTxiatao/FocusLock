@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,16 +22,43 @@ public final class FragmentAppLockBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final Button addAppPlanButton;
+
+  @NonNull
+  public final LinearLayout appLockPlanContainer;
+
+  @NonNull
+  public final RecyclerView appPlanRecyclerView;
+
+  @NonNull
+  public final TextView appPlanTitle;
+
+  @NonNull
   public final Button configureWhitelistButton;
+
+  @NonNull
+  public final LinearLayout whitelistContainer;
 
   @NonNull
   public final RecyclerView whitelistRecyclerView;
 
-  private FragmentAppLockBinding(@NonNull LinearLayout rootView,
-      @NonNull Button configureWhitelistButton, @NonNull RecyclerView whitelistRecyclerView) {
+  @NonNull
+  public final TextView whitelistTitle;
+
+  private FragmentAppLockBinding(@NonNull LinearLayout rootView, @NonNull Button addAppPlanButton,
+      @NonNull LinearLayout appLockPlanContainer, @NonNull RecyclerView appPlanRecyclerView,
+      @NonNull TextView appPlanTitle, @NonNull Button configureWhitelistButton,
+      @NonNull LinearLayout whitelistContainer, @NonNull RecyclerView whitelistRecyclerView,
+      @NonNull TextView whitelistTitle) {
     this.rootView = rootView;
+    this.addAppPlanButton = addAppPlanButton;
+    this.appLockPlanContainer = appLockPlanContainer;
+    this.appPlanRecyclerView = appPlanRecyclerView;
+    this.appPlanTitle = appPlanTitle;
     this.configureWhitelistButton = configureWhitelistButton;
+    this.whitelistContainer = whitelistContainer;
     this.whitelistRecyclerView = whitelistRecyclerView;
+    this.whitelistTitle = whitelistTitle;
   }
 
   @Override
@@ -60,9 +88,39 @@ public final class FragmentAppLockBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.addAppPlanButton;
+      Button addAppPlanButton = ViewBindings.findChildViewById(rootView, id);
+      if (addAppPlanButton == null) {
+        break missingId;
+      }
+
+      id = R.id.appLockPlanContainer;
+      LinearLayout appLockPlanContainer = ViewBindings.findChildViewById(rootView, id);
+      if (appLockPlanContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.appPlanRecyclerView;
+      RecyclerView appPlanRecyclerView = ViewBindings.findChildViewById(rootView, id);
+      if (appPlanRecyclerView == null) {
+        break missingId;
+      }
+
+      id = R.id.appPlanTitle;
+      TextView appPlanTitle = ViewBindings.findChildViewById(rootView, id);
+      if (appPlanTitle == null) {
+        break missingId;
+      }
+
       id = R.id.configureWhitelistButton;
       Button configureWhitelistButton = ViewBindings.findChildViewById(rootView, id);
       if (configureWhitelistButton == null) {
+        break missingId;
+      }
+
+      id = R.id.whitelistContainer;
+      LinearLayout whitelistContainer = ViewBindings.findChildViewById(rootView, id);
+      if (whitelistContainer == null) {
         break missingId;
       }
 
@@ -72,8 +130,15 @@ public final class FragmentAppLockBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentAppLockBinding((LinearLayout) rootView, configureWhitelistButton,
-          whitelistRecyclerView);
+      id = R.id.whitelistTitle;
+      TextView whitelistTitle = ViewBindings.findChildViewById(rootView, id);
+      if (whitelistTitle == null) {
+        break missingId;
+      }
+
+      return new FragmentAppLockBinding((LinearLayout) rootView, addAppPlanButton,
+          appLockPlanContainer, appPlanRecyclerView, appPlanTitle, configureWhitelistButton,
+          whitelistContainer, whitelistRecyclerView, whitelistTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

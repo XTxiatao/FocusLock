@@ -26,15 +26,11 @@ public final class ItemWhitelistAppBinding implements ViewBinding {
   @NonNull
   public final TextView appLabel;
 
-  @NonNull
-  public final TextView appPackage;
-
   private ItemWhitelistAppBinding(@NonNull LinearLayout rootView, @NonNull ImageView appIcon,
-      @NonNull TextView appLabel, @NonNull TextView appPackage) {
+      @NonNull TextView appLabel) {
     this.rootView = rootView;
     this.appIcon = appIcon;
     this.appLabel = appLabel;
-    this.appPackage = appPackage;
   }
 
   @Override
@@ -76,13 +72,7 @@ public final class ItemWhitelistAppBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.appPackage;
-      TextView appPackage = ViewBindings.findChildViewById(rootView, id);
-      if (appPackage == null) {
-        break missingId;
-      }
-
-      return new ItemWhitelistAppBinding((LinearLayout) rootView, appIcon, appLabel, appPackage);
+      return new ItemWhitelistAppBinding((LinearLayout) rootView, appIcon, appLabel);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
