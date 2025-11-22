@@ -2846,6 +2846,7 @@ dimen tooltip_precise_anchor_threshold
 dimen tooltip_vertical_padding
 dimen tooltip_y_offset_non_touch
 dimen tooltip_y_offset_touch
+dimen whitelist_dialog_max_height
 drawable abc_ab_share_pack_mtrl_alpha
 drawable abc_action_bar_item_background_material
 drawable abc_btn_borderless_material
@@ -3116,6 +3117,7 @@ id appCountdown
 id appIcon
 id appLabel
 id appListContainer
+id appListScroll
 id appLockPlanContainer
 id appPlanRecyclerView
 id appPlanTitle
@@ -3439,6 +3441,7 @@ id selectAppsButton
 id select_dialog_listview
 id selected
 id selectedAppsContainer
+id selectedAppsScroll
 id selectedAppsValue
 id selection_type
 id shortcut
@@ -3955,6 +3958,7 @@ string restriction_available_in
 string restriction_plan_deleted
 string restriction_plan_dialog_title
 string restriction_plan_saved
+string restriction_requires_apps
 string restriction_requires_whitelist
 string save_plan_button
 string search_menu_title

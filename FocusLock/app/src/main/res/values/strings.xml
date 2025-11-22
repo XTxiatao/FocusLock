@@ -39,6 +39,7 @@
     <string name="confirm_delete_restriction_plan">Delete this restriction?</string>
     <string name="restriction_app_not_allowed">This app is paused until %1$s</string>
     <string name="restriction_requires_whitelist">Whitelist is empty. Add allowed apps first.</string>
+    <string name="restriction_requires_apps">Add at least one app before enabling this plan.</string>
     <string name="select_days_hint">Select at least one day</string>
     <string name="select_apps_hint">Select at least one app</string>
     <string name="restriction_available_in">Ready in %1$s</string>

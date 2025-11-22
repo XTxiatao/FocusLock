@@ -7,6 +7,7 @@ color purple_500
 color teal_200
 color white
 dimen app_icon_item_width
+dimen whitelist_dialog_max_height
 drawable panel_background
 id addAppPlanButton
 id addPlanButton
@@ -15,6 +16,7 @@ id appCountdown
 id appIcon
 id appLabel
 id appListContainer
+id appListScroll
 id appLockPlanContainer
 id appPlanRecyclerView
 id appPlanTitle
@@ -49,6 +51,7 @@ id planRange
 id scheduleList
 id selectAppsButton
 id selectedAppsContainer
+id selectedAppsScroll
 id selectedAppsValue
 id startHourPicker
 id startMinutePicker
@@ -109,6 +112,7 @@ string restriction_available_in
 string restriction_plan_deleted
 string restriction_plan_dialog_title
 string restriction_plan_saved
+string restriction_requires_apps
 string restriction_requires_whitelist
 string save_plan_button
 string select_apps_hint

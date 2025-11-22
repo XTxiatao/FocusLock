@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:layout_margin="4dp">
 
     <ImageView
         android:id="@+id/appIcon"
@@ -19,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="App"
         android:textColor="@color/white"
         android:textStyle="bold" />

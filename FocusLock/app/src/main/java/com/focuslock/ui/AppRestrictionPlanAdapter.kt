@@ -3,10 +3,10 @@ package com.focuslock.ui
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.flexbox.FlexboxLayout
 import com.focuslock.R
 import com.focuslock.databinding.ItemAppRestrictionPlanBinding
 import com.focuslock.databinding.ItemWhitelistAppBinding
@@ -64,9 +64,9 @@ class AppRestrictionPlanAdapter(
 
             binding.appListContainer.removeAllViews()
             if (plan.apps.isEmpty()) {
-                binding.appListContainer.isVisible = false
+                binding.appListScroll.isVisible = false
             } else {
-                binding.appListContainer.isVisible = true
+                binding.appListScroll.isVisible = true
                 val inflater = LayoutInflater.from(context)
                 plan.apps.forEach { app ->
                     val appBinding =
@@ -76,8 +76,8 @@ class AppRestrictionPlanAdapter(
                     appBinding.appIcon.setImageDrawable(
                         icon ?: ContextCompat.getDrawable(context, android.R.drawable.sym_def_app_icon)
                     )
-                    val params = FlexboxLayout.LayoutParams(
-                        context.resources.getDimensionPixelSize(R.dimen.app_icon_item_width),
+                    val params = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     ).apply {
                         setMargins(8, 8, 8, 8)

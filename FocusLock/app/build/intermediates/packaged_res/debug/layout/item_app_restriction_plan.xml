@@ -46,12 +46,20 @@
         android:textColor="@color/teal_200"
         android:text="Mon Tue" />
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/appListContainer"
+    <HorizontalScrollView
+        android:id="@+id/appListScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:alignItems="flex_start"
-        app:flexWrap="wrap" />
+        android:visibility="gone"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:id="@+id/appListContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
 
 </LinearLayout>

@@ -12,15 +12,15 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.flexbox.FlexboxLayout
+import android.widget.LinearLayout
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.databinding.DialogAddAppPlanBinding
@@ -33,7 +33,6 @@ import com.focuslock.model.WhitelistedApp
 import com.focuslock.service.LockOverlayService
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import kotlin.math.max
 
 class AppLockFragment : Fragment() {
 
@@ -98,7 +97,17 @@ class AppLockFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 restrictionPlanRepository.plansFlow.collect { plans ->
-                    appPlanAdapter.submitList(plans)
+                    val sanitized = plans.map { plan ->
+                        if (plan.isEnabled && plan.apps.isEmpty()) {
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                restrictionPlanRepository.updatePlan(plan.copy(isEnabled = false))
+                            }
+                            plan.copy(isEnabled = false)
+                        } else {
+                            plan
+                        }
+                    }
+                    appPlanAdapter.submitList(sanitized)
                 }
             }
         }
@@ -291,23 +300,29 @@ class AppLockFragment : Fragment() {
         selectedPackages.mapNotNull { pkg ->
             latestWhitelist.firstOrNull { it.packageName == pkg }
         }.forEach { app ->
-            val itemBinding = ItemWhitelistAppBinding.inflate(inflater, dialogBinding.selectedAppsContainer, false)
+            val itemBinding =
+                ItemWhitelistAppBinding.inflate(inflater, dialogBinding.selectedAppsContainer, false)
             itemBinding.appLabel.text = app.label
             val icon = loadAppIcon(app.packageName)
             itemBinding.appIcon.setImageDrawable(
                 icon ?: ContextCompat.getDrawable(requireContext(), defaultIcon)
             )
-            val params = FlexboxLayout.LayoutParams(
-                resources.getDimensionPixelSize(R.dimen.app_icon_item_width),
+            val params = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 setMargins(8, 8, 8, 8)
             }
             dialogBinding.selectedAppsContainer.addView(itemBinding.root, params)
         }
+        dialogBinding.selectedAppsScroll.isVisible = selectedPackages.isNotEmpty()
     }
 
     private fun toggleRestrictionPlan(plan: AppRestrictionPlan) {
+        if (!plan.isEnabled && plan.apps.isEmpty()) {
+            Toast.makeText(requireContext(), R.string.restriction_requires_apps, Toast.LENGTH_SHORT).show()
+            return
+        }
         val updated = plan.copy(isEnabled = !plan.isEnabled)
         viewLifecycleOwner.lifecycleScope.launch {
             restrictionPlanRepository.updatePlan(updated)
@@ -338,20 +353,8 @@ class AppLockFragment : Fragment() {
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 
-    private fun RecyclerView.applyResponsiveGrid(
-        itemWidthPx: Int = resources.getDimensionPixelSize(R.dimen.app_icon_item_width)
-    ) {
-        val manager = GridLayoutManager(context, 1)
-        layoutManager = manager
-        fun updateSpan() {
-            if (width == 0) return
-            val span = max(1, width / itemWidthPx)
-            if (manager.spanCount != span) {
-                manager.spanCount = span
-            }
-        }
-        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateSpan() }
-        doOnLayout { updateSpan() }
+    private fun RecyclerView.applyResponsiveGrid() {
+        layoutManager = GridLayoutManager(context, 4)
     }
 
     private inner class AppSelectionAdapter(

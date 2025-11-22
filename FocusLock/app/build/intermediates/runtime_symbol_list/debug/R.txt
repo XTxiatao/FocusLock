@@ -2845,6 +2845,7 @@ int dimen tooltip_precise_anchor_threshold 0x7f06031f
 int dimen tooltip_vertical_padding 0x7f060320
 int dimen tooltip_y_offset_non_touch 0x7f060321
 int dimen tooltip_y_offset_touch 0x7f060322
+int dimen whitelist_dialog_max_height 0x7f060324
 int drawable abc_ab_share_pack_mtrl_alpha 0x7f070028
 int drawable abc_action_bar_item_background_material 0x7f070029
 int drawable abc_btn_borderless_material 0x7f07002a
@@ -3115,6 +3116,7 @@ int id appCountdown 0x7f0801f0
 int id appIcon 0x7f08004b
 int id appLabel 0x7f08004c
 int id appListContainer 0x7f0801f1
+int id appListScroll 0x7f080211
 int id appLockPlanContainer 0x7f0801f3
 int id appPlanRecyclerView 0x7f0801f4
 int id appPlanTitle 0x7f0801f5
@@ -3438,6 +3440,7 @@ int id selectAppsButton 0x7f0801f9
 int id select_dialog_listview 0x7f080182
 int id selected 0x7f080183
 int id selectedAppsContainer 0x7f0801fa
+int id selectedAppsScroll 0x7f080210
 int id selectedAppsValue 0x7f0801fb
 int id selection_type 0x7f080184
 int id shortcut 0x7f080185
@@ -3954,6 +3957,7 @@ int string restriction_available_in 0x7f0f00c5
 int string restriction_plan_deleted 0x7f0f00c6
 int string restriction_plan_dialog_title 0x7f0f00c7
 int string restriction_plan_saved 0x7f0f00c8
+int string restriction_requires_apps 0x7f0f00db
 int string restriction_requires_whitelist 0x7f0f00c9
 int string save_plan_button 0x7f0f00ad
 int string search_menu_title 0x7f0f00ae

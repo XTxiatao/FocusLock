@@ -4,6 +4,7 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -11,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
-import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,7 +22,10 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final FlexboxLayout appListContainer;
+  public final LinearLayout appListContainer;
+
+  @NonNull
+  public final HorizontalScrollView appListScroll;
 
   @NonNull
   public final TextView planDays;
@@ -34,10 +37,12 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   public final MaterialButton toggleButton;
 
   private ItemAppRestrictionPlanBinding(@NonNull LinearLayout rootView,
-      @NonNull FlexboxLayout appListContainer, @NonNull TextView planDays,
-      @NonNull TextView planRange, @NonNull MaterialButton toggleButton) {
+      @NonNull LinearLayout appListContainer, @NonNull HorizontalScrollView appListScroll,
+      @NonNull TextView planDays, @NonNull TextView planRange,
+      @NonNull MaterialButton toggleButton) {
     this.rootView = rootView;
     this.appListContainer = appListContainer;
+    this.appListScroll = appListScroll;
     this.planDays = planDays;
     this.planRange = planRange;
     this.toggleButton = toggleButton;
@@ -71,8 +76,14 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.appListContainer;
-      FlexboxLayout appListContainer = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout appListContainer = ViewBindings.findChildViewById(rootView, id);
       if (appListContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.appListScroll;
+      HorizontalScrollView appListScroll = ViewBindings.findChildViewById(rootView, id);
+      if (appListScroll == null) {
         break missingId;
       }
 
@@ -94,8 +105,8 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemAppRestrictionPlanBinding((LinearLayout) rootView, appListContainer, planDays,
-          planRange, toggleButton);
+      return new ItemAppRestrictionPlanBinding((LinearLayout) rootView, appListContainer,
+          appListScroll, planDays, planRange, toggleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

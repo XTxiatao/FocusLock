@@ -2,12 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/whitelistRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false" />
+        android:layout_height="@dimen/whitelist_dialog_max_height"
+        android:clipToPadding="false"
+        android:overScrollMode="always"
+        android:nestedScrollingEnabled="true" />
 
 </FrameLayout>

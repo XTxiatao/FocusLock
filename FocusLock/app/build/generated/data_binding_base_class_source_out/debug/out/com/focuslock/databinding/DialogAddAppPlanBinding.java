@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -13,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
-import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import java.lang.NullPointerException;
@@ -58,7 +59,10 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
   public final Button selectAppsButton;
 
   @NonNull
-  public final FlexboxLayout selectedAppsContainer;
+  public final LinearLayout selectedAppsContainer;
+
+  @NonNull
+  public final HorizontalScrollView selectedAppsScroll;
 
   @NonNull
   public final TextView selectedAppsValue;
@@ -75,8 +79,9 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
       @NonNull Chip dialogChipTuesday, @NonNull Chip dialogChipWednesday,
       @NonNull ChipGroup dialogDayGroup, @NonNull NumberPicker endHourPicker,
       @NonNull NumberPicker endMinutePicker, @NonNull Button selectAppsButton,
-      @NonNull FlexboxLayout selectedAppsContainer, @NonNull TextView selectedAppsValue,
-      @NonNull NumberPicker startHourPicker, @NonNull NumberPicker startMinutePicker) {
+      @NonNull LinearLayout selectedAppsContainer, @NonNull HorizontalScrollView selectedAppsScroll,
+      @NonNull TextView selectedAppsValue, @NonNull NumberPicker startHourPicker,
+      @NonNull NumberPicker startMinutePicker) {
     this.rootView = rootView;
     this.dialogChipFriday = dialogChipFriday;
     this.dialogChipMonday = dialogChipMonday;
@@ -90,6 +95,7 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
     this.endMinutePicker = endMinutePicker;
     this.selectAppsButton = selectAppsButton;
     this.selectedAppsContainer = selectedAppsContainer;
+    this.selectedAppsScroll = selectedAppsScroll;
     this.selectedAppsValue = selectedAppsValue;
     this.startHourPicker = startHourPicker;
     this.startMinutePicker = startMinutePicker;
@@ -189,8 +195,14 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
       }
 
       id = R.id.selectedAppsContainer;
-      FlexboxLayout selectedAppsContainer = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout selectedAppsContainer = ViewBindings.findChildViewById(rootView, id);
       if (selectedAppsContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.selectedAppsScroll;
+      HorizontalScrollView selectedAppsScroll = ViewBindings.findChildViewById(rootView, id);
+      if (selectedAppsScroll == null) {
         break missingId;
       }
 
@@ -215,7 +227,8 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
       return new DialogAddAppPlanBinding((ScrollView) rootView, dialogChipFriday, dialogChipMonday,
           dialogChipSaturday, dialogChipSunday, dialogChipThursday, dialogChipTuesday,
           dialogChipWednesday, dialogDayGroup, endHourPicker, endMinutePicker, selectAppsButton,
-          selectedAppsContainer, selectedAppsValue, startHourPicker, startMinutePicker);
+          selectedAppsContainer, selectedAppsScroll, selectedAppsValue, startHourPicker,
+          startMinutePicker);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

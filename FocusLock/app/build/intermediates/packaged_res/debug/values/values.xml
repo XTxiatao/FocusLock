@@ -7,6 +7,7 @@
     <color name="teal_200">#03DAC5</color>
     <color name="white">#FFFFFF</color>
     <dimen name="app_icon_item_width">72dp</dimen>
+    <dimen name="whitelist_dialog_max_height">320dp</dimen>
     <string name="accessibility_description">Monitor window content and keep coverage in place.</string>
     <string name="add_plan_button">Add Plan</string>
     <string name="add_restriction_plan">Add restriction plan</string>
@@ -38,6 +39,7 @@
     <string name="restriction_plan_deleted">Restriction plan deleted</string>
     <string name="restriction_plan_dialog_title">Restrict apps</string>
     <string name="restriction_plan_saved">Restriction plan saved</string>
+    <string name="restriction_requires_apps">Add at least one app before enabling this plan.</string>
     <string name="restriction_requires_whitelist">Whitelist is empty. Add allowed apps first.</string>
     <string name="save_plan_button">Save Plan</string>
     <string name="select_apps_hint">Select at least one app</string>

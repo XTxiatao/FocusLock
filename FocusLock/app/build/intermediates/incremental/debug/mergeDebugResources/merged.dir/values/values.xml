@@ -1687,6 +1687,7 @@
     <dimen name="tooltip_vertical_padding">6.5dp</dimen>
     <dimen name="tooltip_y_offset_non_touch">0dp</dimen>
     <dimen name="tooltip_y_offset_touch">16dp</dimen>
+    <dimen name="whitelist_dialog_max_height">320dp</dimen>
     <item name="material_ic_keyboard_arrow_next_black_24dp" type="drawable">@drawable/material_ic_keyboard_arrow_right_black_24dp</item>
     <item name="material_ic_keyboard_arrow_previous_black_24dp" type="drawable">@drawable/material_ic_keyboard_arrow_left_black_24dp</item>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
@@ -2073,6 +2074,7 @@
     <string name="restriction_plan_deleted">Restriction plan deleted</string>
     <string name="restriction_plan_dialog_title">Restrict apps</string>
     <string name="restriction_plan_saved">Restriction plan saved</string>
+    <string name="restriction_requires_apps">Add at least one app before enabling this plan.</string>
     <string name="restriction_requires_whitelist">Whitelist is empty. Add allowed apps first.</string>
     <string name="save_plan_button">Save Plan</string>
     <string name="search_menu_title">Search</string>
