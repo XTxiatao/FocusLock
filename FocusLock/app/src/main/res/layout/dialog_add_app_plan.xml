@@ -143,6 +143,48 @@
                 android:text="Sun" />
         </com.google.android.material.chip.ChipGroup>
 
+        <Button
+            android:id="@+id/addSlotButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_time_slot_button"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:id="@+id/selectedSlotsValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/selected_slot_count_default"
+            android:textColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/slotListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/slotListHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/slot_edit_hint"
+            android:textColor="@color/teal_200"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/slotEmptyHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/slot_empty_hint"
+            android:textColor="@color/teal_200"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

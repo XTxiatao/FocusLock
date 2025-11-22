@@ -8,6 +8,11 @@ data class AppRestrictionPlanWithApps(
     @Embedded val plan: AppRestrictionPlanEntity,
     @Relation(
         parentColumn = "id",
+        entityColumn = "planId"
+    )
+    val slots: List<AppRestrictionPlanSlotEntity>,
+    @Relation(
+        parentColumn = "id",
         entityColumn = "packageName",
         associateBy = Junction(
             value = AppRestrictionPlanAppCrossRef::class,

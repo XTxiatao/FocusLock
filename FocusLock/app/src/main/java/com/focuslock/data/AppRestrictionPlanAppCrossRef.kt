@@ -7,7 +7,7 @@ import androidx.room.Index
 @Entity(
     tableName = "app_restriction_plan_apps",
     primaryKeys = ["planId", "packageName"],
-    indices = [Index("planId"), Index("packageName")],
+    indices = [Index("planId"), Index(value = ["packageName"], unique = true)],
     foreignKeys = [
         ForeignKey(
             entity = AppRestrictionPlanEntity::class,

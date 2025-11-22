@@ -43,8 +43,20 @@ class AppRestrictionPlanAdapter(
 
         fun bind(plan: AppRestrictionPlan) {
             val context = binding.root.context
-            binding.planRange.text = plan.rangeLabel()
-            binding.planDays.text = plan.dayLabels()
+            val slotCount = plan.slots.size
+            val slotSummary = if (slotCount == 0) {
+                context.getString(R.string.no_time_slots)
+            } else {
+                plan.slots.joinToString("\n") { slot ->
+                    context.getString(R.string.slot_summary_line, slot.rangeLabel(), slot.dayLabels())
+                }
+            }
+            binding.planRange.text = when (slotCount) {
+                0 -> context.getString(R.string.no_time_slots)
+                1 -> plan.slots.first().rangeLabel()
+                else -> context.getString(R.string.slot_count_label, slotCount)
+            }
+            binding.planDays.text = slotSummary
             val tintColor = ContextCompat.getColor(
                 context,
                 if (plan.isEnabled) R.color.plan_active_green else R.color.plan_inactive_gray

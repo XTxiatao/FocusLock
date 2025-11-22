@@ -8,10 +8,11 @@ import androidx.room.RoomDatabase
         LockScheduleEntity::class,
         WhitelistedAppEntity::class,
         AppRestrictionPlanEntity::class,
+        AppRestrictionPlanSlotEntity::class,
         AppRestrictionPlanAppCrossRef::class,
         ReminderEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class LockScheduleDatabase : RoomDatabase() {

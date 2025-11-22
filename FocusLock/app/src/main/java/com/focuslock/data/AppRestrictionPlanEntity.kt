@@ -7,8 +7,5 @@ import androidx.room.PrimaryKey
 data class AppRestrictionPlanEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val startMinutes: Int,
-    val endMinutes: Int,
-    val daysBitmask: Int,
     val isEnabled: Boolean
 )

@@ -19,6 +19,9 @@ interface AppRestrictionPlanDao {
     @Insert
     fun insertPlan(entity: AppRestrictionPlanEntity): Long
 
+    @Insert
+    fun insertSlots(slots: List<AppRestrictionPlanSlotEntity>)
+
     @Update
     fun updatePlan(entity: AppRestrictionPlanEntity)
 
@@ -30,4 +33,7 @@ interface AppRestrictionPlanDao {
 
     @Query("DELETE FROM app_restriction_plan_apps WHERE planId = :planId")
     fun deleteMappings(planId: Long): Int
+
+    @Query("DELETE FROM app_restriction_plan_slots WHERE planId = :planId")
+    fun deleteSlots(planId: Long): Int
 }

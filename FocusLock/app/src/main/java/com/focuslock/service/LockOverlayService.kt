@@ -36,6 +36,7 @@ import com.focuslock.databinding.DialogWhitelistPickerBinding
 import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
 import com.focuslock.model.AppRestrictionPlan
+import com.focuslock.model.AppRestrictionPlanSlot
 import com.focuslock.model.WhitelistedApp
 import com.focuslock.model.Reminder
 import com.focuslock.data.ReminderRepository
@@ -460,6 +461,10 @@ class LockOverlayService : Service() {
         return calculateEndMillis(schedule.startMinutes, schedule.endMinutes, now)
     }
 
+    private fun restrictionEndMillis(slot: AppRestrictionPlanSlot, now: LocalDateTime): Long {
+        return calculateEndMillis(slot.startMinutes, slot.endMinutes, now)
+    }
+
     private fun calculateEndMillis(startMinutes: Int, endMinutes: Int, now: LocalDateTime): Long {
         val nextEndDay = if (startMinutes <= endMinutes) {
             now
@@ -483,12 +488,14 @@ class LockOverlayService : Service() {
 
     private fun computeActiveRestrictions(now: LocalDateTime): Map<String, Long> {
         val restrictionMap = mutableMapOf<String, Long>()
-        appRestrictionPlans.filter { it.matches(now) }.forEach { plan ->
-            val endMillis = calculateEndMillis(plan.startMinutes, plan.endMinutes, now)
-            plan.apps.forEach { app ->
-                val existing = restrictionMap[app.packageName]
-                if (existing == null || endMillis > existing) {
-                    restrictionMap[app.packageName] = endMillis
+        appRestrictionPlans.filter { it.isEnabled }.forEach { plan ->
+            plan.slots.filter { it.matches(now) }.forEach { slot ->
+                val endMillis = restrictionEndMillis(slot, now)
+                plan.apps.forEach { app ->
+                    val existing = restrictionMap[app.packageName]
+                    if (existing == null || endMillis > existing) {
+                        restrictionMap[app.packageName] = endMillis
+                    }
                 }
             }
         }

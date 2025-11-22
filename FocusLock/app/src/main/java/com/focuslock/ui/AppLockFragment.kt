@@ -27,8 +27,10 @@ import com.focuslock.databinding.DialogAddAppPlanBinding
 import com.focuslock.databinding.DialogAppSelectorBinding
 import com.focuslock.databinding.FragmentAppLockBinding
 import com.focuslock.databinding.ItemAppSelectBinding
+import com.focuslock.databinding.ItemRestrictionSlotBinding
 import com.focuslock.databinding.ItemWhitelistAppBinding
 import com.focuslock.model.AppRestrictionPlan
+import com.focuslock.model.AppRestrictionPlanSlot
 import com.focuslock.model.WhitelistedApp
 import com.focuslock.service.LockOverlayService
 import kotlinx.coroutines.launch
@@ -57,6 +59,7 @@ class AppLockFragment : Fragment() {
     }
 
     private var latestWhitelist: List<WhitelistedApp> = emptyList()
+    private var latestPlans: List<AppRestrictionPlan> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,7 +101,8 @@ class AppLockFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 restrictionPlanRepository.plansFlow.collect { plans ->
                     val sanitized = plans.map { plan ->
-                        if (plan.isEnabled && plan.apps.isEmpty()) {
+                        val requiresDisable = plan.isEnabled && (plan.apps.isEmpty() || plan.slots.isEmpty())
+                        if (requiresDisable) {
                             viewLifecycleOwner.lifecycleScope.launch {
                                 restrictionPlanRepository.updatePlan(plan.copy(isEnabled = false))
                             }
@@ -107,6 +111,7 @@ class AppLockFragment : Fragment() {
                             plan
                         }
                     }
+                    latestPlans = sanitized
                     appPlanAdapter.submitList(sanitized)
                 }
             }
@@ -170,8 +175,11 @@ class AppLockFragment : Fragment() {
             return
         }
         val dialogBinding = DialogAddAppPlanBinding.inflate(layoutInflater)
-        var startMinutesLocal = existing?.startMinutes ?: 20 * 60
-        var endMinutesLocal = existing?.endMinutes ?: 22 * 60
+        val slotDrafts = existing?.slots
+            ?.map { AppRestrictionPlanSlot(it.startMinutes, it.endMinutes, it.daysBitmask) }
+            ?.toMutableList() ?: mutableListOf()
+        var startMinutesLocal = slotDrafts.firstOrNull()?.startMinutes ?: 20 * 60
+        var endMinutesLocal = slotDrafts.firstOrNull()?.endMinutes ?: 22 * 60
         dialogBinding.startHourPicker.apply {
             minValue = 0
             maxValue = 23
@@ -196,10 +204,8 @@ class AppLockFragment : Fragment() {
             value = endMinutesLocal % 60
             setFormatter { String.format("%02d", it) }
         }
-        val selectedDays = existing?.let { plan ->
-            DayOfWeek.values().filter { plan.isDaySelected(it) }.toMutableSet()
-        } ?: mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
-        val selectAllByDefault = existing == null
+        val selectedDays = slotDrafts.firstOrNull()?.toDaySet()?.toMutableSet()
+            ?: mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
         val dayChipMap = mapOf(
             dialogBinding.dialogChipMonday to DayOfWeek.MONDAY,
             dialogBinding.dialogChipTuesday to DayOfWeek.TUESDAY,
@@ -209,22 +215,76 @@ class AppLockFragment : Fragment() {
             dialogBinding.dialogChipSaturday to DayOfWeek.SATURDAY,
             dialogBinding.dialogChipSunday to DayOfWeek.SUNDAY
         )
-        dayChipMap.forEach { (chip, day) ->
-            val checked = if (selectAllByDefault) true else selectedDays.contains(day)
-            chip.isChecked = checked
-            if (selectAllByDefault && !selectedDays.contains(day)) {
-                selectedDays.add(day)
-            }
-            chip.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) selectedDays.add(day) else selectedDays.remove(day)
+
+        fun bindChipState() {
+            dayChipMap.forEach { (chip, day) ->
+                chip.setOnCheckedChangeListener(null)
+                chip.isChecked = selectedDays.contains(day)
+                chip.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) selectedDays.add(day) else selectedDays.remove(day)
+                }
             }
         }
+        bindChipState()
 
         val selectedPackages = existing?.apps?.map { it.packageName }?.toMutableSet() ?: mutableSetOf()
         updateSelectedAppPreview(dialogBinding, selectedPackages)
 
+        fun refreshSlotList() {
+            dialogBinding.slotListContainer.removeAllViews()
+            val inflater = layoutInflater
+            slotDrafts.forEach { slot ->
+                val slotBinding =
+                    ItemRestrictionSlotBinding.inflate(inflater, dialogBinding.slotListContainer, false)
+                slotBinding.slotRangeText.text = slot.rangeLabel()
+                slotBinding.slotDaysText.text = slot.dayLabels()
+                slotBinding.removeSlotButton.setOnClickListener {
+                    slotDrafts.remove(slot)
+                    refreshSlotList()
+                }
+                slotBinding.root.setOnClickListener {
+                    startMinutesLocal = slot.startMinutes
+                    endMinutesLocal = slot.endMinutes
+                    selectedDays.clear()
+                    selectedDays.addAll(slot.toDaySet())
+                    dialogBinding.startHourPicker.value = startMinutesLocal / 60
+                    dialogBinding.startMinutePicker.value = startMinutesLocal % 60
+                    dialogBinding.endHourPicker.value = endMinutesLocal / 60
+                    dialogBinding.endMinutePicker.value = endMinutesLocal % 60
+                    bindChipState()
+                    slotDrafts.remove(slot)
+                    refreshSlotList()
+                }
+                dialogBinding.slotListContainer.addView(slotBinding.root)
+            }
+            if (slotDrafts.isEmpty()) {
+                dialogBinding.selectedSlotsValue.text = getString(R.string.selected_slot_count_default)
+                dialogBinding.slotListHint.isVisible = false
+                dialogBinding.slotListContainer.isVisible = false
+            } else {
+                dialogBinding.selectedSlotsValue.text =
+                    getString(R.string.selected_slot_count_format, slotDrafts.size)
+                dialogBinding.slotListHint.isVisible = true
+                dialogBinding.slotListContainer.isVisible = true
+            }
+            dialogBinding.slotEmptyHint.isVisible = slotDrafts.isEmpty()
+        }
+        refreshSlotList()
+
+        dialogBinding.addSlotButton.setOnClickListener {
+            startMinutesLocal = dialogBinding.startHourPicker.value * 60 + dialogBinding.startMinutePicker.value
+            endMinutesLocal = dialogBinding.endHourPicker.value * 60 + dialogBinding.endMinutePicker.value
+            if (selectedDays.isEmpty()) {
+                Toast.makeText(requireContext(), R.string.slot_requires_days, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val mask = selectedDays.toBitmask()
+            slotDrafts.add(AppRestrictionPlanSlot(startMinutesLocal, endMinutesLocal, mask))
+            refreshSlotList()
+        }
+
         dialogBinding.selectAppsButton.setOnClickListener {
-            showAppSelectionDialog(selectedPackages, dialogBinding)
+            showAppSelectionDialog(selectedPackages, dialogBinding, existing?.id)
         }
 
         AlertDialog.Builder(requireContext())
@@ -233,29 +293,34 @@ class AppLockFragment : Fragment() {
             .setPositiveButton(R.string.save_plan_button) { _, _ ->
                 startMinutesLocal = dialogBinding.startHourPicker.value * 60 + dialogBinding.startMinutePicker.value
                 endMinutesLocal = dialogBinding.endHourPicker.value * 60 + dialogBinding.endMinutePicker.value
-                if (selectedDays.isEmpty()) {
-                    Toast.makeText(requireContext(), R.string.select_days_hint, Toast.LENGTH_SHORT).show()
+                val inlineMask = selectedDays.toBitmask()
+                val slotsToPersist = if (slotDrafts.isEmpty()) {
+                    if (inlineMask == 0) {
+                        Toast.makeText(requireContext(), R.string.slot_requires_days, Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+                    listOf(AppRestrictionPlanSlot(startMinutesLocal, endMinutesLocal, inlineMask))
+                } else {
+                    slotDrafts.toList()
+                }
+                if (slotsToPersist.isEmpty()) {
+                    Toast.makeText(requireContext(), R.string.slot_empty_hint, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
                 if (selectedPackages.isEmpty()) {
                     Toast.makeText(requireContext(), R.string.select_apps_hint, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                val mask = selectedDays.fold(0) { acc, day -> acc or (1 shl day.ordinal) }
                 viewLifecycleOwner.lifecycleScope.launch {
                     if (existing == null) {
                         restrictionPlanRepository.insertPlan(
-                            startMinutesLocal,
-                            endMinutesLocal,
-                            mask,
+                            slotsToPersist,
                             selectedPackages.toList()
                         )
                     } else {
                         restrictionPlanRepository.updatePlanDetails(
                             existing,
-                            startMinutesLocal,
-                            endMinutesLocal,
-                            mask,
+                            slotsToPersist,
                             selectedPackages.toList()
                         )
                     }
@@ -268,11 +333,17 @@ class AppLockFragment : Fragment() {
 
     private fun showAppSelectionDialog(
         selectedPackages: MutableSet<String>,
-        dialogBinding: DialogAddAppPlanBinding
+        dialogBinding: DialogAddAppPlanBinding,
+        planId: Long?
     ) {
         if (latestWhitelist.isEmpty()) return
         val selectorBinding = DialogAppSelectorBinding.inflate(layoutInflater)
-        val adapter = AppSelectionAdapter(latestWhitelist, selectedPackages)
+        val disabledPackages = latestPlans
+            .filter { planId == null || it.id != planId }
+            .flatMap { it.apps }
+            .map { it.packageName }
+            .toSet()
+        val adapter = AppSelectionAdapter(latestWhitelist, selectedPackages, disabledPackages)
         selectorBinding.appRecyclerView.applyResponsiveGrid()
         selectorBinding.appRecyclerView.adapter = adapter
 
@@ -319,9 +390,15 @@ class AppLockFragment : Fragment() {
     }
 
     private fun toggleRestrictionPlan(plan: AppRestrictionPlan) {
-        if (!plan.isEnabled && plan.apps.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.restriction_requires_apps, Toast.LENGTH_SHORT).show()
-            return
+        if (!plan.isEnabled) {
+            if (plan.apps.isEmpty()) {
+                Toast.makeText(requireContext(), R.string.restriction_requires_apps, Toast.LENGTH_SHORT).show()
+                return
+            }
+            if (plan.slots.isEmpty()) {
+                Toast.makeText(requireContext(), R.string.restriction_requires_slots, Toast.LENGTH_SHORT).show()
+                return
+            }
         }
         val updated = plan.copy(isEnabled = !plan.isEnabled)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -359,7 +436,8 @@ class AppLockFragment : Fragment() {
 
     private inner class AppSelectionAdapter(
         private val apps: List<WhitelistedApp>,
-        preselected: Set<String>
+        preselected: Set<String>,
+        private val disabledPackages: Set<String>
     ) : RecyclerView.Adapter<AppSelectionAdapter.ViewHolder>() {
 
         private val selected = preselected.toMutableSet()
@@ -394,16 +472,28 @@ class AppLockFragment : Fragment() {
                         android.R.drawable.sym_def_app_icon
                     )
                 )
+                val isDisabled = disabledPackages.contains(app.packageName)
+                if (isDisabled) {
+                    selected.remove(app.packageName)
+                }
                 binding.appCheckBox.setOnCheckedChangeListener(null)
-                binding.appCheckBox.isChecked = selected.contains(app.packageName)
+                binding.appCheckBox.isEnabled = !isDisabled
+                binding.root.alpha = if (isDisabled) 0.4f else 1f
+                binding.appCheckBox.isChecked = !isDisabled && selected.contains(app.packageName)
                 binding.appCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isDisabled) return@setOnCheckedChangeListener
                     if (isChecked) selected.add(app.packageName) else selected.remove(app.packageName)
                 }
                 binding.root.setOnClickListener {
+                    if (isDisabled) return@setOnClickListener
                     binding.appCheckBox.isChecked = !binding.appCheckBox.isChecked
                 }
             }
         }
+    }
+
+    private fun Set<DayOfWeek>.toBitmask(): Int {
+        return fold(0) { acc, day -> acc or (1 shl day.ordinal) }
     }
 
     override fun onDestroyView() {
