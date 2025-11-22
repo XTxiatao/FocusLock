@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit
 private const val SERVICE_LOG_TAG = "LockOverlaySvc"
 private const val PREFS_NAME = "focus_lock_prefs"
 private const val KEY_FORCE_UNLOCK_TIMESTAMP = "force_unlock_timestamp"
+private const val KEY_TEMP_LOCK_EXPIRY = "temp_lock_expiry"
 private val FORCE_UNLOCK_INTERVAL_MS = TimeUnit.DAYS.toMillis(7)
 
 class LockOverlayService : Service() {
@@ -114,6 +115,7 @@ class LockOverlayService : Service() {
         binding = OverlayViewBinding.inflate(LayoutInflater.from(overlayContext))
         prepareOverlay()
         setCountdownText(formatDuration(0))
+        temporaryLockExpiryMillis = prefs.getLong(KEY_TEMP_LOCK_EXPIRY, 0L)
 
         serviceScope.launch {
             repository.enabledSchedulesFlow.collect { schedules ->
@@ -174,8 +176,7 @@ class LockOverlayService : Service() {
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
             type,
-            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
@@ -310,8 +311,7 @@ class LockOverlayService : Service() {
         val dialogBinding = DialogWhitelistPickerBinding.inflate(LayoutInflater.from(this))
         val adapter = OverlayWhitelistAdapter { item ->
             if (item.isRestricted()) {
-                val unlockTime = item.restrictedUntil?.let { formatUnlockClock(it) } ?: "later"
-                showOverlayAlert(getString(R.string.restriction_app_not_allowed, unlockTime))
+                return@OverlayWhitelistAdapter
             } else {
                 val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
                 if (launchIntent != null) {
@@ -394,7 +394,7 @@ class LockOverlayService : Service() {
                     ).show()
                 }
             }
-            temporaryLockExpiryMillis = 0L
+            saveTemporaryLockExpiry(0L)
             hideOverlay()
             stopCountdown()
             LockStateTracker.enforceHome = false
@@ -502,11 +502,16 @@ class LockOverlayService : Service() {
     }
 
     private fun applyTemporaryLock(durationMinutes: Int) {
-        temporaryLockExpiryMillis = System.currentTimeMillis() + durationMinutes * 60_000L
+        saveTemporaryLockExpiry(System.currentTimeMillis() + durationMinutes * 60_000L)
         serviceScope.launch {
             evaluateSchedule()
         }
         Log.d(SERVICE_LOG_TAG, "Temporary lock for $durationMinutes minutes until ${temporaryLockExpiryMillis}")
+    }
+
+    private fun saveTemporaryLockExpiry(value: Long) {
+        temporaryLockExpiryMillis = value
+        prefs.edit().putLong(KEY_TEMP_LOCK_EXPIRY, value).apply()
     }
 
     private fun setCountdownText(text: String) {
