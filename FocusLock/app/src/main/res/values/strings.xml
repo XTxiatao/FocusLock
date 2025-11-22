@@ -20,6 +20,7 @@
     <string name="plan_section_title">Scheduled Locks</string>
     <string name="add_plan_button">Add Plan</string>
     <string name="save_plan_button">Save Plan</string>
+    <string name="edit_plan_button">Edit Plan</string>
     <string name="temporary_lock_section_title">Temporary Lock</string>
     <string name="configure_whitelist">Configure Whitelist</string>
     <string name="current_whitelist">Whitelist</string>
@@ -30,6 +31,7 @@
     <string name="select_restricted_apps">Select apps</string>
     <string name="selected_app_count">Selected: %1$d</string>
     <string name="restriction_plan_dialog_title">Restrict apps</string>
+    <string name="edit_restriction_plan_title">Edit restricted apps</string>
     <string name="restriction_plan_saved">Restriction plan saved</string>
     <string name="restriction_plan_deleted">Restriction plan deleted</string>
     <string name="restriction_app_not_allowed">This app is paused until %1$s</string>
@@ -40,4 +42,8 @@
     <string name="select_days_hint">Select at least one day</string>
     <string name="select_apps_hint">Select at least one app</string>
     <string name="restriction_available_in">Ready in %1$s</string>
+    <string name="disable_plan_to_edit">Disable this plan before editing.</string>
+    <string name="disable_restriction_to_edit">Turn this restriction off before editing.</string>
+    <string name="status_on">ON</string>
+    <string name="status_off">OFF</string>
 </resources>

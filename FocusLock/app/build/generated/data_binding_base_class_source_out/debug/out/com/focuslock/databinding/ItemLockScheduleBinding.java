@@ -4,7 +4,6 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -24,7 +24,7 @@ public final class ItemLockScheduleBinding implements ViewBinding {
   public final TextView daysText;
 
   @NonNull
-  public final Button deleteButton;
+  public final MaterialButton deleteButton;
 
   @NonNull
   public final TextView statusText;
@@ -33,11 +33,11 @@ public final class ItemLockScheduleBinding implements ViewBinding {
   public final TextView timeRangeText;
 
   @NonNull
-  public final Button toggleButton;
+  public final MaterialButton toggleButton;
 
   private ItemLockScheduleBinding(@NonNull LinearLayout rootView, @NonNull TextView daysText,
-      @NonNull Button deleteButton, @NonNull TextView statusText, @NonNull TextView timeRangeText,
-      @NonNull Button toggleButton) {
+      @NonNull MaterialButton deleteButton, @NonNull TextView statusText,
+      @NonNull TextView timeRangeText, @NonNull MaterialButton toggleButton) {
     this.rootView = rootView;
     this.daysText = daysText;
     this.deleteButton = deleteButton;
@@ -80,7 +80,7 @@ public final class ItemLockScheduleBinding implements ViewBinding {
       }
 
       id = R.id.deleteButton;
-      Button deleteButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton deleteButton = ViewBindings.findChildViewById(rootView, id);
       if (deleteButton == null) {
         break missingId;
       }
@@ -98,7 +98,7 @@ public final class ItemLockScheduleBinding implements ViewBinding {
       }
 
       id = R.id.toggleButton;
-      Button toggleButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton toggleButton = ViewBindings.findChildViewById(rootView, id);
       if (toggleButton == null) {
         break missingId;
       }

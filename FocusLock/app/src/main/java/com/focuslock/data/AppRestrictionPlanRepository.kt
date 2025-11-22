@@ -79,6 +79,28 @@ class AppRestrictionPlanRepository(
         }
     }
 
+    suspend fun updatePlanDetails(
+        plan: AppRestrictionPlan,
+        startMinutes: Int,
+        endMinutes: Int,
+        daysBitmask: Int,
+        packageNames: List<String>
+    ) {
+        withContext(Dispatchers.IO) {
+            dao.updatePlan(
+                AppRestrictionPlanEntity(
+                    id = plan.id,
+                    startMinutes = startMinutes,
+                    endMinutes = endMinutes,
+                    daysBitmask = daysBitmask,
+                    isEnabled = plan.isEnabled
+                )
+            )
+            dao.deleteMappings(plan.id)
+            persistMappings(plan.id, packageNames)
+        }
+    }
+
     private suspend fun persistMappings(planId: Long, packageNames: List<String>) {
         dao.insertMappings(packageNames.map { AppRestrictionPlanAppCrossRef(planId, it) })
     }

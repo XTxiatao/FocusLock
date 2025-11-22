@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.FlexboxLayout
 import com.focuslock.R
 import com.focuslock.databinding.ItemAppRestrictionPlanBinding
 import com.focuslock.databinding.ItemWhitelistAppBinding
@@ -14,6 +15,7 @@ import com.focuslock.model.AppRestrictionPlan
 class AppRestrictionPlanAdapter(
     private val onToggle: (AppRestrictionPlan) -> Unit,
     private val onDelete: (AppRestrictionPlan) -> Unit,
+    private val onEdit: (AppRestrictionPlan) -> Unit,
     private val iconProvider: (String) -> android.graphics.drawable.Drawable?
 ) : RecyclerView.Adapter<AppRestrictionPlanAdapter.ViewHolder>() {
 
@@ -43,20 +45,28 @@ class AppRestrictionPlanAdapter(
             val context = binding.root.context
             binding.planRange.text = plan.rangeLabel()
             binding.planDays.text = plan.dayLabels()
-            binding.toggleButton.text = context.getString(if (plan.isEnabled) R.string.disable_plan else R.string.enable_plan)
             val tintColor = ContextCompat.getColor(
                 context,
                 if (plan.isEnabled) R.color.plan_active_green else R.color.plan_inactive_gray
             )
+            val statusText = context.getString(if (plan.isEnabled) R.string.status_on else R.string.status_off)
+            binding.planRange.setTextColor(tintColor)
+            binding.planDays.setTextColor(tintColor)
+            binding.appListTitle.setTextColor(tintColor)
+            binding.toggleButton.text = statusText
             binding.toggleButton.backgroundTintList = ColorStateList.valueOf(tintColor)
+            binding.toggleButton.setTextColor(ContextCompat.getColor(context, android.R.color.white))
             binding.toggleButton.setOnClickListener { onToggle(plan) }
             binding.deleteButton.setOnClickListener { onDelete(plan) }
+            binding.root.setOnClickListener { onEdit(plan) }
 
             binding.appListContainer.removeAllViews()
             if (plan.apps.isEmpty()) {
                 binding.appListTitle.isVisible = false
+                binding.appListContainer.isVisible = false
             } else {
                 binding.appListTitle.isVisible = true
+                binding.appListContainer.isVisible = true
                 val inflater = LayoutInflater.from(context)
                 plan.apps.forEach { app ->
                     val appBinding =
@@ -66,7 +76,13 @@ class AppRestrictionPlanAdapter(
                     appBinding.appIcon.setImageDrawable(
                         icon ?: ContextCompat.getDrawable(context, android.R.drawable.sym_def_app_icon)
                     )
-                    binding.appListContainer.addView(appBinding.root)
+                    val params = FlexboxLayout.LayoutParams(
+                        context.resources.getDimensionPixelSize(R.dimen.app_icon_item_width),
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(8, 8, 8, 8)
+                    }
+                    binding.appListContainer.addView(appBinding.root, params)
                 }
             }
         }

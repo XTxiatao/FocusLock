@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:padding="12dp">
 
     <ImageView
@@ -13,29 +13,24 @@
         android:contentDescription="@null"
         android:scaleType="centerInside" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/appLabel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_marginTop="6dp"
+        android:gravity="center_horizontal"
+        android:text="App"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/appLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="App"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/appCountdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/teal_200"
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:text="Ready in 00:00:00" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/appCountdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/teal_200"
+        android:textSize="11sp"
+        android:visibility="gone"
+        android:text="Ready in 00:00:00" />
 
 </LinearLayout>

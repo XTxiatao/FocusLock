@@ -6,6 +6,7 @@ color plan_inactive_gray
 color purple_500
 color teal_200
 color white
+dimen app_icon_item_width
 drawable panel_background
 id addAppPlanButton
 id addPlanButton
@@ -59,6 +60,7 @@ id tempLockContainer
 id timeRangeText
 id toggleButton
 id whitelistContainer
+id whitelistRecycler
 id whitelistRecyclerView
 id whitelistTitle
 layout activity_main
@@ -66,6 +68,7 @@ layout dialog_add_app_plan
 layout dialog_add_plan
 layout dialog_app_selector
 layout dialog_temporary_lock
+layout dialog_whitelist_picker
 layout fragment_app_lock
 layout fragment_device_lock
 layout fragment_reminder
@@ -85,6 +88,10 @@ string configure_whitelist
 string current_whitelist
 string delete_plan
 string disable_plan
+string disable_plan_to_edit
+string disable_restriction_to_edit
+string edit_plan_button
+string edit_restriction_plan_title
 string enable_plan
 string force_unlock
 string lock_countdown_label
@@ -111,6 +118,8 @@ string selected_app_count
 string service_notification_text
 string service_notification_title
 string start_button
+string status_off
+string status_on
 string temporary_lock_button
 string temporary_lock_dialog_confirm
 string temporary_lock_duration_label

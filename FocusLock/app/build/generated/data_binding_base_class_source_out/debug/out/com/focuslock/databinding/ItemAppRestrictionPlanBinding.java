@@ -4,7 +4,6 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -12,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.button.MaterialButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -21,13 +22,13 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final LinearLayout appListContainer;
+  public final FlexboxLayout appListContainer;
 
   @NonNull
   public final TextView appListTitle;
 
   @NonNull
-  public final Button deleteButton;
+  public final MaterialButton deleteButton;
 
   @NonNull
   public final TextView planDays;
@@ -36,12 +37,12 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   public final TextView planRange;
 
   @NonNull
-  public final Button toggleButton;
+  public final MaterialButton toggleButton;
 
   private ItemAppRestrictionPlanBinding(@NonNull LinearLayout rootView,
-      @NonNull LinearLayout appListContainer, @NonNull TextView appListTitle,
-      @NonNull Button deleteButton, @NonNull TextView planDays, @NonNull TextView planRange,
-      @NonNull Button toggleButton) {
+      @NonNull FlexboxLayout appListContainer, @NonNull TextView appListTitle,
+      @NonNull MaterialButton deleteButton, @NonNull TextView planDays, @NonNull TextView planRange,
+      @NonNull MaterialButton toggleButton) {
     this.rootView = rootView;
     this.appListContainer = appListContainer;
     this.appListTitle = appListTitle;
@@ -79,7 +80,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.appListContainer;
-      LinearLayout appListContainer = ViewBindings.findChildViewById(rootView, id);
+      FlexboxLayout appListContainer = ViewBindings.findChildViewById(rootView, id);
       if (appListContainer == null) {
         break missingId;
       }
@@ -91,7 +92,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
       }
 
       id = R.id.deleteButton;
-      Button deleteButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton deleteButton = ViewBindings.findChildViewById(rootView, id);
       if (deleteButton == null) {
         break missingId;
       }
@@ -109,7 +110,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
       }
 
       id = R.id.toggleButton;
-      Button toggleButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton toggleButton = ViewBindings.findChildViewById(rootView, id);
       if (toggleButton == null) {
         break missingId;
       }

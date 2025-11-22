@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.focuslock.app-mergeDebugResources-35:/values-ro/values-ro.xml",
+            "outputFile": "com.focuslock.app-mergeDebugResources-36:/values-ro/values-ro.xml",
             "map": [
                 {
                     "source": "C:\\Users\\xtxia\\.gradle\\caches\\transforms-3\\28b1547ee1811d39c891753a2d88e08a\\transformed\\appcompat-1.7.0\\res\\values-ro\\values-ro.xml",

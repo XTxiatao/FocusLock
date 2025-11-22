@@ -6,6 +6,7 @@
     <color name="purple_500">#6200EE</color>
     <color name="teal_200">#03DAC5</color>
     <color name="white">#FFFFFF</color>
+    <dimen name="app_icon_item_width">72dp</dimen>
     <string name="accessibility_description">Monitor window content and keep coverage in place.</string>
     <string name="add_plan_button">Add Plan</string>
     <string name="add_restriction_plan">Add restriction plan</string>
@@ -15,6 +16,10 @@
     <string name="current_whitelist">Whitelist</string>
     <string name="delete_plan">Delete</string>
     <string name="disable_plan">Disable</string>
+    <string name="disable_plan_to_edit">Disable this plan before editing.</string>
+    <string name="disable_restriction_to_edit">Turn this restriction off before editing.</string>
+    <string name="edit_plan_button">Edit Plan</string>
+    <string name="edit_restriction_plan_title">Edit restricted apps</string>
     <string name="enable_plan">Enable</string>
     <string name="force_unlock">Force Unlock</string>
     <string name="lock_countdown_label">Lock expires in %1$d seconds</string>
@@ -41,6 +46,8 @@
     <string name="service_notification_text">Keep overlay and input interception online.</string>
     <string name="service_notification_title">FocusLock Active</string>
     <string name="start_button">Start Lock Session</string>
+    <string name="status_off">OFF</string>
+    <string name="status_on">ON</string>
     <string name="temporary_lock_button">Quick Lock</string>
     <string name="temporary_lock_dialog_confirm">Start Lock</string>
     <string name="temporary_lock_duration_label">Duration (minutes)</string>

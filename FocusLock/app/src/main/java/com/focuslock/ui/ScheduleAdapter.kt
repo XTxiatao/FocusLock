@@ -13,7 +13,8 @@ import com.focuslock.model.LockSchedule
 
 class ScheduleAdapter(
     private val toggleListener: (LockSchedule) -> Unit,
-    private val deleteListener: (LockSchedule) -> Unit
+    private val deleteListener: (LockSchedule) -> Unit,
+    private val editListener: (LockSchedule) -> Unit
 ) : ListAdapter<LockSchedule, ScheduleAdapter.ScheduleViewHolder>(Diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
@@ -36,10 +37,19 @@ class ScheduleAdapter(
 
             binding.timeRangeText.text = schedule.rangeLabel()
             binding.daysText.text = schedule.dayLabels()
-            binding.statusText.text = if (schedule.isEnabled) "Active" else "Inactive"
-            binding.toggleButton.text = if (schedule.isEnabled) "Disable" else "Activate"
-            binding.toggleButton.backgroundTintList =
-                ColorStateList.valueOf(if (schedule.isEnabled) activeColor else inactiveColor)
+            val statusText = if (schedule.isEnabled) {
+                context.getString(R.string.status_on)
+            } else {
+                context.getString(R.string.status_off)
+            }
+            val tintColor = if (schedule.isEnabled) activeColor else inactiveColor
+            binding.statusText.text = statusText
+            binding.statusText.setTextColor(tintColor)
+            binding.timeRangeText.setTextColor(tintColor)
+            binding.daysText.setTextColor(tintColor)
+            binding.toggleButton.text = statusText
+            binding.toggleButton.backgroundTintList = ColorStateList.valueOf(tintColor)
+            binding.toggleButton.setTextColor(ContextCompat.getColor(context, android.R.color.white))
 
             binding.toggleButton.setOnClickListener {
                 toggleListener(schedule)
@@ -47,6 +57,10 @@ class ScheduleAdapter(
 
             binding.deleteButton.setOnClickListener {
                 deleteListener(schedule)
+            }
+
+            binding.root.setOnClickListener {
+                editListener(schedule)
             }
         }
     }

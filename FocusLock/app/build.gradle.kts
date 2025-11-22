@@ -49,4 +49,5 @@ dependencies {
     kapt("androidx.room:room-compiler:2.5.2")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 }

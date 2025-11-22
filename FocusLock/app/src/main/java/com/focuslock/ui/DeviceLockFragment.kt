@@ -42,7 +42,7 @@ class DeviceLockFragment : Fragment() {
     private val repository by lazy {
         (requireActivity().application as FocusLockApplication).lockScheduleRepository
     }
-    private val adapter = ScheduleAdapter(::toggleSchedule, ::deleteSchedule)
+    private val adapter = ScheduleAdapter(::toggleSchedule, ::deleteSchedule, ::requestEditSchedule)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -127,16 +127,29 @@ class DeviceLockFragment : Fragment() {
             .show()
     }
 
-    private fun saveLockPlan(startMinutes: Int, endMinutes: Int, mask: Int) {
-        val schedule = LockSchedule(
-            startMinutes = startMinutes,
-            endMinutes = endMinutes,
-            daysBitmask = mask,
-            isEnabled = false
-        )
+    private fun saveLockPlan(startMinutes: Int, endMinutes: Int, mask: Int, existing: LockSchedule?) {
+        val schedule = if (existing == null) {
+            LockSchedule(
+                startMinutes = startMinutes,
+                endMinutes = endMinutes,
+                daysBitmask = mask,
+                isEnabled = false
+            )
+        } else {
+            existing.copy(
+                startMinutes = startMinutes,
+                endMinutes = endMinutes,
+                daysBitmask = mask,
+                isEnabled = false
+            )
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repository.insert(schedule)
+            if (existing == null) {
+                repository.insert(schedule)
+            } else {
+                repository.update(schedule)
+            }
             Log.d(LOG_TAG, "Saved plan: ${schedule.describe()}")
         }
     }
@@ -181,6 +194,17 @@ class DeviceLockFragment : Fragment() {
         }
     }
 
+    private fun requestEditSchedule(schedule: LockSchedule) {
+        if (schedule.isEnabled) {
+            AlertDialog.Builder(requireContext())
+                .setMessage(R.string.disable_plan_to_edit)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+        } else {
+            showAddPlanDialog(schedule)
+        }
+    }
+
     private fun showTemporaryLockDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_temporary_lock, null)
         val picker = dialogView.findViewById<NumberPicker>(R.id.durationPicker)
@@ -206,14 +230,16 @@ class DeviceLockFragment : Fragment() {
         Log.d(LOG_TAG, "Starting temporary lock for $durationMinutes minutes")
     }
 
-    private fun showAddPlanDialog() {
+    private fun showAddPlanDialog(existing: LockSchedule? = null) {
         val dialogBinding = DialogAddPlanBinding.inflate(layoutInflater)
-        var startMinutesLocal = 22 * 60
-        var endMinutesLocal = 23 * 60
+        var startMinutesLocal = existing?.startMinutes ?: 22 * 60
+        var endMinutesLocal = existing?.endMinutes ?: 23 * 60
         dialogBinding.dialogStartTimeValue.text = formatTimeLabel(startMinutesLocal)
         dialogBinding.dialogEndTimeValue.text = formatTimeLabel(endMinutesLocal)
 
-        val selectedDays = mutableSetOf<DayOfWeek>()
+        val selectedDays = existing?.let { schedule ->
+            DayOfWeek.values().filter { schedule.isDaySelected(it) }.toMutableSet()
+        } ?: mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
         val chips = mapOf(
             dialogBinding.dialogChipMonday to DayOfWeek.MONDAY,
             dialogBinding.dialogChipTuesday to DayOfWeek.TUESDAY,
@@ -224,9 +250,13 @@ class DeviceLockFragment : Fragment() {
             dialogBinding.dialogChipSunday to DayOfWeek.SUNDAY
         )
 
+        val selectAllByDefault = existing == null
         chips.forEach { (chip, day) ->
-            chip.isChecked = true
-            selectedDays.add(day)
+            val checked = if (selectAllByDefault) true else selectedDays.contains(day)
+            chip.isChecked = checked
+            if (selectAllByDefault && !selectedDays.contains(day)) {
+                selectedDays.add(day)
+            }
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) selectedDays.add(day) else selectedDays.remove(day)
             }
@@ -246,7 +276,7 @@ class DeviceLockFragment : Fragment() {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.add_plan_button)
+            .setTitle(if (existing == null) R.string.add_plan_button else R.string.edit_plan_button)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save_plan_button) { _, _ ->
                 if (selectedDays.isEmpty()) {
@@ -254,7 +284,7 @@ class DeviceLockFragment : Fragment() {
                     return@setPositiveButton
                 }
                 val mask = selectedDays.fold(0) { acc, day -> acc or (1 shl day.ordinal) }
-                saveLockPlan(startMinutesLocal, endMinutesLocal, mask)
+                saveLockPlan(startMinutesLocal, endMinutesLocal, mask, existing)
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()

@@ -19,15 +19,17 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.NotificationCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.data.AppRestrictionPlanRepository
+import com.focuslock.databinding.DialogWhitelistPickerBinding
 import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
 import com.focuslock.model.AppRestrictionPlan
@@ -72,7 +74,7 @@ class LockOverlayService : Service() {
     private var currentSchedule: LockSchedule? = null
     private var activeRestrictions: Map<String, Long> = emptyMap()
     private var whitelistDialog: AlertDialog? = null
-    private var whitelistDialogAdapter: WhitelistDialogAdapter? = null
+    private var overlayWhitelistAdapter: OverlayWhitelistAdapter? = null
     private var lastForegroundPackage: String? = null
 
     override fun onCreate() {
@@ -268,13 +270,8 @@ class LockOverlayService : Service() {
 
         whitelistDialog?.dismiss()
 
-        val builder = AlertDialog.Builder(
-            ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
-        )
-            .setTitle(R.string.select_whitelist_app_title)
-        val adapter = WhitelistDialogAdapter(buildWhitelistDialogItems())
-        builder.setAdapter(adapter) { dialog, which ->
-            val item = adapter.getItem(which)
+        val dialogBinding = DialogWhitelistPickerBinding.inflate(LayoutInflater.from(this))
+        val adapter = OverlayWhitelistAdapter { item ->
             if (item.isRestricted()) {
                 val unlockTime = item.restrictedUntil?.let { formatUnlockClock(it) } ?: "later"
                 Toast.makeText(
@@ -282,19 +279,28 @@ class LockOverlayService : Service() {
                     getString(R.string.restriction_app_not_allowed, unlockTime),
                     Toast.LENGTH_SHORT
                 ).show()
-                return@setAdapter
-            }
-            val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(launchIntent)
             } else {
-                Toast.makeText(this, "Cannot launch ${item.app.label}", Toast.LENGTH_SHORT).show()
+                val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(launchIntent)
+                } else {
+                    Toast.makeText(this, "Cannot launch ${item.app.label}", Toast.LENGTH_SHORT).show()
+                }
+                whitelistDialog?.dismiss()
             }
-            dialog.dismiss()
         }
+        adapter.submitList(buildWhitelistDialogItems())
+        dialogBinding.whitelistRecycler.layoutManager = GridLayoutManager(this, 5)
+        dialogBinding.whitelistRecycler.adapter = adapter
+
+        val builder = AlertDialog.Builder(
+            ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+        )
+            .setTitle(R.string.select_whitelist_app_title)
+            .setView(dialogBinding.root)
         val dialog = builder.create()
-        whitelistDialogAdapter = adapter
+        overlayWhitelistAdapter = adapter
         whitelistDialog = dialog
         dialog.window?.setType(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -303,7 +309,7 @@ class LockOverlayService : Service() {
                 WindowManager.LayoutParams.TYPE_PHONE
         )
         dialog.setOnDismissListener {
-            whitelistDialogAdapter = null
+            overlayWhitelistAdapter = null
             whitelistDialog = null
         }
         dialog.show()
@@ -312,7 +318,7 @@ class LockOverlayService : Service() {
     private fun refreshWhitelistDialog() {
         val items = buildWhitelistDialogItems()
         mainHandler.post {
-            whitelistDialogAdapter?.update(items)
+            overlayWhitelistAdapter?.submitList(items)
         }
     }
 
@@ -460,40 +466,54 @@ class LockOverlayService : Service() {
         return whitelistedApps.any { it.packageName == packageName }
     }
 
-    private inner class WhitelistDialogAdapter(
-        private var items: List<WhitelistDialogItem>
-    ) : android.widget.BaseAdapter() {
-        override fun getCount(): Int = items.size
-        override fun getItem(position: Int): WhitelistDialogItem = items[position]
-        override fun getItemId(position: Int): Long = position.toLong()
+    private inner class OverlayWhitelistAdapter(
+        private val clickListener: (WhitelistDialogItem) -> Unit
+    ) : RecyclerView.Adapter<OverlayWhitelistAdapter.ViewHolder>() {
 
-        fun update(newItems: List<WhitelistDialogItem>) {
-            items = newItems
+        private val items = mutableListOf<WhitelistDialogItem>()
+
+        fun submitList(list: List<WhitelistDialogItem>) {
+            items.clear()
+            items.addAll(list)
             notifyDataSetChanged()
         }
 
-        override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
-            val view = convertView ?: LayoutInflater.from(this@LockOverlayService)
-                .inflate(R.layout.item_whitelist_dialog, parent, false)
-            val item = getItem(position)
-            val iconView = view.findViewById<ImageView>(R.id.appIcon)
-            val labelView = view.findViewById<TextView>(R.id.appLabel)
-            val countdownView = view.findViewById<TextView>(R.id.appCountdown)
-            val icon = runCatching { packageManager.getApplicationIcon(item.app.packageName) }.getOrNull()
-            iconView.setImageDrawable(icon ?: getDrawable(android.R.drawable.sym_def_app_icon))
-            labelView.text = item.app.label
-            val now = System.currentTimeMillis()
-            val restricted = item.isRestricted(now)
-            if (restricted && item.restrictedUntil != null) {
-                val remaining = item.restrictedUntil - now
-                countdownView.visibility = View.VISIBLE
-                countdownView.text = getString(R.string.restriction_available_in, formatDuration(remaining))
-                view.alpha = 0.4f
-            } else {
-                countdownView.visibility = View.GONE
-                view.alpha = 1f
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val binding = com.focuslock.databinding.ItemWhitelistDialogBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return ViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind(items[position])
+        }
+
+        override fun getItemCount(): Int = items.size
+
+        inner class ViewHolder(
+            private val binding: com.focuslock.databinding.ItemWhitelistDialogBinding
+        ) : RecyclerView.ViewHolder(binding.root) {
+            fun bind(item: WhitelistDialogItem) {
+                val icon = runCatching { packageManager.getApplicationIcon(item.app.packageName) }.getOrNull()
+                binding.appIcon.setImageDrawable(icon ?: getDrawable(android.R.drawable.sym_def_app_icon))
+                binding.appLabel.text = item.app.label
+                val now = System.currentTimeMillis()
+                val restricted = item.isRestricted(now)
+                if (restricted && item.restrictedUntil != null) {
+                    val remaining = item.restrictedUntil - now
+                    binding.appCountdown.visibility = View.VISIBLE
+                    binding.appCountdown.text =
+                        getString(R.string.restriction_available_in, formatDuration(remaining))
+                    binding.root.alpha = 0.4f
+                } else {
+                    binding.appCountdown.visibility = View.GONE
+                    binding.root.alpha = 1f
+                }
+                binding.root.setOnClickListener { clickListener(item) }
             }
-            return view
         }
     }
 

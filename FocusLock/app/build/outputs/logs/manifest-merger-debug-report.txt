@@ -37,6 +37,7 @@ MERGED from [androidx.customview:customview:1.1.0] C:\Users\xtxia\.gradle\caches
 MERGED from [androidx.core:core:1.13.0] C:\Users\xtxia\.gradle\caches\transforms-3\f9af022641a3ec2f13830b958febfcce\transformed\core-1.13.0\AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\xtxia\.gradle\caches\transforms-3\2f65ede5f21c52393be981bc0cc0d4d9\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.2] C:\Users\xtxia\.gradle\caches\transforms-3\36a50f2b85cfe8a7f98184aa1ca5f360\transformed\jetified-lifecycle-runtime-ktx-2.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.flexbox:flexbox:3.0.0] C:\Users\xtxia\.gradle\caches\transforms-3\c467c31b74bc86112219b1380abef7dc\transformed\jetified-flexbox-3.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\xtxia\.gradle\caches\transforms-3\30390461025cb37ba6e4feddc97f7b26\transformed\room-runtime-2.5.2\AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.sqlite:sqlite-framework:2.3.1] C:\Users\xtxia\.gradle\caches\transforms-3\89a3cd3249d8979104d447ba6da46412\transformed\sqlite-framework-2.3.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.sqlite:sqlite:2.3.1] C:\Users\xtxia\.gradle\caches\transforms-3\81e92450e4bda2fa044f8e7c9f9ec7ff\transformed\sqlite-2.3.1\AndroidManifest.xml:17:1-22:12
@@ -249,6 +250,8 @@ MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\xtxia\.gradle\
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\xtxia\.gradle\caches\transforms-3\2f65ede5f21c52393be981bc0cc0d4d9\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml:5:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.2] C:\Users\xtxia\.gradle\caches\transforms-3\36a50f2b85cfe8a7f98184aa1ca5f360\transformed\jetified-lifecycle-runtime-ktx-2.6.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime-ktx:2.6.2] C:\Users\xtxia\.gradle\caches\transforms-3\36a50f2b85cfe8a7f98184aa1ca5f360\transformed\jetified-lifecycle-runtime-ktx-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.flexbox:flexbox:3.0.0] C:\Users\xtxia\.gradle\caches\transforms-3\c467c31b74bc86112219b1380abef7dc\transformed\jetified-flexbox-3.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.flexbox:flexbox:3.0.0] C:\Users\xtxia\.gradle\caches\transforms-3\c467c31b74bc86112219b1380abef7dc\transformed\jetified-flexbox-3.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\xtxia\.gradle\caches\transforms-3\30390461025cb37ba6e4feddc97f7b26\transformed\room-runtime-2.5.2\AndroidManifest.xml:21:5-44
 MERGED from [androidx.room:room-runtime:2.5.2] C:\Users\xtxia\.gradle\caches\transforms-3\30390461025cb37ba6e4feddc97f7b26\transformed\room-runtime-2.5.2\AndroidManifest.xml:21:5-44
 MERGED from [androidx.sqlite:sqlite-framework:2.3.1] C:\Users\xtxia\.gradle\caches\transforms-3\89a3cd3249d8979104d447ba6da46412\transformed\sqlite-framework-2.3.1\AndroidManifest.xml:20:5-44

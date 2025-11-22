@@ -41,7 +41,7 @@ class AppLockFragment : Fragment() {
         }
     }
     private val appPlanAdapter by lazy {
-        AppRestrictionPlanAdapter(::toggleRestrictionPlan, ::confirmDeletePlan) { packageName ->
+        AppRestrictionPlanAdapter(::toggleRestrictionPlan, ::confirmDeletePlan, ::requestEditAppPlan) { packageName ->
             loadAppIcon(packageName)
         }
     }
@@ -71,7 +71,7 @@ class AppLockFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.whitelistRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.whitelistRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 5)
         binding.whitelistRecyclerView.adapter = displayAdapter
 
         binding.configureWhitelistButton.setOnClickListener {
@@ -140,17 +140,31 @@ class AppLockFragment : Fragment() {
             .show()
     }
 
-    private fun showAddRestrictionPlanDialog() {
+    private fun requestEditAppPlan(plan: AppRestrictionPlan) {
+        if (plan.isEnabled) {
+            AlertDialog.Builder(requireContext())
+                .setMessage(R.string.disable_restriction_to_edit)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+        } else {
+            showAddRestrictionPlanDialog(plan)
+        }
+    }
+
+    private fun showAddRestrictionPlanDialog(existing: AppRestrictionPlan? = null) {
         if (latestWhitelist.isEmpty()) {
             Toast.makeText(requireContext(), R.string.restriction_requires_whitelist, Toast.LENGTH_SHORT).show()
             return
         }
         val dialogBinding = DialogAddAppPlanBinding.inflate(layoutInflater)
-        var startMinutesLocal = 20 * 60
-        var endMinutesLocal = 22 * 60
+        var startMinutesLocal = existing?.startMinutes ?: 20 * 60
+        var endMinutesLocal = existing?.endMinutes ?: 22 * 60
         dialogBinding.dialogStartTimeValue.text = formatTimeLabel(startMinutesLocal)
         dialogBinding.dialogEndTimeValue.text = formatTimeLabel(endMinutesLocal)
-        val selectedDays = mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
+        val selectedDays = existing?.let { plan ->
+            DayOfWeek.values().filter { plan.isDaySelected(it) }.toMutableSet()
+        } ?: mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
+        val selectAllByDefault = existing == null
         val dayChipMap = mapOf(
             dialogBinding.dialogChipMonday to DayOfWeek.MONDAY,
             dialogBinding.dialogChipTuesday to DayOfWeek.TUESDAY,
@@ -161,13 +175,17 @@ class AppLockFragment : Fragment() {
             dialogBinding.dialogChipSunday to DayOfWeek.SUNDAY
         )
         dayChipMap.forEach { (chip, day) ->
-            chip.isChecked = true
+            val checked = if (selectAllByDefault) true else selectedDays.contains(day)
+            chip.isChecked = checked
+            if (selectAllByDefault && !selectedDays.contains(day)) {
+                selectedDays.add(day)
+            }
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) selectedDays.add(day) else selectedDays.remove(day)
             }
         }
 
-        val selectedPackages = mutableSetOf<String>()
+        val selectedPackages = existing?.apps?.map { it.packageName }?.toMutableSet() ?: mutableSetOf()
         updateSelectedAppPreview(dialogBinding, selectedPackages)
 
         dialogBinding.dialogStartTimeButton.setOnClickListener {
@@ -187,7 +205,7 @@ class AppLockFragment : Fragment() {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.restriction_plan_dialog_title)
+            .setTitle(if (existing == null) R.string.restriction_plan_dialog_title else R.string.edit_restriction_plan_title)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save_plan_button) { _, _ ->
                 if (selectedDays.isEmpty()) {
@@ -200,12 +218,22 @@ class AppLockFragment : Fragment() {
                 }
                 val mask = selectedDays.fold(0) { acc, day -> acc or (1 shl day.ordinal) }
                 viewLifecycleOwner.lifecycleScope.launch {
-                    restrictionPlanRepository.insertPlan(
-                        startMinutesLocal,
-                        endMinutesLocal,
-                        mask,
-                        selectedPackages.toList()
-                    )
+                    if (existing == null) {
+                        restrictionPlanRepository.insertPlan(
+                            startMinutesLocal,
+                            endMinutesLocal,
+                            mask,
+                            selectedPackages.toList()
+                        )
+                    } else {
+                        restrictionPlanRepository.updatePlanDetails(
+                            existing,
+                            startMinutesLocal,
+                            endMinutesLocal,
+                            mask,
+                            selectedPackages.toList()
+                        )
+                    }
                     Toast.makeText(requireContext(), R.string.restriction_plan_saved, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -220,7 +248,8 @@ class AppLockFragment : Fragment() {
         if (latestWhitelist.isEmpty()) return
         val selectorBinding = DialogAppSelectorBinding.inflate(layoutInflater)
         val adapter = AppSelectionAdapter(latestWhitelist, selectedPackages)
-        selectorBinding.appRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        selectorBinding.appRecyclerView.layoutManager =
+            androidx.recyclerview.widget.GridLayoutManager(requireContext(), 5)
         selectorBinding.appRecyclerView.adapter = adapter
 
         AlertDialog.Builder(requireContext())
@@ -253,7 +282,13 @@ class AppLockFragment : Fragment() {
             itemBinding.appIcon.setImageDrawable(
                 icon ?: ContextCompat.getDrawable(requireContext(), defaultIcon)
             )
-            dialogBinding.selectedAppsContainer.addView(itemBinding.root)
+            val params = com.google.android.flexbox.FlexboxLayout.LayoutParams(
+                resources.getDimensionPixelSize(R.dimen.app_icon_item_width),
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 8, 8, 8)
+            }
+            dialogBinding.selectedAppsContainer.addView(itemBinding.root, params)
         }
     }
 

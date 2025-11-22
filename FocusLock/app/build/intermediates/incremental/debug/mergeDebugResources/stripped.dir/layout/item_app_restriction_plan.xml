@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
@@ -30,21 +31,25 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/toggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/add_plan_button"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            app:cornerRadius="50dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/delete_plan"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            app:cornerRadius="50dp" />
     </LinearLayout>
 
     <TextView
@@ -56,11 +61,12 @@
         android:textColor="@color/white"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/appListContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:orientation="vertical" />
+        app:flexWrap="wrap"
+        app:alignItems="flex_start" />
 
 </LinearLayout>

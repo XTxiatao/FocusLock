@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -13,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import java.lang.NullPointerException;
@@ -63,7 +63,7 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
   public final Button selectAppsButton;
 
   @NonNull
-  public final LinearLayout selectedAppsContainer;
+  public final FlexboxLayout selectedAppsContainer;
 
   @NonNull
   public final TextView selectedAppsValue;
@@ -75,7 +75,7 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
       @NonNull ChipGroup dialogDayGroup, @NonNull Button dialogEndTimeButton,
       @NonNull TextView dialogEndTimeValue, @NonNull Button dialogStartTimeButton,
       @NonNull TextView dialogStartTimeValue, @NonNull Button selectAppsButton,
-      @NonNull LinearLayout selectedAppsContainer, @NonNull TextView selectedAppsValue) {
+      @NonNull FlexboxLayout selectedAppsContainer, @NonNull TextView selectedAppsValue) {
     this.rootView = rootView;
     this.dialogChipFriday = dialogChipFriday;
     this.dialogChipMonday = dialogChipMonday;
@@ -200,7 +200,7 @@ public final class DialogAddAppPlanBinding implements ViewBinding {
       }
 
       id = R.id.selectedAppsContainer;
-      LinearLayout selectedAppsContainer = ViewBindings.findChildViewById(rootView, id);
+      FlexboxLayout selectedAppsContainer = ViewBindings.findChildViewById(rootView, id);
       if (selectedAppsContainer == null) {
         break missingId;
       }
