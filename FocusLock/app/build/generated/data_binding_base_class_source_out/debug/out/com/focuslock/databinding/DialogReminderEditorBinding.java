@@ -15,7 +15,6 @@ import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -47,25 +46,25 @@ public final class DialogReminderEditorBinding implements ViewBinding {
   public final Chip chipWednesday;
 
   @NonNull
-  public final Button dateButton;
-
-  @NonNull
   public final TextInputEditText descriptionInput;
 
   @NonNull
-  public final Button endDateButton;
+  public final LinearLayout dueContainer;
 
   @NonNull
-  public final SwitchMaterial endDateSwitch;
+  public final Button dueDateTimeButton;
 
   @NonNull
-  public final Button endTimeButton;
+  public final Button dueToggleButton;
+
+  @NonNull
+  public final Button endDateTimeButton;
+
+  @NonNull
+  public final Button endToggleButton;
 
   @NonNull
   public final Spinner recurrenceSpinner;
-
-  @NonNull
-  public final Button timeButton;
 
   @NonNull
   public final TextInputEditText titleInput;
@@ -79,11 +78,11 @@ public final class DialogReminderEditorBinding implements ViewBinding {
   private DialogReminderEditorBinding(@NonNull ScrollView rootView, @NonNull Chip chipFriday,
       @NonNull Chip chipMonday, @NonNull Chip chipSaturday, @NonNull Chip chipSunday,
       @NonNull Chip chipThursday, @NonNull Chip chipTuesday, @NonNull Chip chipWednesday,
-      @NonNull Button dateButton, @NonNull TextInputEditText descriptionInput,
-      @NonNull Button endDateButton, @NonNull SwitchMaterial endDateSwitch,
-      @NonNull Button endTimeButton, @NonNull Spinner recurrenceSpinner, @NonNull Button timeButton,
-      @NonNull TextInputEditText titleInput, @NonNull ChipGroup weekChipGroup,
-      @NonNull LinearLayout weeklyContainer) {
+      @NonNull TextInputEditText descriptionInput, @NonNull LinearLayout dueContainer,
+      @NonNull Button dueDateTimeButton, @NonNull Button dueToggleButton,
+      @NonNull Button endDateTimeButton, @NonNull Button endToggleButton,
+      @NonNull Spinner recurrenceSpinner, @NonNull TextInputEditText titleInput,
+      @NonNull ChipGroup weekChipGroup, @NonNull LinearLayout weeklyContainer) {
     this.rootView = rootView;
     this.chipFriday = chipFriday;
     this.chipMonday = chipMonday;
@@ -92,13 +91,13 @@ public final class DialogReminderEditorBinding implements ViewBinding {
     this.chipThursday = chipThursday;
     this.chipTuesday = chipTuesday;
     this.chipWednesday = chipWednesday;
-    this.dateButton = dateButton;
     this.descriptionInput = descriptionInput;
-    this.endDateButton = endDateButton;
-    this.endDateSwitch = endDateSwitch;
-    this.endTimeButton = endTimeButton;
+    this.dueContainer = dueContainer;
+    this.dueDateTimeButton = dueDateTimeButton;
+    this.dueToggleButton = dueToggleButton;
+    this.endDateTimeButton = endDateTimeButton;
+    this.endToggleButton = endToggleButton;
     this.recurrenceSpinner = recurrenceSpinner;
-    this.timeButton = timeButton;
     this.titleInput = titleInput;
     this.weekChipGroup = weekChipGroup;
     this.weeklyContainer = weeklyContainer;
@@ -173,45 +172,45 @@ public final class DialogReminderEditorBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.dateButton;
-      Button dateButton = ViewBindings.findChildViewById(rootView, id);
-      if (dateButton == null) {
-        break missingId;
-      }
-
       id = R.id.descriptionInput;
       TextInputEditText descriptionInput = ViewBindings.findChildViewById(rootView, id);
       if (descriptionInput == null) {
         break missingId;
       }
 
-      id = R.id.endDateButton;
-      Button endDateButton = ViewBindings.findChildViewById(rootView, id);
-      if (endDateButton == null) {
+      id = R.id.dueContainer;
+      LinearLayout dueContainer = ViewBindings.findChildViewById(rootView, id);
+      if (dueContainer == null) {
         break missingId;
       }
 
-      id = R.id.endDateSwitch;
-      SwitchMaterial endDateSwitch = ViewBindings.findChildViewById(rootView, id);
-      if (endDateSwitch == null) {
+      id = R.id.dueDateTimeButton;
+      Button dueDateTimeButton = ViewBindings.findChildViewById(rootView, id);
+      if (dueDateTimeButton == null) {
         break missingId;
       }
 
-      id = R.id.endTimeButton;
-      Button endTimeButton = ViewBindings.findChildViewById(rootView, id);
-      if (endTimeButton == null) {
+      id = R.id.dueToggleButton;
+      Button dueToggleButton = ViewBindings.findChildViewById(rootView, id);
+      if (dueToggleButton == null) {
+        break missingId;
+      }
+
+      id = R.id.endDateTimeButton;
+      Button endDateTimeButton = ViewBindings.findChildViewById(rootView, id);
+      if (endDateTimeButton == null) {
+        break missingId;
+      }
+
+      id = R.id.endToggleButton;
+      Button endToggleButton = ViewBindings.findChildViewById(rootView, id);
+      if (endToggleButton == null) {
         break missingId;
       }
 
       id = R.id.recurrenceSpinner;
       Spinner recurrenceSpinner = ViewBindings.findChildViewById(rootView, id);
       if (recurrenceSpinner == null) {
-        break missingId;
-      }
-
-      id = R.id.timeButton;
-      Button timeButton = ViewBindings.findChildViewById(rootView, id);
-      if (timeButton == null) {
         break missingId;
       }
 
@@ -234,9 +233,9 @@ public final class DialogReminderEditorBinding implements ViewBinding {
       }
 
       return new DialogReminderEditorBinding((ScrollView) rootView, chipFriday, chipMonday,
-          chipSaturday, chipSunday, chipThursday, chipTuesday, chipWednesday, dateButton,
-          descriptionInput, endDateButton, endDateSwitch, endTimeButton, recurrenceSpinner,
-          timeButton, titleInput, weekChipGroup, weeklyContainer);
+          chipSaturday, chipSunday, chipThursday, chipTuesday, chipWednesday, descriptionInput,
+          dueContainer, dueDateTimeButton, dueToggleButton, endDateTimeButton, endToggleButton,
+          recurrenceSpinner, titleInput, weekChipGroup, weeklyContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

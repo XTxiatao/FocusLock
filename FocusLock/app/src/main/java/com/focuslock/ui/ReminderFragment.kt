@@ -1,14 +1,16 @@
 package com.focuslock.ui
 
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -20,6 +22,7 @@ import com.focuslock.R
 import com.focuslock.data.ReminderRepository
 import com.focuslock.databinding.DialogArchivedRemindersBinding
 import com.focuslock.databinding.DialogReminderEditorBinding
+import com.focuslock.databinding.DialogTimePickerBinding
 import com.focuslock.databinding.FragmentReminderBinding
 import com.focuslock.model.Reminder
 import com.focuslock.model.ReminderRecurrence
@@ -208,15 +211,24 @@ class ReminderFragment : Fragment() {
             ReminderRecurrence.YEARLY
         )
 
-        var selectedRecurrence = reminder?.recurrence ?: ReminderRecurrence.NONE
         val zone = ZoneId.systemDefault()
-        var selectedDateTime = reminder?.anchorDateTime(zone)
-            ?: ZonedDateTime.now(zone).plusMinutes(30).withSecond(0).withNano(0)
+        var selectedDueDateTime = reminder?.anchorDateTime(zone)?.withSecond(0)?.withNano(0)
+        var selectedRecurrence = reminder?.recurrence ?: ReminderRecurrence.NONE
+        if (selectedDueDateTime == null) {
+            selectedRecurrence = ReminderRecurrence.NONE
+        }
         var selectedEndDateTime = reminder?.endDateTimeMillis?.let {
-            java.time.Instant.ofEpochMilli(it).atZone(zone)
+            java.time.Instant.ofEpochMilli(it).atZone(zone).withSecond(0).withNano(0)
         }
         val weeklySelection = reminder?.selectedDays()?.toMutableSet()
-            ?: mutableSetOf(selectedDateTime.dayOfWeek)
+            ?: mutableSetOf((selectedDueDateTime ?: ZonedDateTime.now(zone)).dayOfWeek)
+        var dueEnabled = selectedDueDateTime != null
+        var endEnabled = selectedEndDateTime != null
+        var lastRecurrenceSelection = if (selectedRecurrence == ReminderRecurrence.NONE) {
+            ReminderRecurrence.DAILY
+        } else {
+            selectedRecurrence
+        }
 
         val dayChipMap = mapOf(
             DayOfWeek.MONDAY to dialogBinding.chipMonday,
@@ -238,108 +250,116 @@ class ReminderFragment : Fragment() {
         }
         refreshWeekChips()
 
-        fun updateDateLabel() {
-            dialogBinding.dateButton.text = selectedDateTime.format(DATE_FORMATTER)
-            dialogBinding.timeButton.text = selectedDateTime.format(TIME_FORMATTER)
-        }
-        fun updateEndDateLabel() {
-            val hasEnd = selectedEndDateTime != null
-            dialogBinding.endDateSwitch.isChecked = hasEnd
-            dialogBinding.endDateButton.isEnabled = hasEnd
-            dialogBinding.endTimeButton.isEnabled = hasEnd
-            dialogBinding.endDateButton.text = selectedEndDateTime?.format(DATE_FORMATTER)
-                ?: getString(R.string.reminder_pick_date)
-            dialogBinding.endTimeButton.text = selectedEndDateTime?.format(TIME_FORMATTER)
-                ?: getString(R.string.reminder_pick_time)
-        }
-        updateDateLabel()
-        updateEndDateLabel()
+        fun ensureDueDateTime(): ZonedDateTime =
+            (selectedDueDateTime ?: ZonedDateTime.now(zone).plusMinutes(30)).withSecond(0).withNano(0)
 
-        dialogBinding.dateButton.setOnClickListener {
-            val currentDate = selectedDateTime.toLocalDate()
-            DatePickerDialog(
-                requireContext(),
-                { _, year, month, dayOfMonth ->
-                    selectedDateTime = selectedDateTime
-                        .withYear(year)
-                        .withMonth(month + 1)
-                        .withDayOfMonth(dayOfMonth)
-                    updateDateLabel()
-                },
-                currentDate.year,
-                currentDate.monthValue - 1,
-                currentDate.dayOfMonth
-            ).show()
-        }
+        fun ensureEndDateTime(): ZonedDateTime =
+            (selectedEndDateTime ?: selectedDueDateTime ?: ZonedDateTime.now(zone).plusMinutes(30))
+                .withSecond(0)
+                .withNano(0)
 
-        dialogBinding.timeButton.setOnClickListener {
-            val currentTime = selectedDateTime.toLocalTime()
-            TimePickerDialog(
-                requireContext(),
-                { _, hourOfDay, minute ->
-                    selectedDateTime = selectedDateTime.withHour(hourOfDay).withMinute(minute)
-                    updateDateLabel()
-                },
-                currentTime.hour,
-                currentTime.minute,
-                true
-            ).show()
-        }
-
-        dialogBinding.endDateSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (!isChecked) {
-                selectedEndDateTime = null
-            } else if (selectedEndDateTime == null) {
-                selectedEndDateTime = selectedDateTime
+        fun updateToggleButton(button: Button, enabledState: Boolean) {
+            val color = if (enabledState) {
+                ContextCompat.getColor(requireContext(), R.color.plan_active_green)
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.plan_inactive_gray)
             }
-            updateEndDateLabel()
+            button.backgroundTintList = ColorStateList.valueOf(color)
+            button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         }
 
-        dialogBinding.endDateButton.setOnClickListener {
-            val base = selectedEndDateTime ?: selectedDateTime
-            DatePickerDialog(
-                requireContext(),
-                { _, year, month, dayOfMonth ->
-                    selectedEndDateTime = base
-                        .withYear(year)
-                        .withMonth(month + 1)
-                        .withDayOfMonth(dayOfMonth)
-                    updateEndDateLabel()
-                },
-                base.year,
-                base.monthValue - 1,
-                base.dayOfMonth
-            ).show()
+        fun updateRecurrenceAvailability() {
+            dialogBinding.recurrenceSpinner.isEnabled = dueEnabled
+            dialogBinding.recurrenceSpinner.alpha = if (dueEnabled) 1f else 0.5f
         }
 
-        dialogBinding.endTimeButton.setOnClickListener {
-            val base = selectedEndDateTime ?: selectedDateTime
-            TimePickerDialog(
-                requireContext(),
-                { _, hourOfDay, minute ->
-                    selectedEndDateTime = base.withHour(hourOfDay).withMinute(minute)
-                    updateEndDateLabel()
-                },
-                base.hour,
-                base.minute,
-                true
-            ).show()
+        fun updateDueUi() {
+            updateToggleButton(dialogBinding.dueToggleButton, dueEnabled)
+            dialogBinding.dueDateTimeButton.isEnabled = dueEnabled
+            dialogBinding.dueDateTimeButton.text = selectedDueDateTime?.let {
+                DATE_TIME_SUMMARY_FORMATTER.format(it)
+            } ?: getString(R.string.reminder_no_due_time)
         }
 
-        dialogBinding.recurrenceSpinner.setSelection(recurrenceOptions.indexOf(selectedRecurrence))
+        fun updateEndUi() {
+            val active = dueEnabled && endEnabled
+            dialogBinding.endToggleButton.isEnabled = dueEnabled
+            updateToggleButton(dialogBinding.endToggleButton, active)
+            dialogBinding.endDateTimeButton.isEnabled = active
+            dialogBinding.endDateTimeButton.text = selectedEndDateTime?.let {
+                DATE_TIME_SUMMARY_FORMATTER.format(it)
+            } ?: getString(R.string.reminder_no_end_time)
+        }
+
         fun updateRecurrenceUi() {
-            dialogBinding.weeklyContainer.isVisible = selectedRecurrence == ReminderRecurrence.WEEKLY
-            if (selectedRecurrence != ReminderRecurrence.WEEKLY) {
+            dialogBinding.weeklyContainer.isVisible = dueEnabled && selectedRecurrence == ReminderRecurrence.WEEKLY
+            if (selectedRecurrence != ReminderRecurrence.WEEKLY && dueEnabled) {
                 if (weeklySelection.isEmpty()) {
-                    weeklySelection.add(selectedDateTime.dayOfWeek)
+                    weeklySelection.add((selectedDueDateTime ?: ZonedDateTime.now(zone)).dayOfWeek)
                 }
             }
             refreshWeekChips()
         }
+
+        dialogBinding.dueToggleButton.setOnClickListener {
+            dueEnabled = !dueEnabled
+            if (!dueEnabled) {
+                selectedDueDateTime = null
+                if (selectedRecurrence != ReminderRecurrence.NONE) {
+                    lastRecurrenceSelection = selectedRecurrence
+                }
+                selectedRecurrence = ReminderRecurrence.NONE
+                dialogBinding.recurrenceSpinner.setSelection(recurrenceOptions.indexOf(ReminderRecurrence.NONE))
+                if (endEnabled) {
+                    endEnabled = false
+                    selectedEndDateTime = null
+                }
+            } else if (selectedDueDateTime == null) {
+                selectedDueDateTime = ensureDueDateTime()
+                selectedRecurrence = lastRecurrenceSelection
+                dialogBinding.recurrenceSpinner.setSelection(recurrenceOptions.indexOf(selectedRecurrence))
+            }
+            updateRecurrenceAvailability()
+            updateRecurrenceUi()
+            updateDueUi()
+            updateEndUi()
+        }
+
+        dialogBinding.dueDateTimeButton.setOnClickListener {
+            pickDateTime(ensureDueDateTime()) { picked ->
+                selectedDueDateTime = picked
+                updateDueUi()
+            }
+        }
+
+        dialogBinding.endToggleButton.setOnClickListener {
+            endEnabled = !endEnabled
+            if (!endEnabled) {
+                selectedEndDateTime = null
+            } else if (selectedEndDateTime == null) {
+                selectedEndDateTime = ensureEndDateTime()
+            }
+            updateEndUi()
+        }
+
+        dialogBinding.endDateTimeButton.setOnClickListener {
+            pickDateTime(ensureEndDateTime()) { picked ->
+                selectedEndDateTime = picked
+                updateEndUi()
+            }
+        }
+
+        updateDueUi()
+        updateEndUi()
+        dialogBinding.recurrenceSpinner.setSelection(recurrenceOptions.indexOf(selectedRecurrence))
+        updateRecurrenceAvailability()
         updateRecurrenceUi()
         dialogBinding.recurrenceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedRecurrence = recurrenceOptions[position]
+                 if (selectedRecurrence != ReminderRecurrence.NONE) {
+                    lastRecurrenceSelection = selectedRecurrence
+                }
                 updateRecurrenceUi()
             }
 
@@ -375,15 +395,7 @@ class ReminderFragment : Fragment() {
                 } else {
                     0
                 }
-                val endMillis = if (dialogBinding.endDateSwitch.isChecked) {
-                    selectedEndDateTime?.withSecond(0)?.withNano(0)?.toInstant()?.toEpochMilli()
-                        ?: run {
-                            Toast.makeText(requireContext(), R.string.reminder_end_required, Toast.LENGTH_SHORT).show()
-                            return@setOnClickListener
-                        }
-                } else {
-                    null
-                }
+                val endMillis = selectedEndDateTime?.toInstant()?.toEpochMilli()
                 viewLifecycleOwner.lifecycleScope.launch {
                     val unique = reminderRepository.ensureUniqueTitle(title, reminder?.id)
                     if (!unique) {
@@ -394,7 +406,7 @@ class ReminderFragment : Fragment() {
                         id = reminder?.id ?: 0,
                         title = title,
                         description = dialogBinding.descriptionInput.text?.toString().orEmpty(),
-                        anchorDateTimeMillis = selectedDateTime.withSecond(0).withNano(0).toInstant().toEpochMilli(),
+                        anchorDateTimeMillis = selectedDueDateTime?.toInstant()?.toEpochMilli(),
                         recurrence = selectedRecurrence,
                         weeklyDaysMask = weeklyMask,
                         isCompleted = reminder?.isCompleted ?: false,
@@ -418,6 +430,48 @@ class ReminderFragment : Fragment() {
             mask = mask or (1 shl day.ordinal)
         }
         return mask
+    }
+
+    private fun pickDateTime(initial: ZonedDateTime, onResult: (ZonedDateTime) -> Unit) {
+        val base = initial.withSecond(0).withNano(0)
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val withDate = base.withYear(year).withMonth(month + 1).withDayOfMonth(dayOfMonth)
+                pickTimeWithWheel(withDate, onResult)
+            },
+            base.year,
+            base.monthValue - 1,
+            base.dayOfMonth
+        ).show()
+    }
+
+    private fun pickTimeWithWheel(initial: ZonedDateTime, onResult: (ZonedDateTime) -> Unit) {
+        val binding = DialogTimePickerBinding.inflate(layoutInflater)
+        binding.hourPicker.apply {
+            minValue = 0
+            maxValue = 23
+            value = initial.hour
+            setFormatter { value -> String.format("%02d", value) }
+        }
+        binding.minutePicker.apply {
+            minValue = 0
+            maxValue = 59
+            value = initial.minute
+            setFormatter { value -> String.format("%02d", value) }
+        }
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.reminder_pick_time)
+            .setView(binding.root)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                val result = initial.withHour(binding.hourPicker.value)
+                    .withMinute(binding.minutePicker.value)
+                    .withSecond(0)
+                    .withNano(0)
+                onResult(result)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun attachSwipeToCompletedRecycler(
@@ -511,5 +565,6 @@ class ReminderFragment : Fragment() {
     companion object {
         private val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
         private val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        private val DATE_TIME_SUMMARY_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d HH:mm")
     }
 }

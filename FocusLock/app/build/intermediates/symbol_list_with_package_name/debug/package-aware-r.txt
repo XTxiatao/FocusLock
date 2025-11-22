@@ -3303,7 +3303,6 @@ id currentState
 id custom
 id customPanel
 id cut
-id dateButton
 id dateLabel
 id date_picker_actions
 id daysText
@@ -3344,6 +3343,9 @@ id dragRight
 id dragStart
 id dragUp
 id dropdown_menu
+id dueContainer
+id dueDateTimeButton
+id dueToggleButton
 id durationHourPicker
 id durationLabel
 id durationMinutePicker
@@ -3358,12 +3360,11 @@ id elastic
 id embed
 id emptyRemindersView
 id end
-id endDateButton
-id endDateSwitch
+id endDateTimeButton
 id endHourPicker
 id endMinutePicker
-id endTimeButton
 id endToStart
+id endToggleButton
 id enterAlways
 id enterAlwaysCollapsed
 id escape
@@ -3406,6 +3407,7 @@ id home
 id homeAsUp
 id honorRequest
 id horizontal_only
+id hourPicker
 id icon
 id icon_group
 id ifRoom
@@ -3462,6 +3464,7 @@ id matrix
 id message
 id middle
 id mini
+id minutePicker
 id month_grid
 id month_navigation_bar
 id month_navigation_fragment_toggle
@@ -3689,7 +3692,6 @@ id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
 id time
-id timeButton
 id timeRangeText
 id title
 id titleDividerNoCustom
@@ -3878,6 +3880,7 @@ layout dialog_app_selector
 layout dialog_archived_reminders
 layout dialog_reminder_editor
 layout dialog_temporary_lock
+layout dialog_time_picker
 layout dialog_whitelist_picker
 layout fragment_app_lock
 layout fragment_device_lock
@@ -4162,16 +4165,16 @@ string reminder_completed_label
 string reminder_delete_action
 string reminder_delete_confirm
 string reminder_description_hint
-string reminder_due_date_label
 string reminder_due_prefix
+string reminder_due_toggle
 string reminder_duplicate_title
 string reminder_edit_title
 string reminder_empty_state
-string reminder_end_label
 string reminder_end_required
-string reminder_end_switch
+string reminder_end_toggle
 string reminder_floating_group_title
 string reminder_no_due_time
+string reminder_no_end_time
 string reminder_pick_date
 string reminder_pick_time
 string reminder_recurrence_label
