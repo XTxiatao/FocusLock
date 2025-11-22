@@ -4,25 +4,58 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentReminderBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final ConstraintLayout rootView;
 
-  private FragmentReminderBinding(@NonNull FrameLayout rootView) {
+  @NonNull
+  public final FloatingActionButton addReminderFab;
+
+  @NonNull
+  public final MaterialCardView archivedCard;
+
+  @NonNull
+  public final TextView archivedSubtitle;
+
+  @NonNull
+  public final TextView archivedTitle;
+
+  @NonNull
+  public final TextView emptyRemindersView;
+
+  @NonNull
+  public final RecyclerView reminderRecyclerView;
+
+  private FragmentReminderBinding(@NonNull ConstraintLayout rootView,
+      @NonNull FloatingActionButton addReminderFab, @NonNull MaterialCardView archivedCard,
+      @NonNull TextView archivedSubtitle, @NonNull TextView archivedTitle,
+      @NonNull TextView emptyRemindersView, @NonNull RecyclerView reminderRecyclerView) {
     this.rootView = rootView;
+    this.addReminderFab = addReminderFab;
+    this.archivedCard = archivedCard;
+    this.archivedSubtitle = archivedSubtitle;
+    this.archivedTitle = archivedTitle;
+    this.emptyRemindersView = emptyRemindersView;
+    this.reminderRecyclerView = reminderRecyclerView;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -43,10 +76,50 @@ public final class FragmentReminderBinding implements ViewBinding {
 
   @NonNull
   public static FragmentReminderBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.addReminderFab;
+      FloatingActionButton addReminderFab = ViewBindings.findChildViewById(rootView, id);
+      if (addReminderFab == null) {
+        break missingId;
+      }
 
-    return new FragmentReminderBinding((FrameLayout) rootView);
+      id = R.id.archivedCard;
+      MaterialCardView archivedCard = ViewBindings.findChildViewById(rootView, id);
+      if (archivedCard == null) {
+        break missingId;
+      }
+
+      id = R.id.archivedSubtitle;
+      TextView archivedSubtitle = ViewBindings.findChildViewById(rootView, id);
+      if (archivedSubtitle == null) {
+        break missingId;
+      }
+
+      id = R.id.archivedTitle;
+      TextView archivedTitle = ViewBindings.findChildViewById(rootView, id);
+      if (archivedTitle == null) {
+        break missingId;
+      }
+
+      id = R.id.emptyRemindersView;
+      TextView emptyRemindersView = ViewBindings.findChildViewById(rootView, id);
+      if (emptyRemindersView == null) {
+        break missingId;
+      }
+
+      id = R.id.reminderRecyclerView;
+      RecyclerView reminderRecyclerView = ViewBindings.findChildViewById(rootView, id);
+      if (reminderRecyclerView == null) {
+        break missingId;
+      }
+
+      return new FragmentReminderBinding((ConstraintLayout) rootView, addReminderFab, archivedCard,
+          archivedSubtitle, archivedTitle, emptyRemindersView, reminderRecyclerView);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

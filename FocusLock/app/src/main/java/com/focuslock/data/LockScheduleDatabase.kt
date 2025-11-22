@@ -8,13 +8,15 @@ import androidx.room.RoomDatabase
         LockScheduleEntity::class,
         WhitelistedAppEntity::class,
         AppRestrictionPlanEntity::class,
-        AppRestrictionPlanAppCrossRef::class
+        AppRestrictionPlanAppCrossRef::class,
+        ReminderEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class LockScheduleDatabase : RoomDatabase() {
     abstract fun lockScheduleDao(): LockScheduleDao
     abstract fun whitelistedAppDao(): WhitelistedAppDao
     abstract fun appRestrictionPlanDao(): AppRestrictionPlanDao
+    abstract fun reminderDao(): ReminderDao
 }

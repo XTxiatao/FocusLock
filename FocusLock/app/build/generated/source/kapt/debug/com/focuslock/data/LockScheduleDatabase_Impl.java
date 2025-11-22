@@ -38,9 +38,11 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
 
   private volatile AppRestrictionPlanDao _appRestrictionPlanDao;
 
+  private volatile ReminderDao _reminderDao;
+
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(3) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(4) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `lock_schedule` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_minutes` INTEGER NOT NULL, `end_minutes` INTEGER NOT NULL, `days_bitmask` INTEGER NOT NULL, `is_enabled` INTEGER NOT NULL)");
@@ -49,8 +51,10 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `app_restriction_plan_apps` (`planId` INTEGER NOT NULL, `packageName` TEXT NOT NULL, PRIMARY KEY(`planId`, `packageName`), FOREIGN KEY(`planId`) REFERENCES `app_restriction_plans`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`packageName`) REFERENCES `whitelisted_apps`(`packageName`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_planId` ON `app_restriction_plan_apps` (`planId`)");
         _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_packageName` ON `app_restriction_plan_apps` (`packageName`)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `reminders` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `anchor_date_time` INTEGER NOT NULL, `recurrence_type` TEXT NOT NULL, `weekly_days_mask` INTEGER NOT NULL, `is_active` INTEGER NOT NULL, `is_completed` INTEGER NOT NULL, `is_archived` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL)");
+        _db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_reminders_title` ON `reminders` (`title`)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '52e85d74bdc4f15733985cf70abdbed8')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a59f516fa99ba855f6df5f90e18608d8')");
       }
 
       @Override
@@ -59,6 +63,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
         _db.execSQL("DROP TABLE IF EXISTS `whitelisted_apps`");
         _db.execSQL("DROP TABLE IF EXISTS `app_restriction_plans`");
         _db.execSQL("DROP TABLE IF EXISTS `app_restriction_plan_apps`");
+        _db.execSQL("DROP TABLE IF EXISTS `reminders`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -156,9 +161,31 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
                   + " Expected:\n" + _infoAppRestrictionPlanApps + "\n"
                   + " Found:\n" + _existingAppRestrictionPlanApps);
         }
+        final HashMap<String, TableInfo.Column> _columnsReminders = new HashMap<String, TableInfo.Column>(11);
+        _columnsReminders.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("description", new TableInfo.Column("description", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("anchor_date_time", new TableInfo.Column("anchor_date_time", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("recurrence_type", new TableInfo.Column("recurrence_type", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("weekly_days_mask", new TableInfo.Column("weekly_days_mask", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("is_active", new TableInfo.Column("is_active", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("is_completed", new TableInfo.Column("is_completed", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("is_archived", new TableInfo.Column("is_archived", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("created_at", new TableInfo.Column("created_at", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("updated_at", new TableInfo.Column("updated_at", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysReminders = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesReminders = new HashSet<TableInfo.Index>(1);
+        _indicesReminders.add(new TableInfo.Index("index_reminders_title", true, Arrays.asList("title"), Arrays.asList("ASC")));
+        final TableInfo _infoReminders = new TableInfo("reminders", _columnsReminders, _foreignKeysReminders, _indicesReminders);
+        final TableInfo _existingReminders = TableInfo.read(_db, "reminders");
+        if (! _infoReminders.equals(_existingReminders)) {
+          return new RoomOpenHelper.ValidationResult(false, "reminders(com.focuslock.data.ReminderEntity).\n"
+                  + " Expected:\n" + _infoReminders + "\n"
+                  + " Found:\n" + _existingReminders);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "52e85d74bdc4f15733985cf70abdbed8", "b1f6aceb3152c6d8e2865e9f42abefc6");
+    }, "a59f516fa99ba855f6df5f90e18608d8", "74f28364a61b1a49d3dcdb7499f136b9");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -171,7 +198,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule","whitelisted_apps","app_restriction_plans","app_restriction_plan_apps");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule","whitelisted_apps","app_restriction_plans","app_restriction_plan_apps","reminders");
   }
 
   @Override
@@ -191,6 +218,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
       _db.execSQL("DELETE FROM `whitelisted_apps`");
       _db.execSQL("DELETE FROM `app_restriction_plans`");
       _db.execSQL("DELETE FROM `app_restriction_plan_apps`");
+      _db.execSQL("DELETE FROM `reminders`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -210,6 +238,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
     _typeConvertersMap.put(LockScheduleDao.class, LockScheduleDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(WhitelistedAppDao.class, WhitelistedAppDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(AppRestrictionPlanDao.class, AppRestrictionPlanDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(ReminderDao.class, ReminderDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -263,6 +292,20 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
           _appRestrictionPlanDao = new AppRestrictionPlanDao_Impl(this);
         }
         return _appRestrictionPlanDao;
+      }
+    }
+  }
+
+  @Override
+  public ReminderDao reminderDao() {
+    if (_reminderDao != null) {
+      return _reminderDao;
+    } else {
+      synchronized(this) {
+        if(_reminderDao == null) {
+          _reminderDao = new ReminderDao_Impl(this);
+        }
+        return _reminderDao;
       }
     }
   }

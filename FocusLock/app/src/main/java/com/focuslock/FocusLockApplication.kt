@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.focuslock.data.AppRestrictionPlanRepository
 import com.focuslock.data.LockScheduleDatabase
 import com.focuslock.data.LockScheduleRepository
+import com.focuslock.data.ReminderRepository
 import com.focuslock.data.WhitelistedAppRepository
 
 class FocusLockApplication : Application() {
@@ -19,6 +20,10 @@ class FocusLockApplication : Application() {
 
     val appRestrictionPlanRepository by lazy {
         AppRestrictionPlanRepository(lockScheduleDatabase.appRestrictionPlanDao())
+    }
+
+    val reminderRepository by lazy {
+        ReminderRepository(lockScheduleDatabase.reminderDao())
     }
 
     private val lockScheduleDatabase by lazy {

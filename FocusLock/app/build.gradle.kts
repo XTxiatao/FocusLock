@@ -50,4 +50,5 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 }

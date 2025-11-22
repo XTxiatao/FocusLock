@@ -51,4 +51,60 @@
     <string name="end_time_label">End</string>
     <string name="hours_label">Hours</string>
     <string name="minutes_label">Minutes</string>
+    <string name="reminder_archived_card_title">Archived reminders</string>
+    <string name="reminder_archived_card_subtitle">Tap to review archived items</string>
+    <plurals name="reminder_archived_count">
+        <item quantity="one">%d archived item</item>
+        <item quantity="other">%d archived items</item>
+    </plurals>
+    <string name="reminder_add_button">Add reminder</string>
+    <string name="reminder_edit_title">Edit reminder</string>
+    <string name="reminder_empty_state">No reminders yet. Tap + to create one.</string>
+    <string name="reminder_archived_empty">Nothing archived yet.</string>
+    <string name="reminder_title_hint">Title</string>
+    <string name="reminder_description_hint">Notes</string>
+    <string name="reminder_due_date_label">Due date &amp; time</string>
+    <string name="reminder_pick_date">Pick date</string>
+    <string name="reminder_pick_time">Pick time</string>
+    <string name="reminder_recurrence_label">Repeat</string>
+    <string name="reminder_weekly_label">Repeat on</string>
+    <string name="reminder_week_monday">Mon</string>
+    <string name="reminder_week_tuesday">Tue</string>
+    <string name="reminder_week_wednesday">Wed</string>
+    <string name="reminder_week_thursday">Thu</string>
+    <string name="reminder_week_friday">Fri</string>
+    <string name="reminder_week_saturday">Sat</string>
+    <string name="reminder_week_sunday">Sun</string>
+    <string name="reminder_active_label">Enable reminder</string>
+    <string name="reminder_completed_label">Mark as completed</string>
+    <string name="reminder_toggle_label">Active</string>
+    <string name="reminder_complete_action">Complete</string>
+    <string name="reminder_archive_action">Archive</string>
+    <string name="reminder_restore_action">Restore</string>
+    <string name="reminder_delete_action">Delete</string>
+    <string name="reminder_save_button">Save reminder</string>
+    <string name="reminder_cancel_button">Cancel</string>
+    <string name="reminder_duplicate_title">Title already exists. Pick another name.</string>
+    <string name="reminder_title_required">Title is required.</string>
+    <string name="reminder_weekly_required">Select at least one weekday.</string>
+    <string name="reminder_completed_blocked">Repeating reminders cannot be marked complete.</string>
+    <string name="reminder_restore_blocked">Unmark completed before restoring.</string>
+    <string name="reminder_delete_confirm">Delete this archived reminder?</string>
+    <string name="reminder_archive_blocked">Only completed or inactive reminders can be archived.</string>
+    <string name="reminder_due_prefix">Due %1$s</string>
+    <string name="reminder_repeat_once">One time</string>
+    <string name="reminder_repeat_daily">Repeats daily</string>
+    <string name="reminder_repeat_weekly">Repeats weekly: %1$s</string>
+    <string name="reminder_repeat_monthly">Repeats monthly</string>
+    <string name="reminder_repeat_yearly">Repeats yearly</string>
+    <string name="reminder_status_completed">Completed</string>
+    <string name="reminder_status_archived">Archived</string>
+    <string name="reminder_status_inactive">Inactive</string>
+    <string-array name="reminder_recurrence_entries">
+        <item>One time</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
 </resources>
