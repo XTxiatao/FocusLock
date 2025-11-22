@@ -347,8 +347,9 @@ class LockOverlayService : Service() {
         dialog.show()
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        dialog.window?.setGravity(android.view.Gravity.BOTTOM)
     }
 
     private fun showForceUnlockDialog() {
