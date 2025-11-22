@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -90,6 +91,7 @@ class LockOverlayService : Service() {
         ReminderDayAdapter({ reminder -> openReminderEditorFromOverlay(reminder) }, ::completeReminderFromOverlay)
     }
     private var reminderEditorDialog: AlertDialog? = null
+    private var overlayResumeAfterMillis: Long = 0L
 
     override fun onCreate() {
         super.onCreate()
@@ -227,18 +229,25 @@ class LockOverlayService : Service() {
 
         val shouldLock = tempActive || scheduleActive || foregroundRestricted
         LockStateTracker.enforceHome = shouldLock
+        val overlaySuppressed = SystemClock.elapsedRealtime() < overlayResumeAfterMillis
         if (shouldLock) {
-            showOverlay()
-            val targetMillis = when {
-                tempActive -> temporaryLockExpiryMillis
-                foregroundRestricted -> activeRestrictions[foregroundPackage] ?: System.currentTimeMillis()
-                activeSchedule != null -> planEndMillis(activeSchedule, now)
-                else -> System.currentTimeMillis()
+            if (overlaySuppressed) {
+                hideOverlay()
+                stopCountdown()
+            } else {
+                showOverlay()
+                val targetMillis = when {
+                    tempActive -> temporaryLockExpiryMillis
+                    foregroundRestricted -> activeRestrictions[foregroundPackage] ?: System.currentTimeMillis()
+                    activeSchedule != null -> planEndMillis(activeSchedule, now)
+                    else -> System.currentTimeMillis()
+                }
+                startCountdownFor(targetMillis)
             }
-            startCountdownFor(targetMillis)
         } else {
             hideOverlay()
             stopCountdown()
+            overlayResumeAfterMillis = 0L
         }
         refreshWhitelistDialog()
     }
@@ -299,6 +308,8 @@ class LockOverlayService : Service() {
                 val launchIntent = packageManager.getLaunchIntentForPackage(item.app.packageName)
                 if (launchIntent != null) {
                     launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    hideOverlay()
+                    overlayResumeAfterMillis = SystemClock.elapsedRealtime() + 1000L
                     startActivity(launchIntent)
                 } else {
                     Toast.makeText(this, "Cannot launch ${item.app.label}", Toast.LENGTH_SHORT).show()

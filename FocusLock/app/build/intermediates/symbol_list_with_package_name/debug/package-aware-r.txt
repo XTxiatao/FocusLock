@@ -2127,6 +2127,9 @@ color secondary_text_default_material_dark
 color secondary_text_default_material_light
 color secondary_text_disabled_material_dark
 color secondary_text_disabled_material_light
+color surface_background_dark
+color surface_card_dark
+color surface_dialog_dark
 color switch_thumb_disabled_material_dark
 color switch_thumb_disabled_material_light
 color switch_thumb_material_dark
@@ -2218,7 +2221,6 @@ dimen abc_text_size_subhead_material
 dimen abc_text_size_subtitle_material_toolbar
 dimen abc_text_size_title_material
 dimen abc_text_size_title_material_toolbar
-dimen app_icon_item_width
 dimen appcompat_dialog_background_inset
 dimen cardview_compat_inset_shadow
 dimen cardview_default_elevation
@@ -2285,6 +2287,8 @@ dimen disabled_alpha_material_light
 dimen fastscroll_default_thickness
 dimen fastscroll_margin
 dimen fastscroll_minimum_range
+dimen focuslock_card_corner_radius
+dimen focuslock_dialog_corner_radius
 dimen highlight_alpha_material_colored
 dimen highlight_alpha_material_dark
 dimen highlight_alpha_material_light
@@ -3023,6 +3027,7 @@ drawable abc_textfield_search_material
 drawable abc_vector_test
 drawable avd_hide_password
 drawable avd_show_password
+drawable bg_dialog
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -4885,6 +4890,7 @@ style ThemeOverlay_AppCompat_Dialog
 style ThemeOverlay_AppCompat_Dialog_Alert
 style ThemeOverlay_AppCompat_Light
 style ThemeOverlay_Design_TextInputEditText
+style ThemeOverlay_FocusLock_Dialog
 style ThemeOverlay_Material3
 style ThemeOverlay_Material3_ActionBar
 style ThemeOverlay_Material3_AutoCompleteTextView
@@ -5075,6 +5081,7 @@ style Widget_Design_Snackbar
 style Widget_Design_TabLayout
 style Widget_Design_TextInputEditText
 style Widget_Design_TextInputLayout
+style Widget_FocusLock_Card
 style Widget_Material3_ActionBar_Solid
 style Widget_Material3_ActionMode
 style Widget_Material3_AppBarLayout

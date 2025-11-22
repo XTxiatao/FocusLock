@@ -12,10 +12,15 @@ color reminder_status_completed
 color reminder_status_inactive
 color reminder_text_inactive
 color reminder_text_secondary
+color surface_background_dark
+color surface_card_dark
+color surface_dialog_dark
 color teal_200
 color white
-dimen app_icon_item_width
+dimen focuslock_card_corner_radius
+dimen focuslock_dialog_corner_radius
 dimen whitelist_dialog_max_height
+drawable bg_dialog
 drawable ic_caretaker
 drawable ic_clover
 drawable ic_hourglass
@@ -259,5 +264,7 @@ string temporary_lock_duration_error
 string temporary_lock_duration_label
 string temporary_lock_section_title
 string temporary_lock_title
+style ThemeOverlay.FocusLock.Dialog
 style Theme.FocusLock
+style Widget.FocusLock.Card
 xml accessibility_service_config

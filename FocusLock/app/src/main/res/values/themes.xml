@@ -4,6 +4,21 @@
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/teal_200</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/surface_background_dark</item>
+        <item name="materialCardViewStyle">@style/Widget.FocusLock.Card</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.FocusLock.Dialog</item>
+    </style>
+
+    <style name="Widget.FocusLock.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/focuslock_card_corner_radius</item>
+        <item name="cardBackgroundColor">@color/surface_card_dark</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="strokeColor">@android:color/transparent</item>
+    </style>
+
+    <style name="ThemeOverlay.FocusLock.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@drawable/bg_dialog</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
     </style>
 </resources>
