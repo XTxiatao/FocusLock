@@ -22,6 +22,7 @@ dimen focuslock_dialog_corner_radius
 dimen whitelist_dialog_max_height
 drawable bg_dialog
 drawable ic_caretaker
+drawable ic_close
 drawable ic_clover
 drawable ic_hourglass
 drawable ic_launcher_foreground
@@ -41,7 +42,6 @@ id appListContainer
 id appListScroll
 id appLockPlanContainer
 id appPlanRecyclerView
-id appPlanTitle
 id appRecyclerView
 id archivedCard
 id archivedEmptyText
@@ -56,6 +56,7 @@ id chipSunday
 id chipThursday
 id chipTuesday
 id chipWednesday
+id closeButton
 id completedDateLabel
 id completedEntryRecycler
 id completedEntryTime
@@ -115,8 +116,6 @@ id selectedAppsScroll
 id selectedAppsValue
 id startHourPicker
 id startMinutePicker
-id statusDescription
-id statusText
 id tag_completed_swipe_helper
 id tempLockButton
 id tempLockContainer
@@ -128,7 +127,6 @@ id weeklyContainer
 id whitelistContainer
 id whitelistRecycler
 id whitelistRecyclerView
-id whitelistTitle
 layout activity_main
 layout dialog_add_app_plan
 layout dialog_add_plan

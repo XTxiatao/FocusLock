@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,40 +25,31 @@ public final class FragmentAppLockBinding implements ViewBinding {
   public final Button addAppPlanButton;
 
   @NonNull
-  public final LinearLayout appLockPlanContainer;
+  public final MaterialCardView appLockPlanContainer;
 
   @NonNull
   public final RecyclerView appPlanRecyclerView;
 
   @NonNull
-  public final TextView appPlanTitle;
-
-  @NonNull
   public final Button configureWhitelistButton;
 
   @NonNull
-  public final LinearLayout whitelistContainer;
+  public final MaterialCardView whitelistContainer;
 
   @NonNull
   public final RecyclerView whitelistRecyclerView;
 
-  @NonNull
-  public final TextView whitelistTitle;
-
   private FragmentAppLockBinding(@NonNull LinearLayout rootView, @NonNull Button addAppPlanButton,
-      @NonNull LinearLayout appLockPlanContainer, @NonNull RecyclerView appPlanRecyclerView,
-      @NonNull TextView appPlanTitle, @NonNull Button configureWhitelistButton,
-      @NonNull LinearLayout whitelistContainer, @NonNull RecyclerView whitelistRecyclerView,
-      @NonNull TextView whitelistTitle) {
+      @NonNull MaterialCardView appLockPlanContainer, @NonNull RecyclerView appPlanRecyclerView,
+      @NonNull Button configureWhitelistButton, @NonNull MaterialCardView whitelistContainer,
+      @NonNull RecyclerView whitelistRecyclerView) {
     this.rootView = rootView;
     this.addAppPlanButton = addAppPlanButton;
     this.appLockPlanContainer = appLockPlanContainer;
     this.appPlanRecyclerView = appPlanRecyclerView;
-    this.appPlanTitle = appPlanTitle;
     this.configureWhitelistButton = configureWhitelistButton;
     this.whitelistContainer = whitelistContainer;
     this.whitelistRecyclerView = whitelistRecyclerView;
-    this.whitelistTitle = whitelistTitle;
   }
 
   @Override
@@ -95,7 +86,7 @@ public final class FragmentAppLockBinding implements ViewBinding {
       }
 
       id = R.id.appLockPlanContainer;
-      LinearLayout appLockPlanContainer = ViewBindings.findChildViewById(rootView, id);
+      MaterialCardView appLockPlanContainer = ViewBindings.findChildViewById(rootView, id);
       if (appLockPlanContainer == null) {
         break missingId;
       }
@@ -106,12 +97,6 @@ public final class FragmentAppLockBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.appPlanTitle;
-      TextView appPlanTitle = ViewBindings.findChildViewById(rootView, id);
-      if (appPlanTitle == null) {
-        break missingId;
-      }
-
       id = R.id.configureWhitelistButton;
       Button configureWhitelistButton = ViewBindings.findChildViewById(rootView, id);
       if (configureWhitelistButton == null) {
@@ -119,7 +104,7 @@ public final class FragmentAppLockBinding implements ViewBinding {
       }
 
       id = R.id.whitelistContainer;
-      LinearLayout whitelistContainer = ViewBindings.findChildViewById(rootView, id);
+      MaterialCardView whitelistContainer = ViewBindings.findChildViewById(rootView, id);
       if (whitelistContainer == null) {
         break missingId;
       }
@@ -130,15 +115,9 @@ public final class FragmentAppLockBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.whitelistTitle;
-      TextView whitelistTitle = ViewBindings.findChildViewById(rootView, id);
-      if (whitelistTitle == null) {
-        break missingId;
-      }
-
       return new FragmentAppLockBinding((LinearLayout) rootView, addAppPlanButton,
-          appLockPlanContainer, appPlanRecyclerView, appPlanTitle, configureWhitelistButton,
-          whitelistContainer, whitelistRecyclerView, whitelistTitle);
+          appLockPlanContainer, appPlanRecyclerView, configureWhitelistButton, whitelistContainer,
+          whitelistRecyclerView);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

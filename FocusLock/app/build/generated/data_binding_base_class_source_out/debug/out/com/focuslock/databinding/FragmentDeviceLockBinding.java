@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,33 +25,24 @@ public final class FragmentDeviceLockBinding implements ViewBinding {
   public final Button addPlanButton;
 
   @NonNull
-  public final LinearLayout planContainer;
+  public final MaterialCardView planContainer;
 
   @NonNull
   public final RecyclerView scheduleList;
 
   @NonNull
-  public final TextView statusDescription;
-
-  @NonNull
-  public final TextView statusText;
-
-  @NonNull
   public final Button tempLockButton;
 
   @NonNull
-  public final LinearLayout tempLockContainer;
+  public final MaterialCardView tempLockContainer;
 
   private FragmentDeviceLockBinding(@NonNull LinearLayout rootView, @NonNull Button addPlanButton,
-      @NonNull LinearLayout planContainer, @NonNull RecyclerView scheduleList,
-      @NonNull TextView statusDescription, @NonNull TextView statusText,
-      @NonNull Button tempLockButton, @NonNull LinearLayout tempLockContainer) {
+      @NonNull MaterialCardView planContainer, @NonNull RecyclerView scheduleList,
+      @NonNull Button tempLockButton, @NonNull MaterialCardView tempLockContainer) {
     this.rootView = rootView;
     this.addPlanButton = addPlanButton;
     this.planContainer = planContainer;
     this.scheduleList = scheduleList;
-    this.statusDescription = statusDescription;
-    this.statusText = statusText;
     this.tempLockButton = tempLockButton;
     this.tempLockContainer = tempLockContainer;
   }
@@ -90,7 +81,7 @@ public final class FragmentDeviceLockBinding implements ViewBinding {
       }
 
       id = R.id.planContainer;
-      LinearLayout planContainer = ViewBindings.findChildViewById(rootView, id);
+      MaterialCardView planContainer = ViewBindings.findChildViewById(rootView, id);
       if (planContainer == null) {
         break missingId;
       }
@@ -101,18 +92,6 @@ public final class FragmentDeviceLockBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.statusDescription;
-      TextView statusDescription = ViewBindings.findChildViewById(rootView, id);
-      if (statusDescription == null) {
-        break missingId;
-      }
-
-      id = R.id.statusText;
-      TextView statusText = ViewBindings.findChildViewById(rootView, id);
-      if (statusText == null) {
-        break missingId;
-      }
-
       id = R.id.tempLockButton;
       Button tempLockButton = ViewBindings.findChildViewById(rootView, id);
       if (tempLockButton == null) {
@@ -120,13 +99,13 @@ public final class FragmentDeviceLockBinding implements ViewBinding {
       }
 
       id = R.id.tempLockContainer;
-      LinearLayout tempLockContainer = ViewBindings.findChildViewById(rootView, id);
+      MaterialCardView tempLockContainer = ViewBindings.findChildViewById(rootView, id);
       if (tempLockContainer == null) {
         break missingId;
       }
 
       return new FragmentDeviceLockBinding((LinearLayout) rootView, addPlanButton, planContainer,
-          scheduleList, statusDescription, statusText, tempLockButton, tempLockContainer);
+          scheduleList, tempLockButton, tempLockContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -23,7 +23,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:text="App"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/teal_200"
+            android:textColor="@color/plan_inactive_gray"
             android:textSize="9sp"
             android:includeFontPadding="false"
             android:text="00:00:00"

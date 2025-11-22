@@ -3051,6 +3051,7 @@ drawable ic_call_decline_low
 drawable ic_caretaker
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
+drawable ic_close
 drawable ic_clover
 drawable ic_hourglass
 drawable ic_keyboard_black_24dp
@@ -3235,7 +3236,6 @@ id appListContainer
 id appListScroll
 id appLockPlanContainer
 id appPlanRecyclerView
-id appPlanTitle
 id appRecyclerView
 id arc
 id archivedCard
@@ -3289,6 +3289,7 @@ id clear_text
 id clip_horizontal
 id clip_vertical
 id clockwise
+id closeButton
 id closest
 id collapseActionView
 id column
@@ -3664,8 +3665,6 @@ id startToEnd
 id startVertical
 id staticLayout
 id staticPostLayout
-id statusDescription
-id statusText
 id stop
 id stretch
 id submenuarrow
@@ -3746,7 +3745,6 @@ id west
 id whitelistContainer
 id whitelistRecycler
 id whitelistRecyclerView
-id whitelistTitle
 id withText
 id with_icon
 id withinBounds

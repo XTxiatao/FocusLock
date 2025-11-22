@@ -48,8 +48,16 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_add_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_whitelist_picker.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_whitelist_picker.xml"
+        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_lock_schedule.xml",
+        "source": "com.focuslock.app-main-40:/layout/item_lock_schedule.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_app_restriction_plan.xml",
+        "source": "com.focuslock.app-main-40:/layout/item_app_restriction_plan.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/fragment_app_lock.xml",
+        "source": "com.focuslock.app-main-40:/layout/fragment_app_lock.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_reminder.xml",
@@ -86,6 +94,10 @@
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\fragment_device_lock.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\fragment_device_lock.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/fragment_device_lock.xml",
+        "source": "com.focuslock.app-main-40:/layout/fragment_device_lock.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_temporary_lock.xml",

@@ -4,7 +4,8 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,20 +18,24 @@ import java.lang.String;
 
 public final class DialogWhitelistPickerBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final LinearLayout rootView;
+
+  @NonNull
+  public final ImageButton closeButton;
 
   @NonNull
   public final RecyclerView whitelistRecycler;
 
-  private DialogWhitelistPickerBinding(@NonNull FrameLayout rootView,
-      @NonNull RecyclerView whitelistRecycler) {
+  private DialogWhitelistPickerBinding(@NonNull LinearLayout rootView,
+      @NonNull ImageButton closeButton, @NonNull RecyclerView whitelistRecycler) {
     this.rootView = rootView;
+    this.closeButton = closeButton;
     this.whitelistRecycler = whitelistRecycler;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public LinearLayout getRoot() {
     return rootView;
   }
 
@@ -55,13 +60,20 @@ public final class DialogWhitelistPickerBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.closeButton;
+      ImageButton closeButton = ViewBindings.findChildViewById(rootView, id);
+      if (closeButton == null) {
+        break missingId;
+      }
+
       id = R.id.whitelistRecycler;
       RecyclerView whitelistRecycler = ViewBindings.findChildViewById(rootView, id);
       if (whitelistRecycler == null) {
         break missingId;
       }
 
-      return new DialogWhitelistPickerBinding((FrameLayout) rootView, whitelistRecycler);
+      return new DialogWhitelistPickerBinding((LinearLayout) rootView, closeButton,
+          whitelistRecycler);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

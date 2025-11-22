@@ -66,16 +66,6 @@ class DeviceLockFragment : Fragment() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                repository.enabledSchedulesFlow.collect { enabled ->
-                    if (enabled.isNotEmpty()) {
-                        binding.statusText.text = getString(R.string.service_notification_title)
-                        binding.statusDescription.text = getString(R.string.service_notification_text)
-                    }
-                }
-            }
-        }
     }
 
     override fun onResume() {
@@ -93,14 +83,10 @@ class DeviceLockFragment : Fragment() {
 
     private fun evaluatePermissions() {
         val missing = PermissionHelper.getMissingPermissions(requireContext())
-        if (missing.isEmpty()) {
-            binding.statusText.text = getString(R.string.service_notification_title)
-            binding.statusDescription.text = getString(R.string.service_notification_text)
-            binding.planContainer.visibility = View.VISIBLE
-        } else {
-            binding.planContainer.visibility = View.GONE
-            binding.statusText.text = getString(R.string.permission_missing_title)
-            binding.statusDescription.text = missing.first().descriptionText(requireActivity())
+        val hasAll = missing.isEmpty()
+        binding.planContainer.visibility = if (hasAll) View.VISIBLE else View.GONE
+        binding.tempLockContainer.visibility = if (hasAll) View.VISIBLE else View.GONE
+        if (!hasAll) {
             promptForPermission(missing.first())
         }
     }

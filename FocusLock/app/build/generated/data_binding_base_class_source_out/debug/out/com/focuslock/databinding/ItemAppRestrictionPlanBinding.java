@@ -13,13 +13,14 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final MaterialCardView rootView;
 
   @NonNull
   public final LinearLayout appListContainer;
@@ -36,7 +37,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   @NonNull
   public final MaterialButton toggleButton;
 
-  private ItemAppRestrictionPlanBinding(@NonNull LinearLayout rootView,
+  private ItemAppRestrictionPlanBinding(@NonNull MaterialCardView rootView,
       @NonNull LinearLayout appListContainer, @NonNull HorizontalScrollView appListScroll,
       @NonNull TextView planDays, @NonNull TextView planRange,
       @NonNull MaterialButton toggleButton) {
@@ -50,7 +51,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public MaterialCardView getRoot() {
     return rootView;
   }
 
@@ -105,7 +106,7 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemAppRestrictionPlanBinding((LinearLayout) rootView, appListContainer,
+      return new ItemAppRestrictionPlanBinding((MaterialCardView) rootView, appListContainer,
           appListScroll, planDays, planRange, toggleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);

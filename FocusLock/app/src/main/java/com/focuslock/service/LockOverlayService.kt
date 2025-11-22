@@ -170,7 +170,10 @@ class LockOverlayService : Service() {
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                     WindowManager.LayoutParams.FLAG_FULLSCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -324,9 +327,11 @@ class LockOverlayService : Service() {
         val builder = AlertDialog.Builder(
             ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
         )
-            .setTitle(R.string.select_whitelist_app_title)
             .setView(dialogBinding.root)
         val dialog = builder.create()
+        dialogBinding.closeButton.setOnClickListener {
+            dialog.dismiss()
+        }
         overlayWhitelistAdapter = adapter
         whitelistDialog = dialog
         dialog.window?.setType(
@@ -340,6 +345,10 @@ class LockOverlayService : Service() {
             whitelistDialog = null
         }
         dialog.show()
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
     }
 
     private fun showForceUnlockDialog() {
