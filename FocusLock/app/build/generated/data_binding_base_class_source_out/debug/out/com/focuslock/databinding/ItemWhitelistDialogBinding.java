@@ -24,19 +24,15 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
   public final TextView appCountdown;
 
   @NonNull
-  public final ImageView appCountdownIcon;
-
-  @NonNull
   public final ImageView appIcon;
 
   @NonNull
   public final TextView appLabel;
 
   private ItemWhitelistDialogBinding(@NonNull LinearLayout rootView, @NonNull TextView appCountdown,
-      @NonNull ImageView appCountdownIcon, @NonNull ImageView appIcon, @NonNull TextView appLabel) {
+      @NonNull ImageView appIcon, @NonNull TextView appLabel) {
     this.rootView = rootView;
     this.appCountdown = appCountdown;
-    this.appCountdownIcon = appCountdownIcon;
     this.appIcon = appIcon;
     this.appLabel = appLabel;
   }
@@ -74,12 +70,6 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.appCountdownIcon;
-      ImageView appCountdownIcon = ViewBindings.findChildViewById(rootView, id);
-      if (appCountdownIcon == null) {
-        break missingId;
-      }
-
       id = R.id.appIcon;
       ImageView appIcon = ViewBindings.findChildViewById(rootView, id);
       if (appIcon == null) {
@@ -92,8 +82,8 @@ public final class ItemWhitelistDialogBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemWhitelistDialogBinding((LinearLayout) rootView, appCountdown, appCountdownIcon,
-          appIcon, appLabel);
+      return new ItemWhitelistDialogBinding((LinearLayout) rootView, appCountdown, appIcon,
+          appLabel);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -2945,7 +2945,6 @@ dimen tooltip_precise_anchor_threshold
 dimen tooltip_vertical_padding
 dimen tooltip_y_offset_non_touch
 dimen tooltip_y_offset_touch
-dimen whitelist_dialog_max_height
 drawable abc_ab_share_pack_mtrl_alpha
 drawable abc_action_bar_item_background_material
 drawable abc_btn_borderless_material
@@ -3051,7 +3050,6 @@ drawable ic_call_decline_low
 drawable ic_caretaker
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
-drawable ic_close
 drawable ic_clover
 drawable ic_hourglass
 drawable ic_keyboard_black_24dp
@@ -3229,7 +3227,6 @@ id antiClockwise
 id anticipate
 id appCheckBox
 id appCountdown
-id appCountdownIcon
 id appIcon
 id appLabel
 id appListContainer
@@ -3289,7 +3286,6 @@ id clear_text
 id clip_horizontal
 id clip_vertical
 id clockwise
-id closeButton
 id closest
 id collapseActionView
 id column
@@ -4048,6 +4044,7 @@ string icon_content_description
 string item_view_role_description
 string lock_countdown_label
 string lock_force_unlock_confirm
+string lock_force_unlock_unavailable
 string m3_exceed_max_badge_text_suffix
 string m3_ref_typeface_brand_medium
 string m3_ref_typeface_brand_regular

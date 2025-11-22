@@ -14,14 +14,4 @@
         android:nestedScrollingEnabled="true"
         android:overScrollMode="always" />
 
-    <ImageButton
-        android:id="@+id/closeButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:color/transparent"
-        android:contentDescription="@android:string/cancel"
-        android:padding="8dp"
-        android:src="@drawable/ic_close" />
-
 </LinearLayout>

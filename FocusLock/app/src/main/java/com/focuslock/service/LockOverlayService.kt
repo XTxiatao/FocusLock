@@ -55,8 +55,12 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.concurrent.TimeUnit
 
 private const val SERVICE_LOG_TAG = "LockOverlaySvc"
+private const val PREFS_NAME = "focus_lock_prefs"
+private const val KEY_FORCE_UNLOCK_TIMESTAMP = "force_unlock_timestamp"
+private val FORCE_UNLOCK_INTERVAL_MS = TimeUnit.DAYS.toMillis(7)
 
 class LockOverlayService : Service() {
 
@@ -91,6 +95,9 @@ class LockOverlayService : Service() {
         ReminderDayAdapter({ reminder -> openReminderEditorFromOverlay(reminder) }, ::completeReminderFromOverlay)
     }
     private var reminderEditorDialog: AlertDialog? = null
+    private val prefs by lazy {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
     private var overlayResumeAfterMillis: Long = 0L
 
     override fun onCreate() {
@@ -168,8 +175,6 @@ class LockOverlayService : Service() {
             WindowManager.LayoutParams.MATCH_PARENT,
             type,
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
@@ -329,9 +334,6 @@ class LockOverlayService : Service() {
         )
             .setView(dialogBinding.root)
         val dialog = builder.create()
-        dialogBinding.closeButton.setOnClickListener {
-            dialog.dismiss()
-        }
         overlayWhitelistAdapter = adapter
         whitelistDialog = dialog
         dialog.window?.setType(
@@ -353,16 +355,32 @@ class LockOverlayService : Service() {
     }
 
     private fun showForceUnlockDialog() {
-        val dialog = AlertDialog.Builder(overlayContext)
+        if (!isForceUnlockAllowed()) {
+            showOverlayAlert(getString(R.string.lock_force_unlock_unavailable))
+            return
+        }
+        AlertDialog.Builder(overlayContext)
             .setMessage(R.string.lock_force_unlock_confirm)
             .setPositiveButton(android.R.string.ok) { _, _ -> performForceUnlock() }
             .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        dialog.window?.setType(dialogWindowType())
-        dialog.show()
+            .create().also {
+                it.window?.setType(dialogWindowType())
+                it.show()
+            }
+    }
+
+    private fun isForceUnlockAllowed(): Boolean {
+        val last = prefs.getLong(KEY_FORCE_UNLOCK_TIMESTAMP, 0L)
+        val now = System.currentTimeMillis()
+        return now - last >= FORCE_UNLOCK_INTERVAL_MS
     }
 
     private fun performForceUnlock() {
+        if (!isForceUnlockAllowed()) {
+            showOverlayAlert(getString(R.string.lock_force_unlock_unavailable))
+            return
+        }
+        prefs.edit().putLong(KEY_FORCE_UNLOCK_TIMESTAMP, System.currentTimeMillis()).apply()
         serviceScope.launch {
             val activePlan = currentSchedule
             if (activePlan != null) {
@@ -573,12 +591,10 @@ class LockOverlayService : Service() {
                 val restricted = item.isRestricted(now)
                 if (restricted && item.restrictedUntil != null) {
                     val remaining = item.restrictedUntil - now
-                    binding.appCountdownIcon.visibility = View.VISIBLE
                     binding.appCountdown.visibility = View.VISIBLE
                     binding.appCountdown.text = formatDuration(remaining)
                     binding.root.alpha = 0.4f
                 } else {
-                    binding.appCountdownIcon.visibility = View.GONE
                     binding.appCountdown.visibility = View.GONE
                     binding.root.alpha = 1f
                 }

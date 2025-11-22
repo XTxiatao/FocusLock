@@ -13,15 +13,11 @@ import android.view.accessibility.AccessibilityManager
 
 object PermissionHelper {
 
-    private const val PREFS_NAME = "focus_lock_prefs"
-    private const val KEY_AUTO_START_ACK = "auto_start_ack"
-
     enum class RequiredPermission {
         OVERLAY,
         USAGE_STATS,
         ACCESSIBILITY,
-        BATTERY,
-        AUTO_START;
+        BATTERY;
 
         fun settingsIntent(context: Context): Intent? {
             return when (this) {
@@ -29,7 +25,6 @@ object PermissionHelper {
                 USAGE_STATS -> Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                 ACCESSIBILITY -> Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 BATTERY -> Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-                AUTO_START -> Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
             }
         }
     }
@@ -53,14 +48,10 @@ object PermissionHelper {
             missing.add(RequiredPermission.BATTERY)
         }
 
-        if (!hasAutoStartConfirmed(context)) {
-            missing.add(RequiredPermission.AUTO_START)
-        }
-
         return missing
     }
 
-    private fun hasUsageStatsPermission(context: Context): Boolean {
+    fun hasUsageStatsPermission(context: Context): Boolean {
         val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as? AppOpsManager ?: return false
         val mode = appOps.checkOpNoThrow(
             AppOpsManager.OPSTR_GET_USAGE_STATS,
@@ -85,16 +76,4 @@ object PermissionHelper {
         return true
     }
 
-    private fun hasAutoStartConfirmed(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(KEY_AUTO_START_ACK, false)
-    }
-
-    fun markPermissionAcknowledged(context: Context, permission: RequiredPermission) {
-        if (permission != RequiredPermission.AUTO_START) {
-            return
-        }
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(KEY_AUTO_START_ACK, true).apply()
-    }
 }

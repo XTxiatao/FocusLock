@@ -1,15 +1,17 @@
 package com.focuslock.ui
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -32,6 +34,8 @@ import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 private const val LOG_TAG = "DeviceLockFragment"
+private const val PREFS_NAME = "focus_lock_prefs"
+
 
 class DeviceLockFragment : Fragment() {
 
@@ -104,7 +108,6 @@ class DeviceLockFragment : Fragment() {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(R.string.open_settings_button) { _, _ ->
-                PermissionHelper.markPermissionAcknowledged(requireContext(), permission)
                 intent?.let { startActivity(it) }
             }
             .setNegativeButton(android.R.string.cancel, null)
@@ -328,8 +331,6 @@ private fun PermissionHelper.RequiredPermission.descriptionText(activity: Compon
             " Accessibility access powers the input interception."
         PermissionHelper.RequiredPermission.BATTERY -> activity.getString(R.string.permission_missing_message) +
             " Background optimization must be ignored."
-        PermissionHelper.RequiredPermission.AUTO_START -> activity.getString(R.string.permission_missing_message) +
-            " Allow auto start to keep the service running after boot."
     }
 }
 

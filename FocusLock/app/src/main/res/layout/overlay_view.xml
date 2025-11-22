@@ -10,15 +10,13 @@
         android:id="@+id/countdownText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_hourglass"
-        android:drawablePadding="8dp"
-        android:drawableTint="@color/white"
         android:gravity="center_vertical"
         android:text="@string/lock_countdown_label"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/overlayReminderRecycler"

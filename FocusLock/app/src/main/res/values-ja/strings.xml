@@ -112,6 +112,7 @@
     <string name="reminder_end_required">終了日時を選択してください</string>
     <string name="reminder_no_end_time">終了なし</string>
     <string name="lock_force_unlock_confirm">今すぐ解除して現在のロックを無効にしますか？</string>
+    <string name="lock_force_unlock_unavailable">今週の強制解除は既に使用しています。しばらくしてから再試行してください。</string>
     <string-array name="reminder_recurrence_entries">
         <item>1 回のみ</item>
         <item>毎日</item>

@@ -112,6 +112,7 @@
     <string name="reminder_end_required">请选择结束日期和时间</string>
     <string name="reminder_no_end_time">无结束</string>
     <string name="lock_force_unlock_confirm">立即解锁并停用当前锁定？</string>
+    <string name="lock_force_unlock_unavailable">本周的强制解锁次数已用完，请稍后再试。</string>
     <string-array name="reminder_recurrence_entries">
         <item>一次</item>
         <item>每天</item>

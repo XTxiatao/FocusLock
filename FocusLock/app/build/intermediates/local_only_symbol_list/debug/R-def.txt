@@ -19,10 +19,8 @@ color teal_200
 color white
 dimen focuslock_card_corner_radius
 dimen focuslock_dialog_corner_radius
-dimen whitelist_dialog_max_height
 drawable bg_dialog
 drawable ic_caretaker
-drawable ic_close
 drawable ic_clover
 drawable ic_hourglass
 drawable ic_launcher_foreground
@@ -35,7 +33,6 @@ id addPlanButton
 id addReminderFab
 id appCheckBox
 id appCountdown
-id appCountdownIcon
 id appIcon
 id appLabel
 id appListContainer
@@ -56,7 +53,6 @@ id chipSunday
 id chipThursday
 id chipTuesday
 id chipWednesday
-id closeButton
 id completedDateLabel
 id completedEntryRecycler
 id completedEntryTime
@@ -173,6 +169,7 @@ string force_unlock
 string hours_label
 string lock_countdown_label
 string lock_force_unlock_confirm
+string lock_force_unlock_unavailable
 string minutes_label
 string open_settings_button
 string open_whitelist_app

@@ -96,6 +96,7 @@
     <string name="reminder_cancel_and_archive_confirm">Cancel this reminder and archive it?</string>
     <string name="reminder_restore_completed_confirm">Restore this reminder?</string>
     <string name="lock_force_unlock_confirm">Unlock now and disable the current lock?</string>
+    <string name="lock_force_unlock_unavailable">You have already used the weekly force unlock. Try again later.</string>
     <string name="reminder_due_prefix">Due %1$s</string>
     <string name="reminder_repeat_once">One time</string>
     <string name="reminder_repeat_daily">Repeats daily</string>
