@@ -44,6 +44,7 @@
     <string name="force_unlock">Force Unlock</string>
     <string name="hours_label">Hours</string>
     <string name="lock_countdown_label">Lock expires in %1$d seconds</string>
+    <string name="lock_force_unlock_confirm">Unlock now and disable the current lock?</string>
     <string name="minutes_label">Minutes</string>
     <string name="open_settings_button">Open Settings</string>
     <string name="open_whitelist_app">Open allowed app</string>

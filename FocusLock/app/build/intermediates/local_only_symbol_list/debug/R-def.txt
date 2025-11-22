@@ -15,6 +15,9 @@ color teal_200
 color white
 dimen app_icon_item_width
 dimen whitelist_dialog_max_height
+drawable ic_clover
+drawable ic_hourglass
+drawable ic_lock
 drawable panel_background
 drawable reminder_pill_background
 drawable reminder_status_badge
@@ -160,6 +163,7 @@ string end_time_label
 string force_unlock
 string hours_label
 string lock_countdown_label
+string lock_force_unlock_confirm
 string minutes_label
 string open_settings_button
 string open_whitelist_app

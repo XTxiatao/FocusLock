@@ -87,7 +87,7 @@ class LockOverlayService : Service() {
     private var overlayWhitelistAdapter: OverlayWhitelistAdapter? = null
     private var lastForegroundPackage: String? = null
     private val reminderAdapter by lazy {
-        ReminderDayAdapter(::openReminderEditorFromOverlay, ::completeReminderFromOverlay)
+        ReminderDayAdapter({ reminder -> openReminderEditorFromOverlay(reminder) }, ::completeReminderFromOverlay)
     }
     private var reminderEditorDialog: AlertDialog? = null
 
@@ -152,27 +152,8 @@ class LockOverlayService : Service() {
     private fun prepareOverlay() {
         binding.root.setOnTouchListener { _, _ -> true }
         binding.openWhitelistButton.setOnClickListener { showWhitelistAppDialog() }
-        binding.forceUnlockButton.setOnClickListener {
-            serviceScope.launch {
-                val activePlan = currentSchedule
-                if (activePlan != null) {
-                    repository.update(activePlan.copy(isEnabled = false))
-                    Log.d(SERVICE_LOG_TAG, "Plan ${activePlan.id} disabled due to force unlock")
-                    mainHandler.post {
-                        Toast.makeText(
-                            this@LockOverlayService,
-                            getString(R.string.plan_disabled_force_unlock),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                temporaryLockExpiryMillis = 0L
-                hideOverlay()
-                stopCountdown()
-                LockStateTracker.enforceHome = false
-                stopSelf()
-            }
-        }
+        binding.forceUnlockButton.setOnClickListener { showForceUnlockDialog() }
+        binding.addReminderFab.setOnClickListener { openReminderEditorFromOverlay(null) }
 
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -276,6 +257,7 @@ class LockOverlayService : Service() {
             if (overlayAdded) {
                 windowManager.removeViewImmediate(binding.root)
                 overlayAdded = false
+                reminderEditorDialog?.dismiss()
             }
         }
     }
@@ -345,6 +327,38 @@ class LockOverlayService : Service() {
             whitelistDialog = null
         }
         dialog.show()
+    }
+
+    private fun showForceUnlockDialog() {
+        val dialog = AlertDialog.Builder(overlayContext)
+            .setMessage(R.string.lock_force_unlock_confirm)
+            .setPositiveButton(android.R.string.ok) { _, _ -> performForceUnlock() }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        dialog.window?.setType(dialogWindowType())
+        dialog.show()
+    }
+
+    private fun performForceUnlock() {
+        serviceScope.launch {
+            val activePlan = currentSchedule
+            if (activePlan != null) {
+                repository.update(activePlan.copy(isEnabled = false))
+                Log.d(SERVICE_LOG_TAG, "Plan ${activePlan.id} disabled due to force unlock")
+                mainHandler.post {
+                    Toast.makeText(
+                        this@LockOverlayService,
+                        getString(R.string.plan_disabled_force_unlock),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            temporaryLockExpiryMillis = 0L
+            hideOverlay()
+            stopCountdown()
+            LockStateTracker.enforceHome = false
+            stopSelf()
+        }
     }
 
     private fun refreshWhitelistDialog() {
@@ -537,8 +551,7 @@ class LockOverlayService : Service() {
                 if (restricted && item.restrictedUntil != null) {
                     val remaining = item.restrictedUntil - now
                     binding.appCountdown.visibility = View.VISIBLE
-                    binding.appCountdown.text =
-                        getString(R.string.restriction_available_in, formatDuration(remaining))
+                    binding.appCountdown.text = formatDuration(remaining)
                     binding.root.alpha = 0.4f
                 } else {
                     binding.appCountdown.visibility = View.GONE
@@ -633,7 +646,15 @@ class LockOverlayService : Service() {
         const val EXTRA_TEMP_LOCK_MINUTES = "extra_temp_lock_minutes"
     }
 
-    private fun openReminderEditorFromOverlay(reminder: Reminder) {
+    private fun dialogWindowType(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
+    }
+
+    private fun openReminderEditorFromOverlay(reminder: Reminder? = null) {
         mainHandler.post {
             reminderEditorDialog?.dismiss()
             reminderEditorDialog = showReminderEditorDialog(

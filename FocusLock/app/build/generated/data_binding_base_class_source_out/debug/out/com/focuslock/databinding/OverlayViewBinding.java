@@ -4,7 +4,6 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -22,13 +23,16 @@ public final class OverlayViewBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final FloatingActionButton addReminderFab;
+
+  @NonNull
   public final TextView countdownText;
 
   @NonNull
-  public final Button forceUnlockButton;
+  public final MaterialButton forceUnlockButton;
 
   @NonNull
-  public final Button openWhitelistButton;
+  public final MaterialButton openWhitelistButton;
 
   @NonNull
   public final TextView overlayReminderEmpty;
@@ -36,10 +40,12 @@ public final class OverlayViewBinding implements ViewBinding {
   @NonNull
   public final RecyclerView overlayReminderRecycler;
 
-  private OverlayViewBinding(@NonNull ConstraintLayout rootView, @NonNull TextView countdownText,
-      @NonNull Button forceUnlockButton, @NonNull Button openWhitelistButton,
+  private OverlayViewBinding(@NonNull ConstraintLayout rootView,
+      @NonNull FloatingActionButton addReminderFab, @NonNull TextView countdownText,
+      @NonNull MaterialButton forceUnlockButton, @NonNull MaterialButton openWhitelistButton,
       @NonNull TextView overlayReminderEmpty, @NonNull RecyclerView overlayReminderRecycler) {
     this.rootView = rootView;
+    this.addReminderFab = addReminderFab;
     this.countdownText = countdownText;
     this.forceUnlockButton = forceUnlockButton;
     this.openWhitelistButton = openWhitelistButton;
@@ -74,6 +80,12 @@ public final class OverlayViewBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.addReminderFab;
+      FloatingActionButton addReminderFab = ViewBindings.findChildViewById(rootView, id);
+      if (addReminderFab == null) {
+        break missingId;
+      }
+
       id = R.id.countdownText;
       TextView countdownText = ViewBindings.findChildViewById(rootView, id);
       if (countdownText == null) {
@@ -81,13 +93,13 @@ public final class OverlayViewBinding implements ViewBinding {
       }
 
       id = R.id.forceUnlockButton;
-      Button forceUnlockButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton forceUnlockButton = ViewBindings.findChildViewById(rootView, id);
       if (forceUnlockButton == null) {
         break missingId;
       }
 
       id = R.id.openWhitelistButton;
-      Button openWhitelistButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton openWhitelistButton = ViewBindings.findChildViewById(rootView, id);
       if (openWhitelistButton == null) {
         break missingId;
       }
@@ -104,8 +116,8 @@ public final class OverlayViewBinding implements ViewBinding {
         break missingId;
       }
 
-      return new OverlayViewBinding((ConstraintLayout) rootView, countdownText, forceUnlockButton,
-          openWhitelistButton, overlayReminderEmpty, overlayReminderRecycler);
+      return new OverlayViewBinding((ConstraintLayout) rootView, addReminderFab, countdownText,
+          forceUnlockButton, openWhitelistButton, overlayReminderEmpty, overlayReminderRecycler);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
