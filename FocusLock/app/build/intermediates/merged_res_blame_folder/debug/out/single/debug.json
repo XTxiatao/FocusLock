@@ -8,10 +8,6 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_app_restriction_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-38:/drawable_reminder_status_badge.xml.flat",
-        "source": "com.focuslock.app-main-40:/drawable/reminder_status_badge.xml"
-    },
-    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-38:\\layout_overlay_view.xml.flat",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\overlay_view.xml"
     },
@@ -28,16 +24,8 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_reminder.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-38:/layout_item_archived_reminder.xml.flat",
-        "source": "com.focuslock.app-main-40:/layout/item_archived_reminder.xml"
-    },
-    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-38:\\layout_dialog_reminder_editor.xml.flat",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_reminder_editor.xml"
-    },
-    {
-        "merged": "com.focuslock.app-merged_res-38:/layout_item_reminder.xml.flat",
-        "source": "com.focuslock.app-main-40:/layout/item_reminder.xml"
     },
     {
         "merged": "com.focuslock.app-merged_res-38:/layout_fragment_reminder.xml.flat",
@@ -70,6 +58,10 @@
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-38:\\layout_item_lock_schedule.xml.flat",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_lock_schedule.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-38:\\drawable_reminder_status_badge.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\drawable\\reminder_status_badge.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-38:\\layout_fragment_app_lock.xml.flat",
