@@ -14,7 +14,7 @@ import com.focuslock.model.AppRestrictionPlan
 
 class AppRestrictionPlanAdapter(
     private val onToggle: (AppRestrictionPlan) -> Unit,
-    private val onDelete: (AppRestrictionPlan) -> Unit,
+    private val onLongPress: (AppRestrictionPlan) -> Unit,
     private val onEdit: (AppRestrictionPlan) -> Unit,
     private val iconProvider: (String) -> android.graphics.drawable.Drawable?
 ) : RecyclerView.Adapter<AppRestrictionPlanAdapter.ViewHolder>() {
@@ -52,20 +52,20 @@ class AppRestrictionPlanAdapter(
             val statusText = context.getString(if (plan.isEnabled) R.string.status_on else R.string.status_off)
             binding.planRange.setTextColor(tintColor)
             binding.planDays.setTextColor(tintColor)
-            binding.appListTitle.setTextColor(tintColor)
             binding.toggleButton.text = statusText
             binding.toggleButton.backgroundTintList = ColorStateList.valueOf(tintColor)
             binding.toggleButton.setTextColor(ContextCompat.getColor(context, android.R.color.white))
             binding.toggleButton.setOnClickListener { onToggle(plan) }
-            binding.deleteButton.setOnClickListener { onDelete(plan) }
             binding.root.setOnClickListener { onEdit(plan) }
+            binding.root.setOnLongClickListener {
+                onLongPress(plan)
+                true
+            }
 
             binding.appListContainer.removeAllViews()
             if (plan.apps.isEmpty()) {
-                binding.appListTitle.isVisible = false
                 binding.appListContainer.isVisible = false
             } else {
-                binding.appListTitle.isVisible = true
                 binding.appListContainer.isVisible = true
                 val inflater = LayoutInflater.from(context)
                 plan.apps.forEach { app ->

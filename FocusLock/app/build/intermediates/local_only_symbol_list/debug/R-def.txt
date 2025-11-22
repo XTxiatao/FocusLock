@@ -15,7 +15,6 @@ id appCountdown
 id appIcon
 id appLabel
 id appListContainer
-id appListTitle
 id appLockPlanContainer
 id appPlanRecyclerView
 id appPlanTitle
@@ -24,7 +23,6 @@ id bottomNavigation
 id configureWhitelistButton
 id countdownText
 id daysText
-id deleteButton
 id dialogChipFriday
 id dialogChipMonday
 id dialogChipSaturday
@@ -33,12 +31,10 @@ id dialogChipThursday
 id dialogChipTuesday
 id dialogChipWednesday
 id dialogDayGroup
-id dialogEndTimeButton
-id dialogEndTimeValue
-id dialogStartTimeButton
-id dialogStartTimeValue
 id durationLabel
 id durationPicker
+id endHourPicker
+id endMinutePicker
 id forceUnlockButton
 id fragmentContainer
 id nav_app_lock
@@ -53,6 +49,8 @@ id scheduleList
 id selectAppsButton
 id selectedAppsContainer
 id selectedAppsValue
+id startHourPicker
+id startMinutePicker
 id statusDescription
 id statusText
 id tempLockButton
@@ -85,14 +83,15 @@ string add_restriction_plan
 string app_name
 string app_plan_section_title
 string configure_whitelist
+string confirm_delete_plan
+string confirm_delete_restriction_plan
 string current_whitelist
 string delete_plan
-string disable_plan
 string disable_plan_to_edit
 string disable_restriction_to_edit
 string edit_plan_button
 string edit_restriction_plan_title
-string enable_plan
+string end_time_label
 string force_unlock
 string lock_countdown_label
 string open_settings_button
@@ -102,7 +101,6 @@ string permission_missing_message
 string permission_missing_title
 string plan_disabled_force_unlock
 string plan_section_title
-string restricted_app_list_title
 string restriction_app_not_allowed
 string restriction_available_in
 string restriction_plan_deleted
@@ -118,6 +116,7 @@ string selected_app_count
 string service_notification_text
 string service_notification_title
 string start_button
+string start_time_label
 string status_off
 string status_on
 string temporary_lock_button

@@ -25,12 +25,6 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   public final FlexboxLayout appListContainer;
 
   @NonNull
-  public final TextView appListTitle;
-
-  @NonNull
-  public final MaterialButton deleteButton;
-
-  @NonNull
   public final TextView planDays;
 
   @NonNull
@@ -40,13 +34,10 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
   public final MaterialButton toggleButton;
 
   private ItemAppRestrictionPlanBinding(@NonNull LinearLayout rootView,
-      @NonNull FlexboxLayout appListContainer, @NonNull TextView appListTitle,
-      @NonNull MaterialButton deleteButton, @NonNull TextView planDays, @NonNull TextView planRange,
-      @NonNull MaterialButton toggleButton) {
+      @NonNull FlexboxLayout appListContainer, @NonNull TextView planDays,
+      @NonNull TextView planRange, @NonNull MaterialButton toggleButton) {
     this.rootView = rootView;
     this.appListContainer = appListContainer;
-    this.appListTitle = appListTitle;
-    this.deleteButton = deleteButton;
     this.planDays = planDays;
     this.planRange = planRange;
     this.toggleButton = toggleButton;
@@ -85,18 +76,6 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.appListTitle;
-      TextView appListTitle = ViewBindings.findChildViewById(rootView, id);
-      if (appListTitle == null) {
-        break missingId;
-      }
-
-      id = R.id.deleteButton;
-      MaterialButton deleteButton = ViewBindings.findChildViewById(rootView, id);
-      if (deleteButton == null) {
-        break missingId;
-      }
-
       id = R.id.planDays;
       TextView planDays = ViewBindings.findChildViewById(rootView, id);
       if (planDays == null) {
@@ -115,8 +94,8 @@ public final class ItemAppRestrictionPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemAppRestrictionPlanBinding((LinearLayout) rootView, appListContainer,
-          appListTitle, deleteButton, planDays, planRange, toggleButton);
+      return new ItemAppRestrictionPlanBinding((LinearLayout) rootView, appListContainer, planDays,
+          planRange, toggleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

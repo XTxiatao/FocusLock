@@ -13,14 +13,15 @@
     <string name="app_name">FocusLock</string>
     <string name="app_plan_section_title">Restriction Plans</string>
     <string name="configure_whitelist">Configure Whitelist</string>
+    <string name="confirm_delete_plan">Delete this plan?</string>
+    <string name="confirm_delete_restriction_plan">Delete this restriction?</string>
     <string name="current_whitelist">Whitelist</string>
     <string name="delete_plan">Delete</string>
-    <string name="disable_plan">Disable</string>
     <string name="disable_plan_to_edit">Disable this plan before editing.</string>
     <string name="disable_restriction_to_edit">Turn this restriction off before editing.</string>
     <string name="edit_plan_button">Edit Plan</string>
     <string name="edit_restriction_plan_title">Edit restricted apps</string>
-    <string name="enable_plan">Enable</string>
+    <string name="end_time_label">End</string>
     <string name="force_unlock">Force Unlock</string>
     <string name="lock_countdown_label">Lock expires in %1$d seconds</string>
     <string name="open_settings_button">Open Settings</string>
@@ -30,7 +31,6 @@
     <string name="permission_missing_title">Permissions Required</string>
     <string name="plan_disabled_force_unlock">Plan disabled after force unlock.</string>
     <string name="plan_section_title">Scheduled Locks</string>
-    <string name="restricted_app_list_title">Apps</string>
     <string name="restriction_app_not_allowed">This app is paused until %1$s</string>
     <string name="restriction_available_in">Ready in %1$s</string>
     <string name="restriction_plan_deleted">Restriction plan deleted</string>
@@ -46,6 +46,7 @@
     <string name="service_notification_text">Keep overlay and input interception online.</string>
     <string name="service_notification_title">FocusLock Active</string>
     <string name="start_button">Start Lock Session</string>
+    <string name="start_time_label">Start</string>
     <string name="status_off">OFF</string>
     <string name="status_on">ON</string>
     <string name="temporary_lock_button">Quick Lock</string>

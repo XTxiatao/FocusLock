@@ -24,24 +24,15 @@ public final class ItemLockScheduleBinding implements ViewBinding {
   public final TextView daysText;
 
   @NonNull
-  public final MaterialButton deleteButton;
-
-  @NonNull
-  public final TextView statusText;
-
-  @NonNull
   public final TextView timeRangeText;
 
   @NonNull
   public final MaterialButton toggleButton;
 
   private ItemLockScheduleBinding(@NonNull LinearLayout rootView, @NonNull TextView daysText,
-      @NonNull MaterialButton deleteButton, @NonNull TextView statusText,
       @NonNull TextView timeRangeText, @NonNull MaterialButton toggleButton) {
     this.rootView = rootView;
     this.daysText = daysText;
-    this.deleteButton = deleteButton;
-    this.statusText = statusText;
     this.timeRangeText = timeRangeText;
     this.toggleButton = toggleButton;
   }
@@ -79,18 +70,6 @@ public final class ItemLockScheduleBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.deleteButton;
-      MaterialButton deleteButton = ViewBindings.findChildViewById(rootView, id);
-      if (deleteButton == null) {
-        break missingId;
-      }
-
-      id = R.id.statusText;
-      TextView statusText = ViewBindings.findChildViewById(rootView, id);
-      if (statusText == null) {
-        break missingId;
-      }
-
       id = R.id.timeRangeText;
       TextView timeRangeText = ViewBindings.findChildViewById(rootView, id);
       if (timeRangeText == null) {
@@ -103,8 +82,8 @@ public final class ItemLockScheduleBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemLockScheduleBinding((LinearLayout) rootView, daysText, deleteButton,
-          statusText, timeRangeText, toggleButton);
+      return new ItemLockScheduleBinding((LinearLayout) rootView, daysText, timeRangeText,
+          toggleButton);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

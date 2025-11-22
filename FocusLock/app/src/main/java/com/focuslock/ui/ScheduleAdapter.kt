@@ -13,7 +13,7 @@ import com.focuslock.model.LockSchedule
 
 class ScheduleAdapter(
     private val toggleListener: (LockSchedule) -> Unit,
-    private val deleteListener: (LockSchedule) -> Unit,
+    private val longPressListener: (LockSchedule) -> Unit,
     private val editListener: (LockSchedule) -> Unit
 ) : ListAdapter<LockSchedule, ScheduleAdapter.ScheduleViewHolder>(Diff) {
 
@@ -43,8 +43,6 @@ class ScheduleAdapter(
                 context.getString(R.string.status_off)
             }
             val tintColor = if (schedule.isEnabled) activeColor else inactiveColor
-            binding.statusText.text = statusText
-            binding.statusText.setTextColor(tintColor)
             binding.timeRangeText.setTextColor(tintColor)
             binding.daysText.setTextColor(tintColor)
             binding.toggleButton.text = statusText
@@ -55,12 +53,13 @@ class ScheduleAdapter(
                 toggleListener(schedule)
             }
 
-            binding.deleteButton.setOnClickListener {
-                deleteListener(schedule)
-            }
-
             binding.root.setOnClickListener {
                 editListener(schedule)
+            }
+
+            binding.root.setOnLongClickListener {
+                longPressListener(schedule)
+                true
             }
         }
     }

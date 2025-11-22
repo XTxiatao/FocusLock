@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.NotificationCompat
+import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.focuslock.FocusLockApplication
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import kotlin.math.max
 
 private const val SERVICE_LOG_TAG = "LockOverlaySvc"
 
@@ -291,7 +293,8 @@ class LockOverlayService : Service() {
             }
         }
         adapter.submitList(buildWhitelistDialogItems())
-        dialogBinding.whitelistRecycler.layoutManager = GridLayoutManager(this, 5)
+        val iconWidth = resources.getDimensionPixelSize(R.dimen.app_icon_item_width)
+        dialogBinding.whitelistRecycler.configureResponsiveGrid(iconWidth)
         dialogBinding.whitelistRecycler.adapter = adapter
 
         val builder = AlertDialog.Builder(
@@ -515,6 +518,20 @@ class LockOverlayService : Service() {
                 binding.root.setOnClickListener { clickListener(item) }
             }
         }
+    }
+
+    private fun RecyclerView.configureResponsiveGrid(itemWidthPx: Int) {
+        val manager = GridLayoutManager(context, 1)
+        layoutManager = manager
+        fun updateSpan() {
+            if (width == 0) return
+            val span = max(1, width / itemWidthPx)
+            if (manager.spanCount != span) {
+                manager.spanCount = span
+            }
+        }
+        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateSpan() }
+        doOnLayout { updateSpan() }
     }
 
     private data class WhitelistDialogItem(

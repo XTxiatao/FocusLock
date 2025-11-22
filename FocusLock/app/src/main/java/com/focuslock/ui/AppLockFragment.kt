@@ -16,8 +16,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.core.view.doOnLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.FlexboxLayout
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.databinding.DialogAddAppPlanBinding
@@ -30,6 +33,7 @@ import com.focuslock.model.WhitelistedApp
 import com.focuslock.service.LockOverlayService
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import kotlin.math.max
 
 class AppLockFragment : Fragment() {
 
@@ -71,7 +75,7 @@ class AppLockFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.whitelistRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 5)
+        binding.whitelistRecyclerView.applyResponsiveGrid()
         binding.whitelistRecyclerView.adapter = displayAdapter
 
         binding.configureWhitelistButton.setOnClickListener {
@@ -159,8 +163,30 @@ class AppLockFragment : Fragment() {
         val dialogBinding = DialogAddAppPlanBinding.inflate(layoutInflater)
         var startMinutesLocal = existing?.startMinutes ?: 20 * 60
         var endMinutesLocal = existing?.endMinutes ?: 22 * 60
-        dialogBinding.dialogStartTimeValue.text = formatTimeLabel(startMinutesLocal)
-        dialogBinding.dialogEndTimeValue.text = formatTimeLabel(endMinutesLocal)
+        dialogBinding.startHourPicker.apply {
+            minValue = 0
+            maxValue = 23
+            value = startMinutesLocal / 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.startMinutePicker.apply {
+            minValue = 0
+            maxValue = 59
+            value = startMinutesLocal % 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.endHourPicker.apply {
+            minValue = 0
+            maxValue = 23
+            value = endMinutesLocal / 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.endMinutePicker.apply {
+            minValue = 0
+            maxValue = 59
+            value = endMinutesLocal % 60
+            setFormatter { String.format("%02d", it) }
+        }
         val selectedDays = existing?.let { plan ->
             DayOfWeek.values().filter { plan.isDaySelected(it) }.toMutableSet()
         } ?: mutableSetOf<DayOfWeek>().apply { addAll(DayOfWeek.values()) }
@@ -188,18 +214,6 @@ class AppLockFragment : Fragment() {
         val selectedPackages = existing?.apps?.map { it.packageName }?.toMutableSet() ?: mutableSetOf()
         updateSelectedAppPreview(dialogBinding, selectedPackages)
 
-        dialogBinding.dialogStartTimeButton.setOnClickListener {
-            showTimePickerDialog(startMinutesLocal) {
-                startMinutesLocal = it
-                dialogBinding.dialogStartTimeValue.text = formatTimeLabel(it)
-            }
-        }
-        dialogBinding.dialogEndTimeButton.setOnClickListener {
-            showTimePickerDialog(endMinutesLocal) {
-                endMinutesLocal = it
-                dialogBinding.dialogEndTimeValue.text = formatTimeLabel(it)
-            }
-        }
         dialogBinding.selectAppsButton.setOnClickListener {
             showAppSelectionDialog(selectedPackages, dialogBinding)
         }
@@ -208,6 +222,8 @@ class AppLockFragment : Fragment() {
             .setTitle(if (existing == null) R.string.restriction_plan_dialog_title else R.string.edit_restriction_plan_title)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save_plan_button) { _, _ ->
+                startMinutesLocal = dialogBinding.startHourPicker.value * 60 + dialogBinding.startMinutePicker.value
+                endMinutesLocal = dialogBinding.endHourPicker.value * 60 + dialogBinding.endMinutePicker.value
                 if (selectedDays.isEmpty()) {
                     Toast.makeText(requireContext(), R.string.select_days_hint, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -248,8 +264,7 @@ class AppLockFragment : Fragment() {
         if (latestWhitelist.isEmpty()) return
         val selectorBinding = DialogAppSelectorBinding.inflate(layoutInflater)
         val adapter = AppSelectionAdapter(latestWhitelist, selectedPackages)
-        selectorBinding.appRecyclerView.layoutManager =
-            androidx.recyclerview.widget.GridLayoutManager(requireContext(), 5)
+        selectorBinding.appRecyclerView.applyResponsiveGrid()
         selectorBinding.appRecyclerView.adapter = adapter
 
         AlertDialog.Builder(requireContext())
@@ -282,7 +297,7 @@ class AppLockFragment : Fragment() {
             itemBinding.appIcon.setImageDrawable(
                 icon ?: ContextCompat.getDrawable(requireContext(), defaultIcon)
             )
-            val params = com.google.android.flexbox.FlexboxLayout.LayoutParams(
+            val params = FlexboxLayout.LayoutParams(
                 resources.getDimensionPixelSize(R.dimen.app_icon_item_width),
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
@@ -304,7 +319,7 @@ class AppLockFragment : Fragment() {
 
     private fun confirmDeletePlan(plan: AppRestrictionPlan) {
         AlertDialog.Builder(requireContext())
-            .setMessage("Delete restriction plan?")
+            .setMessage(R.string.confirm_delete_restriction_plan)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     restrictionPlanRepository.deletePlan(plan)
@@ -315,32 +330,28 @@ class AppLockFragment : Fragment() {
             .show()
     }
 
-    private fun showTimePickerDialog(initialMinutes: Int, onSelected: (Int) -> Unit) {
-        val hour = initialMinutes / 60
-        val minute = initialMinutes % 60
-        android.app.TimePickerDialog(
-            requireContext(),
-            { _, selectedHour, selectedMinute ->
-                onSelected(selectedHour * 60 + selectedMinute)
-            },
-            hour,
-            minute,
-            true
-        ).show()
-    }
-
-    private fun formatTimeLabel(minutes: Int): String {
-        val hour = minutes / 60
-        val minute = minutes % 60
-        return String.format("%02d:%02d", hour, minute)
-    }
-
     private fun loadAppIcon(packageName: String) =
         runCatching { requireContext().packageManager.getApplicationIcon(packageName) }.getOrNull()
 
     private fun startLockService() {
         val intent = Intent(requireContext(), LockOverlayService::class.java)
         ContextCompat.startForegroundService(requireContext(), intent)
+    }
+
+    private fun RecyclerView.applyResponsiveGrid(
+        itemWidthPx: Int = resources.getDimensionPixelSize(R.dimen.app_icon_item_width)
+    ) {
+        val manager = GridLayoutManager(context, 1)
+        layoutManager = manager
+        fun updateSpan() {
+            if (width == 0) return
+            val span = max(1, width / itemWidthPx)
+            if (manager.spanCount != span) {
+                manager.spanCount = span
+            }
+        }
+        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateSpan() }
+        doOnLayout { updateSpan() }
     }
 
     private inner class AppSelectionAdapter(

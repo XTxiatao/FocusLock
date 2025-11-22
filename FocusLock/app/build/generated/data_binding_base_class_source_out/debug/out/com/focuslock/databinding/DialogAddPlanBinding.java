@@ -4,9 +4,8 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
@@ -47,24 +46,24 @@ public final class DialogAddPlanBinding implements ViewBinding {
   public final ChipGroup dialogDayGroup;
 
   @NonNull
-  public final Button dialogEndTimeButton;
+  public final NumberPicker endHourPicker;
 
   @NonNull
-  public final TextView dialogEndTimeValue;
+  public final NumberPicker endMinutePicker;
 
   @NonNull
-  public final Button dialogStartTimeButton;
+  public final NumberPicker startHourPicker;
 
   @NonNull
-  public final TextView dialogStartTimeValue;
+  public final NumberPicker startMinutePicker;
 
   private DialogAddPlanBinding(@NonNull LinearLayout rootView, @NonNull Chip dialogChipFriday,
       @NonNull Chip dialogChipMonday, @NonNull Chip dialogChipSaturday,
       @NonNull Chip dialogChipSunday, @NonNull Chip dialogChipThursday,
       @NonNull Chip dialogChipTuesday, @NonNull Chip dialogChipWednesday,
-      @NonNull ChipGroup dialogDayGroup, @NonNull Button dialogEndTimeButton,
-      @NonNull TextView dialogEndTimeValue, @NonNull Button dialogStartTimeButton,
-      @NonNull TextView dialogStartTimeValue) {
+      @NonNull ChipGroup dialogDayGroup, @NonNull NumberPicker endHourPicker,
+      @NonNull NumberPicker endMinutePicker, @NonNull NumberPicker startHourPicker,
+      @NonNull NumberPicker startMinutePicker) {
     this.rootView = rootView;
     this.dialogChipFriday = dialogChipFriday;
     this.dialogChipMonday = dialogChipMonday;
@@ -74,10 +73,10 @@ public final class DialogAddPlanBinding implements ViewBinding {
     this.dialogChipTuesday = dialogChipTuesday;
     this.dialogChipWednesday = dialogChipWednesday;
     this.dialogDayGroup = dialogDayGroup;
-    this.dialogEndTimeButton = dialogEndTimeButton;
-    this.dialogEndTimeValue = dialogEndTimeValue;
-    this.dialogStartTimeButton = dialogStartTimeButton;
-    this.dialogStartTimeValue = dialogStartTimeValue;
+    this.endHourPicker = endHourPicker;
+    this.endMinutePicker = endMinutePicker;
+    this.startHourPicker = startHourPicker;
+    this.startMinutePicker = startMinutePicker;
   }
 
   @Override
@@ -155,34 +154,34 @@ public final class DialogAddPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.dialogEndTimeButton;
-      Button dialogEndTimeButton = ViewBindings.findChildViewById(rootView, id);
-      if (dialogEndTimeButton == null) {
+      id = R.id.endHourPicker;
+      NumberPicker endHourPicker = ViewBindings.findChildViewById(rootView, id);
+      if (endHourPicker == null) {
         break missingId;
       }
 
-      id = R.id.dialogEndTimeValue;
-      TextView dialogEndTimeValue = ViewBindings.findChildViewById(rootView, id);
-      if (dialogEndTimeValue == null) {
+      id = R.id.endMinutePicker;
+      NumberPicker endMinutePicker = ViewBindings.findChildViewById(rootView, id);
+      if (endMinutePicker == null) {
         break missingId;
       }
 
-      id = R.id.dialogStartTimeButton;
-      Button dialogStartTimeButton = ViewBindings.findChildViewById(rootView, id);
-      if (dialogStartTimeButton == null) {
+      id = R.id.startHourPicker;
+      NumberPicker startHourPicker = ViewBindings.findChildViewById(rootView, id);
+      if (startHourPicker == null) {
         break missingId;
       }
 
-      id = R.id.dialogStartTimeValue;
-      TextView dialogStartTimeValue = ViewBindings.findChildViewById(rootView, id);
-      if (dialogStartTimeValue == null) {
+      id = R.id.startMinutePicker;
+      NumberPicker startMinutePicker = ViewBindings.findChildViewById(rootView, id);
+      if (startMinutePicker == null) {
         break missingId;
       }
 
       return new DialogAddPlanBinding((LinearLayout) rootView, dialogChipFriday, dialogChipMonday,
           dialogChipSaturday, dialogChipSunday, dialogChipThursday, dialogChipTuesday,
-          dialogChipWednesday, dialogDayGroup, dialogEndTimeButton, dialogEndTimeValue,
-          dialogStartTimeButton, dialogStartTimeValue);
+          dialogChipWednesday, dialogDayGroup, endHourPicker, endMinutePicker, startHourPicker,
+          startMinutePicker);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

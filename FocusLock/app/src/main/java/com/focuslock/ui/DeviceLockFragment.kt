@@ -1,7 +1,6 @@
 package com.focuslock.ui
 
 import android.app.AlertDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -42,7 +41,7 @@ class DeviceLockFragment : Fragment() {
     private val repository by lazy {
         (requireActivity().application as FocusLockApplication).lockScheduleRepository
     }
-    private val adapter = ScheduleAdapter(::toggleSchedule, ::deleteSchedule, ::requestEditSchedule)
+    private val adapter = ScheduleAdapter(::toggleSchedule, ::confirmDeleteSchedule, ::requestEditSchedule)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -194,6 +193,16 @@ class DeviceLockFragment : Fragment() {
         }
     }
 
+    private fun confirmDeleteSchedule(schedule: LockSchedule) {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.confirm_delete_plan)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                deleteSchedule(schedule)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
     private fun requestEditSchedule(schedule: LockSchedule) {
         if (schedule.isEnabled) {
             AlertDialog.Builder(requireContext())
@@ -234,8 +243,31 @@ class DeviceLockFragment : Fragment() {
         val dialogBinding = DialogAddPlanBinding.inflate(layoutInflater)
         var startMinutesLocal = existing?.startMinutes ?: 22 * 60
         var endMinutesLocal = existing?.endMinutes ?: 23 * 60
-        dialogBinding.dialogStartTimeValue.text = formatTimeLabel(startMinutesLocal)
-        dialogBinding.dialogEndTimeValue.text = formatTimeLabel(endMinutesLocal)
+
+        dialogBinding.startHourPicker.apply {
+            minValue = 0
+            maxValue = 23
+            value = startMinutesLocal / 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.startMinutePicker.apply {
+            minValue = 0
+            maxValue = 59
+            value = startMinutesLocal % 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.endHourPicker.apply {
+            minValue = 0
+            maxValue = 23
+            value = endMinutesLocal / 60
+            setFormatter { String.format("%02d", it) }
+        }
+        dialogBinding.endMinutePicker.apply {
+            minValue = 0
+            maxValue = 59
+            value = endMinutesLocal % 60
+            setFormatter { String.format("%02d", it) }
+        }
 
         val selectedDays = existing?.let { schedule ->
             DayOfWeek.values().filter { schedule.isDaySelected(it) }.toMutableSet()
@@ -262,23 +294,12 @@ class DeviceLockFragment : Fragment() {
             }
         }
 
-        dialogBinding.dialogStartTimeButton.setOnClickListener {
-            showTimePickerDialog(startMinutesLocal) {
-                startMinutesLocal = it
-                dialogBinding.dialogStartTimeValue.text = formatTimeLabel(it)
-            }
-        }
-        dialogBinding.dialogEndTimeButton.setOnClickListener {
-            showTimePickerDialog(endMinutesLocal) {
-                endMinutesLocal = it
-                dialogBinding.dialogEndTimeValue.text = formatTimeLabel(it)
-            }
-        }
-
         AlertDialog.Builder(requireContext())
             .setTitle(if (existing == null) R.string.add_plan_button else R.string.edit_plan_button)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save_plan_button) { _, _ ->
+                startMinutesLocal = dialogBinding.startHourPicker.value * 60 + dialogBinding.startMinutePicker.value
+                endMinutesLocal = dialogBinding.endHourPicker.value * 60 + dialogBinding.endMinutePicker.value
                 if (selectedDays.isEmpty()) {
                     Toast.makeText(requireContext(), "Select at least one day", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -290,25 +311,6 @@ class DeviceLockFragment : Fragment() {
             .show()
     }
 
-    private fun showTimePickerDialog(initialMinutes: Int, onSelected: (Int) -> Unit) {
-        val hour = initialMinutes / 60
-        val minute = initialMinutes % 60
-        TimePickerDialog(
-            requireContext(),
-            { _, selectedHour, selectedMinute ->
-                onSelected(selectedHour * 60 + selectedMinute)
-            },
-            hour,
-            minute,
-            true
-        ).show()
-    }
-
-    private fun formatTimeLabel(minutes: Int): String {
-        val hour = minutes / 60
-        val minute = minutes % 60
-        return String.format("%02d:%02d", hour, minute)
-    }
 }
 
 private fun PermissionHelper.RequiredPermission.descriptionText(activity: ComponentActivity): String {

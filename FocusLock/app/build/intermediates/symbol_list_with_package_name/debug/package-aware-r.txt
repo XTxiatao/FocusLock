@@ -3116,7 +3116,6 @@ id appCountdown
 id appIcon
 id appLabel
 id appListContainer
-id appListTitle
 id appLockPlanContainer
 id appPlanRecyclerView
 id appPlanTitle
@@ -3177,7 +3176,6 @@ id decelerate
 id decelerateAndComplete
 id decor_content_parent
 id default_activity_button
-id deleteButton
 id deltaRelative
 id design_bottom_sheet
 id design_menu_item_action_area
@@ -3192,10 +3190,6 @@ id dialogChipThursday
 id dialogChipTuesday
 id dialogChipWednesday
 id dialogDayGroup
-id dialogEndTimeButton
-id dialogEndTimeValue
-id dialogStartTimeButton
-id dialogStartTimeValue
 id dialog_button
 id dimensions
 id direct
@@ -3221,6 +3215,8 @@ id edit_text_id
 id elastic
 id embed
 id end
+id endHourPicker
+id endMinutePicker
 id endToStart
 id enterAlways
 id enterAlwaysCollapsed
@@ -3471,6 +3467,8 @@ id src_over
 id standard
 id start
 id startHorizontal
+id startHourPicker
+id startMinutePicker
 id startToEnd
 id startVertical
 id staticLayout
@@ -3818,14 +3816,15 @@ string character_counter_overflowed_content_description
 string character_counter_pattern
 string clear_text_end_icon_content_description
 string configure_whitelist
+string confirm_delete_plan
+string confirm_delete_restriction_plan
 string current_whitelist
 string delete_plan
-string disable_plan
 string disable_plan_to_edit
 string disable_restriction_to_edit
 string edit_plan_button
 string edit_restriction_plan_title
-string enable_plan
+string end_time_label
 string error_a11y_label
 string error_icon_content_description
 string exposed_dropdown_menu_content_description
@@ -3948,7 +3947,6 @@ string permission_missing_message
 string permission_missing_title
 string plan_disabled_force_unlock
 string plan_section_title
-string restricted_app_list_title
 string restriction_app_not_allowed
 string restriction_available_in
 string restriction_plan_deleted
@@ -3970,6 +3968,7 @@ string service_notification_title
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
 string start_button
+string start_time_label
 string status_bar_notification_info_overflow
 string status_off
 string status_on
