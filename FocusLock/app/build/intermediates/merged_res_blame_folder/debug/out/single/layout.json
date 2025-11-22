@@ -1,94 +1,98 @@
 [
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_temporary_lock.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_temporary_lock.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\overlay_view.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\overlay_view.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_time_picker.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_time_picker.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_add_app_plan.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_add_app_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/activity_main.xml",
-        "source": "com.focuslock.app-main-40:/layout/activity_main.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_whitelist_dialog.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_whitelist_dialog.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_reminder.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_reminder.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_app_restriction_plan.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_app_restriction_plan.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_add_app_plan.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_add_app_plan.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_reminder_day.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_reminder_day.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_archived_reminders.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_archived_reminders.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_whitelist_picker.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_whitelist_picker.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_completed_entry.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_completed_entry.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_reminder_entry.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_reminder_entry.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_lock_schedule.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_lock_schedule.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_app_selector.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_app_selector.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_add_plan.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_add_plan.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_reminder.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_reminder.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\fragment_reminder.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\fragment_reminder.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_reminder_editor.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_reminder_editor.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_app_select.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_app_select.xml"
     },
     {
         "merged": "com.focuslock.app-mergeDebugResources-37:/layout/overlay_view.xml",
         "source": "com.focuslock.app-main-40:/layout/overlay_view.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/fragment_reminder.xml",
-        "source": "com.focuslock.app-main-40:/layout/fragment_reminder.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_completed_day.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_completed_day.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_app_select.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_app_select.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\fragment_app_lock.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\fragment_app_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_reminder_editor.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_reminder_editor.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\item_whitelist_app.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\item_whitelist_app.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_archived_reminders.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_archived_reminders.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\activity_main.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_whitelist_dialog.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_whitelist_dialog.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\fragment_device_lock.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\fragment_device_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_reminder_entry.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_reminder_entry.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_temporary_lock.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_temporary_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_app_selector.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_app_selector.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/fragment_device_lock.xml",
-        "source": "com.focuslock.app-main-40:/layout/fragment_device_lock.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_completed_entry.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_completed_entry.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_add_plan.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_add_plan.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_reminder_day.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_reminder_day.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_lock_schedule.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_lock_schedule.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_app_restriction_plan.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_app_restriction_plan.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/dialog_whitelist_picker.xml",
-        "source": "com.focuslock.app-main-40:/layout/dialog_whitelist_picker.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/fragment_app_lock.xml",
-        "source": "com.focuslock.app-main-40:/layout/fragment_app_lock.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_completed_day.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_completed_day.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-37:/layout/item_whitelist_app.xml",
-        "source": "com.focuslock.app-main-40:/layout/item_whitelist_app.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-37:\\layout\\dialog_time_picker.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-40:\\layout\\dialog_time_picker.xml"
     }
 ]

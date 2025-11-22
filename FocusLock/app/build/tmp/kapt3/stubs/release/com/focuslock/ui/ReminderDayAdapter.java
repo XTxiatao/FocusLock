@@ -1,0 +1,79 @@
+package com.focuslock.ui;
+
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\u0018\u0000 \u00122\u0012\u0012\u0004\u0012\u00020\u0002\u0012\b\u0012\u00060\u0003R\u00020\u00000\u0001:\u0003\u0012\u0013\u0014B-\u0012\u0012\u0010\u0004\u001a\u000e\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00070\u0005\u0012\u0012\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00070\u0005\u00a2\u0006\u0002\u0010\tJ\u001c\u0010\n\u001a\u00020\u00072\n\u0010\u000b\u001a\u00060\u0003R\u00020\u00002\u0006\u0010\f\u001a\u00020\rH\u0016J\u001c\u0010\u000e\u001a\u00060\u0003R\u00020\u00002\u0006\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\rH\u0016R\u001a\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00070\u0005X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u001a\u0010\u0004\u001a\u000e\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00070\u0005X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u0015"}, d2 = {"Lcom/focuslock/ui/ReminderDayAdapter;", "Landroidx/recyclerview/widget/ListAdapter;", "Lcom/focuslock/ui/ReminderDayGroup;", "Lcom/focuslock/ui/ReminderDayAdapter$DayViewHolder;", "onReminderClick", "Lkotlin/Function1;", "Lcom/focuslock/model/Reminder;", "", "onCompleteClick", "(Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V", "onBindViewHolder", "holder", "position", "", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "Companion", "DayViewHolder", "Diff", "app_release"})
+public final class ReminderDayAdapter extends androidx.recyclerview.widget.ListAdapter<com.focuslock.ui.ReminderDayGroup, com.focuslock.ui.ReminderDayAdapter.DayViewHolder> {
+    @org.jetbrains.annotations.NotNull()
+    private final kotlin.jvm.functions.Function1<com.focuslock.model.Reminder, kotlin.Unit> onReminderClick = null;
+    @org.jetbrains.annotations.NotNull()
+    private final kotlin.jvm.functions.Function1<com.focuslock.model.Reminder, kotlin.Unit> onCompleteClick = null;
+    private static final java.time.format.DateTimeFormatter DATE_FORMATTER = null;
+    @org.jetbrains.annotations.NotNull()
+    public static final com.focuslock.ui.ReminderDayAdapter.Companion Companion = null;
+    
+    public ReminderDayAdapter(@org.jetbrains.annotations.NotNull()
+    kotlin.jvm.functions.Function1<? super com.focuslock.model.Reminder, kotlin.Unit> onReminderClick, @org.jetbrains.annotations.NotNull()
+    kotlin.jvm.functions.Function1<? super com.focuslock.model.Reminder, kotlin.Unit> onCompleteClick) {
+        super(null);
+    }
+    
+    @java.lang.Override()
+    @org.jetbrains.annotations.NotNull()
+    public com.focuslock.ui.ReminderDayAdapter.DayViewHolder onCreateViewHolder(@org.jetbrains.annotations.NotNull()
+    android.view.ViewGroup parent, int viewType) {
+        return null;
+    }
+    
+    @java.lang.Override()
+    public void onBindViewHolder(@org.jetbrains.annotations.NotNull()
+    com.focuslock.ui.ReminderDayAdapter.DayViewHolder holder, int position) {
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0086\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002R\u0016\u0010\u0003\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u0006"}, d2 = {"Lcom/focuslock/ui/ReminderDayAdapter$Companion;", "", "()V", "DATE_FORMATTER", "Ljava/time/format/DateTimeFormatter;", "kotlin.jvm.PlatformType", "app_release"})
+    public static final class Companion {
+        
+        private Companion() {
+            super();
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\b\u0086\u0004\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004J\u000e\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nR\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u000b"}, d2 = {"Lcom/focuslock/ui/ReminderDayAdapter$DayViewHolder;", "Landroidx/recyclerview/widget/RecyclerView$ViewHolder;", "binding", "Lcom/focuslock/databinding/ItemReminderDayBinding;", "(Lcom/focuslock/ui/ReminderDayAdapter;Lcom/focuslock/databinding/ItemReminderDayBinding;)V", "entryAdapter", "Lcom/focuslock/ui/ReminderEntryAdapter;", "bind", "", "group", "Lcom/focuslock/ui/ReminderDayGroup;", "app_release"})
+    public final class DayViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
+        @org.jetbrains.annotations.NotNull()
+        private final com.focuslock.databinding.ItemReminderDayBinding binding = null;
+        @org.jetbrains.annotations.NotNull()
+        private final com.focuslock.ui.ReminderEntryAdapter entryAdapter = null;
+        
+        public DayViewHolder(@org.jetbrains.annotations.NotNull()
+        com.focuslock.databinding.ItemReminderDayBinding binding) {
+            super(null);
+        }
+        
+        public final void bind(@org.jetbrains.annotations.NotNull()
+        com.focuslock.ui.ReminderDayGroup group) {
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0004\b\u00c2\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0006\u001a\u00020\u00022\u0006\u0010\u0007\u001a\u00020\u0002H\u0016J\u0018\u0010\b\u001a\u00020\u00052\u0006\u0010\u0006\u001a\u00020\u00022\u0006\u0010\u0007\u001a\u00020\u0002H\u0016\u00a8\u0006\t"}, d2 = {"Lcom/focuslock/ui/ReminderDayAdapter$Diff;", "Landroidx/recyclerview/widget/DiffUtil$ItemCallback;", "Lcom/focuslock/ui/ReminderDayGroup;", "()V", "areContentsTheSame", "", "oldItem", "newItem", "areItemsTheSame", "app_release"})
+    static final class Diff extends androidx.recyclerview.widget.DiffUtil.ItemCallback<com.focuslock.ui.ReminderDayGroup> {
+        @org.jetbrains.annotations.NotNull()
+        public static final com.focuslock.ui.ReminderDayAdapter.Diff INSTANCE = null;
+        
+        private Diff() {
+            super();
+        }
+        
+        @java.lang.Override()
+        public boolean areItemsTheSame(@org.jetbrains.annotations.NotNull()
+        com.focuslock.ui.ReminderDayGroup oldItem, @org.jetbrains.annotations.NotNull()
+        com.focuslock.ui.ReminderDayGroup newItem) {
+            return false;
+        }
+        
+        @java.lang.Override()
+        public boolean areContentsTheSame(@org.jetbrains.annotations.NotNull()
+        com.focuslock.ui.ReminderDayGroup oldItem, @org.jetbrains.annotations.NotNull()
+        com.focuslock.ui.ReminderDayGroup newItem) {
+            return false;
+        }
+    }
+}
