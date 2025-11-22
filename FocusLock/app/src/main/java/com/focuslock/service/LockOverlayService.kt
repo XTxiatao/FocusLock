@@ -38,10 +38,9 @@ import com.focuslock.model.AppRestrictionPlan
 import com.focuslock.model.WhitelistedApp
 import com.focuslock.model.Reminder
 import com.focuslock.data.ReminderRepository
-import com.focuslock.ui.MainActivity
 import com.focuslock.ui.ReminderDayAdapter
 import com.focuslock.ui.ReminderGrouping
-import com.focuslock.ui.ReminderNavigationEvents
+import com.focuslock.ui.showReminderEditorDialog
 import com.focuslock.ui.completeReminder
 import com.focuslock.util.LockStateTracker
 import kotlinx.coroutines.CoroutineScope
@@ -90,6 +89,7 @@ class LockOverlayService : Service() {
     private val reminderAdapter by lazy {
         ReminderDayAdapter(::openReminderEditorFromOverlay, ::completeReminderFromOverlay)
     }
+    private var reminderEditorDialog: AlertDialog? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -621,6 +621,7 @@ class LockOverlayService : Service() {
         Log.d(SERVICE_LOG_TAG, "onDestroy")
         hideOverlay()
         whitelistDialog?.dismiss()
+        reminderEditorDialog?.dismiss()
         serviceScope.cancel()
         LockStateTracker.enforceHome = false
         super.onDestroy()
@@ -633,12 +634,17 @@ class LockOverlayService : Service() {
     }
 
     private fun openReminderEditorFromOverlay(reminder: Reminder) {
-        ReminderNavigationEvents.requestReminderEdit(reminder.id)
-        val intent = Intent(this, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            putExtra(MainActivity.EXTRA_START_DESTINATION, MainActivity.DEST_REMINDER)
+        mainHandler.post {
+            reminderEditorDialog?.dismiss()
+            reminderEditorDialog = showReminderEditorDialog(
+                context = overlayContext,
+                reminder = reminder,
+                repository = reminderRepository,
+                scope = serviceScope,
+                overlayWindow = true,
+                onDismiss = { reminderEditorDialog = null }
+            )
         }
-        startActivity(intent)
     }
 
     private fun completeReminderFromOverlay(reminder: Reminder) {
