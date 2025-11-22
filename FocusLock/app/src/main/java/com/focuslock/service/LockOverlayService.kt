@@ -23,9 +23,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.view.isVisible
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.data.AppRestrictionPlanRepository
@@ -34,6 +36,13 @@ import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
 import com.focuslock.model.AppRestrictionPlan
 import com.focuslock.model.WhitelistedApp
+import com.focuslock.model.Reminder
+import com.focuslock.data.ReminderRepository
+import com.focuslock.ui.MainActivity
+import com.focuslock.ui.ReminderDayAdapter
+import com.focuslock.ui.ReminderGrouping
+import com.focuslock.ui.ReminderNavigationEvents
+import com.focuslock.ui.completeReminder
 import com.focuslock.util.LockStateTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +72,8 @@ class LockOverlayService : Service() {
     private lateinit var repository: com.focuslock.data.LockScheduleRepository
     private lateinit var whitelistRepository: com.focuslock.data.WhitelistedAppRepository
     private lateinit var restrictionPlanRepository: AppRestrictionPlanRepository
+    private lateinit var reminderRepository: ReminderRepository
+    private lateinit var overlayContext: Context
     private var enabledSchedules = emptyList<LockSchedule>()
     private var whitelistedApps = emptyList<WhitelistedApp>()
     private var appRestrictionPlans = emptyList<AppRestrictionPlan>()
@@ -76,6 +87,9 @@ class LockOverlayService : Service() {
     private var whitelistDialog: AlertDialog? = null
     private var overlayWhitelistAdapter: OverlayWhitelistAdapter? = null
     private var lastForegroundPackage: String? = null
+    private val reminderAdapter by lazy {
+        ReminderDayAdapter(::openReminderEditorFromOverlay, ::completeReminderFromOverlay)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -85,8 +99,10 @@ class LockOverlayService : Service() {
         repository = app.lockScheduleRepository
         whitelistRepository = app.whitelistedAppRepository
         restrictionPlanRepository = app.appRestrictionPlanRepository
+        reminderRepository = app.reminderRepository
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        binding = OverlayViewBinding.inflate(LayoutInflater.from(this))
+        overlayContext = ContextThemeWrapper(this, R.style.Theme_FocusLock)
+        binding = OverlayViewBinding.inflate(LayoutInflater.from(overlayContext))
         prepareOverlay()
         setCountdownText(formatDuration(0))
 
@@ -117,6 +133,18 @@ class LockOverlayService : Service() {
                     "Restriction plans updated: ${plans.map { it.id to it.apps.map(WhitelistedApp::packageName) }}"
                 )
                 evaluateSchedule()
+            }
+        }
+
+        serviceScope.launch {
+            reminderRepository.remindersFlow.collect { reminders ->
+                val active = reminders.filter { !it.isCompleted }
+                val (timed, floating) = active.partition { it.anchorDateTimeMillis != null }
+                val groups = ReminderGrouping.buildDayGroups(timed) + ReminderGrouping.buildFloatingGroup(floating)
+                mainHandler.post {
+                    reminderAdapter.submitList(groups)
+                    binding.overlayReminderEmpty.isVisible = groups.isEmpty()
+                }
             }
         }
     }
@@ -162,6 +190,10 @@ class LockOverlayService : Service() {
         ).apply {
             gravity = Gravity.TOP or Gravity.START
         }
+
+        binding.overlayReminderRecycler.layoutManager = LinearLayoutManager(overlayContext)
+        binding.overlayReminderRecycler.adapter = reminderAdapter
+        binding.overlayReminderEmpty.isVisible = true
     }
 
     private fun evaluateSchedule() {
@@ -598,6 +630,22 @@ class LockOverlayService : Service() {
 
     companion object {
         const val EXTRA_TEMP_LOCK_MINUTES = "extra_temp_lock_minutes"
+    }
+
+    private fun openReminderEditorFromOverlay(reminder: Reminder) {
+        ReminderNavigationEvents.requestReminderEdit(reminder.id)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(MainActivity.EXTRA_START_DESTINATION, MainActivity.DEST_REMINDER)
+        }
+        startActivity(intent)
+    }
+
+    private fun completeReminderFromOverlay(reminder: Reminder) {
+        if (reminder.isCompleted) return
+        serviceScope.launch {
+            reminderRepository.completeReminder(reminder)
+        }
     }
 
     private fun LockSchedule.debugDescription(): String {

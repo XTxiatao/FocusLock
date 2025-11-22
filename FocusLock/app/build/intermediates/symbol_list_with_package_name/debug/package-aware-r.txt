@@ -3538,7 +3538,8 @@ id open_search_view_toolbar
 id open_search_view_toolbar_container
 id outline
 id outward
-id overlayMessage
+id overlayReminderEmpty
+id overlayReminderRecycler
 id overshoot
 id packed
 id parallax

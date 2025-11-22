@@ -1,5 +1,6 @@
 package com.focuslock.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -27,6 +28,14 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             binding.bottomNavigation.selectedItemId = R.id.nav_device_lock
         }
+
+        handleIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
     }
 
     private fun switchFragment(fragment: Fragment) {
@@ -34,5 +43,16 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        when (intent?.getStringExtra(EXTRA_START_DESTINATION)) {
+            DEST_REMINDER -> binding.bottomNavigation.selectedItemId = R.id.nav_reminder
+        }
+    }
+
+    companion object {
+        const val EXTRA_START_DESTINATION = "extra_start_destination"
+        const val DEST_REMINDER = "reminder"
     }
 }

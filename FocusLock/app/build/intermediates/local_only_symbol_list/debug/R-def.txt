@@ -80,7 +80,8 @@ id nav_app_lock
 id nav_device_lock
 id nav_reminder
 id openWhitelistButton
-id overlayMessage
+id overlayReminderEmpty
+id overlayReminderRecycler
 id pillButton
 id planContainer
 id planDays

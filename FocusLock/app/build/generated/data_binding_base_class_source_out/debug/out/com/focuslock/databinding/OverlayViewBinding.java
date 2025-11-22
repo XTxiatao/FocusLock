@@ -5,10 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
@@ -18,7 +19,7 @@ import java.lang.String;
 
 public final class OverlayViewBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final ConstraintLayout rootView;
 
   @NonNull
   public final TextView countdownText;
@@ -30,21 +31,25 @@ public final class OverlayViewBinding implements ViewBinding {
   public final Button openWhitelistButton;
 
   @NonNull
-  public final TextView overlayMessage;
+  public final TextView overlayReminderEmpty;
 
-  private OverlayViewBinding(@NonNull FrameLayout rootView, @NonNull TextView countdownText,
+  @NonNull
+  public final RecyclerView overlayReminderRecycler;
+
+  private OverlayViewBinding(@NonNull ConstraintLayout rootView, @NonNull TextView countdownText,
       @NonNull Button forceUnlockButton, @NonNull Button openWhitelistButton,
-      @NonNull TextView overlayMessage) {
+      @NonNull TextView overlayReminderEmpty, @NonNull RecyclerView overlayReminderRecycler) {
     this.rootView = rootView;
     this.countdownText = countdownText;
     this.forceUnlockButton = forceUnlockButton;
     this.openWhitelistButton = openWhitelistButton;
-    this.overlayMessage = overlayMessage;
+    this.overlayReminderEmpty = overlayReminderEmpty;
+    this.overlayReminderRecycler = overlayReminderRecycler;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -87,14 +92,20 @@ public final class OverlayViewBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.overlayMessage;
-      TextView overlayMessage = ViewBindings.findChildViewById(rootView, id);
-      if (overlayMessage == null) {
+      id = R.id.overlayReminderEmpty;
+      TextView overlayReminderEmpty = ViewBindings.findChildViewById(rootView, id);
+      if (overlayReminderEmpty == null) {
         break missingId;
       }
 
-      return new OverlayViewBinding((FrameLayout) rootView, countdownText, forceUnlockButton,
-          openWhitelistButton, overlayMessage);
+      id = R.id.overlayReminderRecycler;
+      RecyclerView overlayReminderRecycler = ViewBindings.findChildViewById(rootView, id);
+      if (overlayReminderRecycler == null) {
+        break missingId;
+      }
+
+      return new OverlayViewBinding((ConstraintLayout) rootView, countdownText, forceUnlockButton,
+          openWhitelistButton, overlayReminderEmpty, overlayReminderRecycler);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
