@@ -5,11 +5,17 @@ color black
 color plan_active_green
 color plan_inactive_gray
 color purple_500
+color reminder_status_archived
+color reminder_status_completed
+color reminder_status_inactive
+color reminder_text_inactive
+color reminder_text_secondary
 color teal_200
 color white
 dimen app_icon_item_width
 dimen whitelist_dialog_max_height
 drawable panel_background
+drawable reminder_status_badge
 id activeSwitch
 id addAppPlanButton
 id addPlanButton

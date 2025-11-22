@@ -6,4 +6,9 @@
     <color name="black">#000000</color>
     <color name="plan_active_green">#4CAF50</color>
     <color name="plan_inactive_gray">#666666</color>
+    <color name="reminder_text_secondary">#ADFFFFFF</color>
+    <color name="reminder_status_completed">#4CAF50</color>
+    <color name="reminder_status_archived">#FFC107</color>
+    <color name="reminder_status_inactive">#9E9E9E</color>
+    <color name="reminder_text_inactive">#80FFFFFF</color>
 </resources>

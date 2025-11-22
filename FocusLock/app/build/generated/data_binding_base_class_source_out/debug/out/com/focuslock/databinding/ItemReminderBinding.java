@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -43,13 +43,13 @@ public final class ItemReminderBinding implements ViewBinding {
   public final TextView reminderTitle;
 
   @NonNull
-  public final Switch reminderToggle;
+  public final MaterialButton reminderToggle;
 
   private ItemReminderBinding(@NonNull MaterialCardView rootView, @NonNull Button archiveButton,
       @NonNull Button completeButton, @NonNull TextView reminderDescription,
       @NonNull TextView reminderDue, @NonNull TextView reminderRecurrence,
       @NonNull TextView reminderStatus, @NonNull TextView reminderTitle,
-      @NonNull Switch reminderToggle) {
+      @NonNull MaterialButton reminderToggle) {
     this.rootView = rootView;
     this.archiveButton = archiveButton;
     this.completeButton = completeButton;
@@ -131,7 +131,7 @@ public final class ItemReminderBinding implements ViewBinding {
       }
 
       id = R.id.reminderToggle;
-      Switch reminderToggle = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton reminderToggle = ViewBindings.findChildViewById(rootView, id);
       if (reminderToggle == null) {
         break missingId;
       }

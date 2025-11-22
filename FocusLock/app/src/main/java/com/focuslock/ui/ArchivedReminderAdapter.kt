@@ -1,7 +1,10 @@
 package com.focuslock.ui
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -40,10 +43,19 @@ class ArchivedReminderAdapter(
                 .atZone(ZoneId.systemDefault())
                 .format(DATE_TIME_FORMATTER)
             binding.archivedItemDue.text = context.getString(R.string.reminder_due_prefix, dueText)
-            binding.archivedItemStatus.text = when {
-                reminder.isCompleted -> context.getString(R.string.reminder_status_completed)
-                else -> context.getString(R.string.reminder_status_inactive)
+
+            val (statusText, statusColor) = if (reminder.isCompleted) {
+                context.getString(R.string.reminder_status_completed) to
+                    ContextCompat.getColor(context, R.color.reminder_status_completed)
+            } else {
+                context.getString(R.string.reminder_status_inactive) to
+                    ContextCompat.getColor(context, R.color.reminder_status_inactive)
             }
+            binding.archivedItemStatus.text = statusText
+            ViewCompat.setBackgroundTintList(
+                binding.archivedItemStatus,
+                ColorStateList.valueOf(statusColor)
+            )
 
             binding.root.setOnClickListener {
                 editListener(reminder)
@@ -59,6 +71,6 @@ class ArchivedReminderAdapter(
     }
 
     companion object {
-        private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy • HH:mm", Locale.getDefault())
+        private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm", Locale.getDefault())
     }
 }

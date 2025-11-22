@@ -10,6 +10,7 @@
         android:id="@+id/archivedCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="112dp"
         android:foreground="?attr/selectableItemBackground"
         android:padding="16dp"
         app:cardBackgroundColor="#1E1E1E"

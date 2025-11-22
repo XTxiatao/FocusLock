@@ -2114,6 +2114,11 @@ color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
 color purple_500
+color reminder_status_archived
+color reminder_status_completed
+color reminder_status_inactive
+color reminder_text_inactive
+color reminder_text_secondary
 color ripple_material_dark
 color ripple_material_light
 color secondary_text_default_material_dark
@@ -3121,6 +3126,7 @@ drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
 drawable panel_background
+drawable reminder_status_badge
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
