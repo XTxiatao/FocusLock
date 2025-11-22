@@ -6,7 +6,6 @@ import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
-import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
@@ -29,9 +28,9 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
 
   private final EntityInsertionAdapter<LockScheduleEntity> __insertionAdapterOfLockScheduleEntity;
 
-  private final EntityDeletionOrUpdateAdapter<LockScheduleEntity> __updateAdapterOfLockScheduleEntity;
+  private final EntityDeletionOrUpdateAdapter<LockScheduleEntity> __deletionAdapterOfLockScheduleEntity;
 
-  private final SharedSQLiteStatement __preparedStmtOfDelete;
+  private final EntityDeletionOrUpdateAdapter<LockScheduleEntity> __updateAdapterOfLockScheduleEntity;
 
   public LockScheduleDao_Impl(RoomDatabase __db) {
     this.__db = __db;
@@ -51,6 +50,17 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
         stmt.bindLong(5, _tmp);
       }
     };
+    this.__deletionAdapterOfLockScheduleEntity = new EntityDeletionOrUpdateAdapter<LockScheduleEntity>(__db) {
+      @Override
+      public String createQuery() {
+        return "DELETE FROM `lock_schedule` WHERE `id` = ?";
+      }
+
+      @Override
+      public void bind(SupportSQLiteStatement stmt, LockScheduleEntity value) {
+        stmt.bindLong(1, value.getId());
+      }
+    };
     this.__updateAdapterOfLockScheduleEntity = new EntityDeletionOrUpdateAdapter<LockScheduleEntity>(__db) {
       @Override
       public String createQuery() {
@@ -68,21 +78,14 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
         stmt.bindLong(6, value.getId());
       }
     };
-    this.__preparedStmtOfDelete = new SharedSQLiteStatement(__db) {
-      @Override
-      public String createQuery() {
-        final String _query = "DELETE FROM lock_schedule WHERE id = ?";
-        return _query;
-      }
-    };
   }
 
   @Override
-  public long insert(final LockScheduleEntity schedule) {
+  public long insert(final LockScheduleEntity arg0) {
     __db.assertNotSuspendingTransaction();
     __db.beginTransaction();
     try {
-      long _result = __insertionAdapterOfLockScheduleEntity.insertAndReturnId(schedule);
+      long _result = __insertionAdapterOfLockScheduleEntity.insertAndReturnId(arg0);
       __db.setTransactionSuccessful();
       return _result;
     } finally {
@@ -91,11 +94,11 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
   }
 
   @Override
-  public void update(final LockScheduleEntity schedule) {
+  public void delete(final LockScheduleEntity arg0) {
     __db.assertNotSuspendingTransaction();
     __db.beginTransaction();
     try {
-      __updateAdapterOfLockScheduleEntity.handle(schedule);
+      __deletionAdapterOfLockScheduleEntity.handle(arg0);
       __db.setTransactionSuccessful();
     } finally {
       __db.endTransaction();
@@ -103,18 +106,14 @@ public final class LockScheduleDao_Impl implements LockScheduleDao {
   }
 
   @Override
-  public void delete(final long scheduleId) {
+  public void update(final LockScheduleEntity arg0) {
     __db.assertNotSuspendingTransaction();
-    final SupportSQLiteStatement _stmt = __preparedStmtOfDelete.acquire();
-    int _argIndex = 1;
-    _stmt.bindLong(_argIndex, scheduleId);
     __db.beginTransaction();
     try {
-      _stmt.executeUpdateDelete();
+      __updateAdapterOfLockScheduleEntity.handle(arg0);
       __db.setTransactionSuccessful();
     } finally {
       __db.endTransaction();
-      __preparedStmtOfDelete.release(_stmt);
     }
   }
 

@@ -1,19 +1,51 @@
 [
     {
-        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_add_plan.xml.flat",
-        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_whitelist_dialog.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_whitelist_dialog.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_activity_main.xml.flat",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\activity_main.xml"
     },
     {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_whitelist_apps.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_whitelist_apps.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_fragment_app_lock.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_app_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_lock_schedule.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_lock_schedule.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_add_plan.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_whitelist_app.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_whitelist_app.xml"
+    },
+    {
+        "merged": "com.focuslock.app-merged_res-37:/layout_item_whitelist_app.xml.flat",
+        "source": "com.focuslock.app-main-39:/layout/item_whitelist_app.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_fragment_reminder.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_reminder.xml"
+    },
+    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_dialog_temporary_lock.xml.flat",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_temporary_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-37:/layout_fragment_app_lock.xml.flat",
-        "source": "com.focuslock.app-main-39:/layout/fragment_app_lock.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_fragment_device_lock.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_device_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\menu\\bottom_nav_menu.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_overlay_view.xml.flat",
@@ -24,23 +56,7 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\xml\\accessibility_service_config.xml"
     },
     {
-        "merged": "com.focuslock.app-merged_res-37:/menu_bottom_nav_menu.xml.flat",
-        "source": "com.focuslock.app-main-39:/menu/bottom_nav_menu.xml"
-    },
-    {
-        "merged": "com.focuslock.app-merged_res-37:/layout_fragment_device_lock.xml.flat",
-        "source": "com.focuslock.app-main-39:/layout/fragment_device_lock.xml"
-    },
-    {
-        "merged": "com.focuslock.app-merged_res-37:/layout_fragment_reminder.xml.flat",
-        "source": "com.focuslock.app-main-39:/layout/fragment_reminder.xml"
-    },
-    {
-        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_lock_schedule.xml.flat",
-        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_lock_schedule.xml"
-    },
-    {
-        "merged": "com.focuslock.app-merged_res-37:/layout_activity_main.xml.flat",
-        "source": "com.focuslock.app-main-39:/layout/activity_main.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-merged_res-37:\\layout_item_app_selection.xml.flat",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_app_selection.xml"
     }
 ]

@@ -4,11 +4,16 @@ import android.app.Application
 import androidx.room.Room
 import com.focuslock.data.LockScheduleDatabase
 import com.focuslock.data.LockScheduleRepository
+import com.focuslock.data.WhitelistedAppRepository
 
 class FocusLockApplication : Application() {
 
     val lockScheduleRepository by lazy {
         LockScheduleRepository(lockScheduleDatabase.lockScheduleDao())
+    }
+
+    val whitelistedAppRepository by lazy {
+        WhitelistedAppRepository(lockScheduleDatabase.whitelistedAppDao())
     }
 
     private val lockScheduleDatabase by lazy {

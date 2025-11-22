@@ -34,19 +34,23 @@ import javax.annotation.processing.Generated;
 public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
   private volatile LockScheduleDao _lockScheduleDao;
 
+  private volatile WhitelistedAppDao _whitelistedAppDao;
+
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `lock_schedule` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_minutes` INTEGER NOT NULL, `end_minutes` INTEGER NOT NULL, `days_bitmask` INTEGER NOT NULL, `is_enabled` INTEGER NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `whitelisted_apps` (`packageName` TEXT NOT NULL, `label` TEXT NOT NULL, PRIMARY KEY(`packageName`))");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79acf619b37b2fe338b8e7bf1b0295ca')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b1f4613ff74903768bad4f3a2e021a4')");
       }
 
       @Override
       public void dropAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("DROP TABLE IF EXISTS `lock_schedule`");
+        _db.execSQL("DROP TABLE IF EXISTS `whitelisted_apps`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -100,9 +104,21 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
                   + " Expected:\n" + _infoLockSchedule + "\n"
                   + " Found:\n" + _existingLockSchedule);
         }
+        final HashMap<String, TableInfo.Column> _columnsWhitelistedApps = new HashMap<String, TableInfo.Column>(2);
+        _columnsWhitelistedApps.put("packageName", new TableInfo.Column("packageName", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWhitelistedApps.put("label", new TableInfo.Column("label", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysWhitelistedApps = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesWhitelistedApps = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoWhitelistedApps = new TableInfo("whitelisted_apps", _columnsWhitelistedApps, _foreignKeysWhitelistedApps, _indicesWhitelistedApps);
+        final TableInfo _existingWhitelistedApps = TableInfo.read(_db, "whitelisted_apps");
+        if (! _infoWhitelistedApps.equals(_existingWhitelistedApps)) {
+          return new RoomOpenHelper.ValidationResult(false, "whitelisted_apps(com.focuslock.data.WhitelistedAppEntity).\n"
+                  + " Expected:\n" + _infoWhitelistedApps + "\n"
+                  + " Found:\n" + _existingWhitelistedApps);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "79acf619b37b2fe338b8e7bf1b0295ca", "4f211ed67ad0fd75e560817d2b092b1a");
+    }, "5b1f4613ff74903768bad4f3a2e021a4", "552d4feac33cec04583383daf0cb928c");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -115,7 +131,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "lock_schedule","whitelisted_apps");
   }
 
   @Override
@@ -125,6 +141,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
     try {
       super.beginTransaction();
       _db.execSQL("DELETE FROM `lock_schedule`");
+      _db.execSQL("DELETE FROM `whitelisted_apps`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -139,6 +156,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
   protected Map<Class<?>, List<Class<?>>> getRequiredTypeConverters() {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(LockScheduleDao.class, LockScheduleDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(WhitelistedAppDao.class, WhitelistedAppDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -164,6 +182,20 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
           _lockScheduleDao = new LockScheduleDao_Impl(this);
         }
         return _lockScheduleDao;
+      }
+    }
+  }
+
+  @Override
+  public WhitelistedAppDao whitelistedAppDao() {
+    if (_whitelistedAppDao != null) {
+      return _whitelistedAppDao;
+    } else {
+      synchronized(this) {
+        if(_whitelistedAppDao == null) {
+          _whitelistedAppDao = new WhitelistedAppDao_Impl(this);
+        }
+        return _whitelistedAppDao;
       }
     }
   }

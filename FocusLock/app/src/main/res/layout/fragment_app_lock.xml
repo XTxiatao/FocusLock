@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/black"
-    android:padding="24dp">
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/configureWhitelistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/configure_whitelist"
+        android:textAllCaps="false" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="App lock coming soon"
+        android:text="Current whitelist"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        android:gravity="center" />
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/whitelistRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>

@@ -4,6 +4,8 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.app.usage.UsageEvents
+import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -17,12 +19,17 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.NotificationCompat
 import com.focuslock.FocusLockApplication
 import com.focuslock.R
 import com.focuslock.databinding.OverlayViewBinding
 import com.focuslock.model.LockSchedule
+import com.focuslock.model.WhitelistedApp
 import com.focuslock.util.LockStateTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,19 +56,24 @@ class LockOverlayService : Service() {
     private lateinit var windowManager: WindowManager
     private lateinit var binding: OverlayViewBinding
     private lateinit var repository: com.focuslock.data.LockScheduleRepository
+    private lateinit var whitelistRepository: com.focuslock.data.WhitelistedAppRepository
     private var enabledSchedules = emptyList<LockSchedule>()
+    private var whitelistedApps = emptyList<WhitelistedApp>()
     private lateinit var windowParams: WindowManager.LayoutParams
     private var foregroundStarted = false
     private var temporaryLockExpiryMillis = 0L
     private var evaluationRunning = false
     private var nextUnlockTimeMillis = 0L
     private var currentSchedule: LockSchedule? = null
+    private var lastForegroundPackage: String? = null
 
     override fun onCreate() {
         super.onCreate()
         Log.d(SERVICE_LOG_TAG, "onCreate")
         promoteToForeground()
-        repository = (application as FocusLockApplication).lockScheduleRepository
+        val app = application as FocusLockApplication
+        repository = app.lockScheduleRepository
+        whitelistRepository = app.whitelistedAppRepository
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         binding = OverlayViewBinding.inflate(LayoutInflater.from(this))
         prepareOverlay()
@@ -77,10 +89,19 @@ class LockOverlayService : Service() {
                 evaluateSchedule()
             }
         }
+
+        serviceScope.launch {
+            whitelistRepository.whitelistFlow.collect { apps ->
+                whitelistedApps = apps
+                Log.d(SERVICE_LOG_TAG, "Whitelist updated: ${apps.map { it.packageName }}")
+                evaluateSchedule()
+            }
+        }
     }
 
     private fun prepareOverlay() {
         binding.root.setOnTouchListener { _, _ -> true }
+        binding.openWhitelistButton.setOnClickListener { showWhitelistAppDialog() }
         binding.forceUnlockButton.setOnClickListener {
             serviceScope.launch {
                 val activePlan = currentSchedule
@@ -139,11 +160,25 @@ class LockOverlayService : Service() {
         val scheduleActive = activeSchedule != null
         val overlayState = if (overlayAdded) "visible" else "hidden"
         val timeLabel = String.format("%02d:%02d:%02d", now.hour, now.minute, now.second)
+        val foregroundPackage = resolveForegroundPackage()
+        if (!foregroundPackage.isNullOrEmpty()) {
+            LockStateTracker.currentForegroundPackage = foregroundPackage
+        }
+        val foregroundWhitelisted = isPackageWhitelisted(foregroundPackage)
         Log.d(
             SERVICE_LOG_TAG,
-            "Evaluating now=$timeLabel tempActive=$tempActive scheduleActive=$scheduleActive overlay=$overlayState enabledCount=${enabledSchedules.size}"
+            "Evaluating now=$timeLabel tempActive=$tempActive scheduleActive=$scheduleActive overlay=$overlayState enabledCount=${enabledSchedules.size} " +
+                "foreground=${foregroundPackage ?: "unknown"} whitelisted=$foregroundWhitelisted"
         )
         currentSchedule = activeSchedule
+        if (foregroundWhitelisted) {
+            Log.d(SERVICE_LOG_TAG, "Foreground app is whitelisted, suppressing overlay")
+            hideOverlay()
+            stopCountdown()
+            LockStateTracker.enforceHome = false
+            return
+        }
+
         val shouldLock = tempActive || scheduleActive
         LockStateTracker.enforceHome = shouldLock
         if (shouldLock) {
@@ -196,6 +231,38 @@ class LockOverlayService : Service() {
                 delay(1000L)
             }
         }
+    }
+
+    private fun showWhitelistAppDialog() {
+        if (whitelistedApps.isEmpty()) {
+            Toast.makeText(this, "Whitelist is empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val builder = AlertDialog.Builder(
+            ContextThemeWrapper(this, androidx.appcompat.R.style.Theme_AppCompat_Dialog)
+        )
+            .setTitle(R.string.select_whitelist_app_title)
+        val adapter = WhitelistDialogAdapter(whitelistedApps)
+        builder.setAdapter(adapter) { dialog, which ->
+            val app = whitelistedApps.getOrNull(which) ?: return@setAdapter
+            val launchIntent = packageManager.getLaunchIntentForPackage(app.packageName)
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(launchIntent)
+            } else {
+                Toast.makeText(this, "Cannot launch ${app.label}", Toast.LENGTH_SHORT).show()
+            }
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.window?.setType(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            else
+                WindowManager.LayoutParams.TYPE_PHONE
+        )
+        dialog.show()
     }
 
     private fun startCountdownFor(targetMillis: Long) {
@@ -269,6 +336,64 @@ class LockOverlayService : Service() {
             binding.countdownText.text = text
         } else {
             mainHandler.post { binding.countdownText.text = text }
+        }
+    }
+
+    private fun resolveForegroundPackage(): String? {
+        return try {
+            val usageStatsManager = getSystemService(UsageStatsManager::class.java)
+                ?: return lastForegroundPackage ?: LockStateTracker.currentForegroundPackage
+            val end = System.currentTimeMillis()
+            val begin = end - 5_000
+            val usageEvents = usageStatsManager.queryEvents(begin, end)
+            var latestPackage: String? = null
+            var latestTimestamp = 0L
+            val event = UsageEvents.Event()
+            while (usageEvents.hasNextEvent()) {
+                usageEvents.getNextEvent(event)
+                val isForegroundEvent = event.eventType == UsageEvents.Event.ACTIVITY_RESUMED ||
+                        event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND
+                if (isForegroundEvent && event.timeStamp > latestTimestamp) {
+                    latestTimestamp = event.timeStamp
+                    latestPackage = event.packageName
+                }
+            }
+            if (latestPackage != null) {
+                lastForegroundPackage = latestPackage
+            }
+            lastForegroundPackage ?: LockStateTracker.currentForegroundPackage
+        } catch (e: Exception) {
+            Log.w(SERVICE_LOG_TAG, "Unable to resolve foreground package", e)
+            lastForegroundPackage ?: LockStateTracker.currentForegroundPackage
+        }
+    }
+
+    private fun isPackageWhitelisted(packageName: String?): Boolean {
+        if (packageName.isNullOrEmpty()) {
+            return false
+        }
+        return whitelistedApps.any { it.packageName == packageName }
+    }
+
+    private inner class WhitelistDialogAdapter(
+        private val apps: List<WhitelistedApp>
+    ) : android.widget.BaseAdapter() {
+        override fun getCount(): Int = apps.size
+        override fun getItem(position: Int): WhitelistedApp = apps[position]
+        override fun getItemId(position: Int): Long = position.toLong()
+
+        override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
+            val view = convertView ?: LayoutInflater.from(this@LockOverlayService)
+                .inflate(R.layout.item_whitelist_dialog, parent, false)
+            val app = getItem(position)
+            val iconView = view.findViewById<ImageView>(R.id.appIcon)
+            val labelView = view.findViewById<TextView>(R.id.appLabel)
+            val packageView = view.findViewById<TextView>(R.id.appPackage)
+            val icon = runCatching { packageManager.getApplicationIcon(app.packageName) }.getOrNull()
+            iconView.setImageDrawable(icon ?: getDrawable(android.R.drawable.sym_def_app_icon))
+            labelView.text = app.label
+            packageView.text = app.packageName
+            return view
         }
     }
 

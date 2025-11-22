@@ -27,13 +27,18 @@ public final class OverlayViewBinding implements ViewBinding {
   public final Button forceUnlockButton;
 
   @NonNull
+  public final Button openWhitelistButton;
+
+  @NonNull
   public final TextView overlayMessage;
 
   private OverlayViewBinding(@NonNull FrameLayout rootView, @NonNull TextView countdownText,
-      @NonNull Button forceUnlockButton, @NonNull TextView overlayMessage) {
+      @NonNull Button forceUnlockButton, @NonNull Button openWhitelistButton,
+      @NonNull TextView overlayMessage) {
     this.rootView = rootView;
     this.countdownText = countdownText;
     this.forceUnlockButton = forceUnlockButton;
+    this.openWhitelistButton = openWhitelistButton;
     this.overlayMessage = overlayMessage;
   }
 
@@ -76,6 +81,12 @@ public final class OverlayViewBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.openWhitelistButton;
+      Button openWhitelistButton = ViewBindings.findChildViewById(rootView, id);
+      if (openWhitelistButton == null) {
+        break missingId;
+      }
+
       id = R.id.overlayMessage;
       TextView overlayMessage = ViewBindings.findChildViewById(rootView, id);
       if (overlayMessage == null) {
@@ -83,7 +94,7 @@ public final class OverlayViewBinding implements ViewBinding {
       }
 
       return new OverlayViewBinding((FrameLayout) rootView, countdownText, forceUnlockButton,
-          overlayMessage);
+          openWhitelistButton, overlayMessage);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

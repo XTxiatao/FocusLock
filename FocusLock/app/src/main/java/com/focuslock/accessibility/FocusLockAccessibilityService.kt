@@ -21,6 +21,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
         }
 
         val packageName = event.packageName?.toString() ?: return
+        LockStateTracker.currentForegroundPackage = packageName
         if (!targetPackages.contains(packageName)) {
             return
         }

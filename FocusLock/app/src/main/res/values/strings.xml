@@ -21,4 +21,7 @@
     <string name="add_plan_button">Add Plan</string>
     <string name="save_plan_button">Save Plan</string>
     <string name="temporary_lock_section_title">Temporary Lock</string>
+    <string name="configure_whitelist">Configure Whitelist</string>
+    <string name="open_whitelist_app">Open allowed app</string>
+    <string name="select_whitelist_app_title">Allowed apps</string>
 </resources>

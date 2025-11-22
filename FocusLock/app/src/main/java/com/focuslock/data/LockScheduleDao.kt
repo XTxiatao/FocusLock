@@ -1,6 +1,7 @@
 package com.focuslock.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -14,8 +15,8 @@ interface LockScheduleDao {
     @Update
     fun update(schedule: LockScheduleEntity)
 
-    @Query("DELETE FROM lock_schedule WHERE id = :scheduleId")
-    fun delete(scheduleId: Long)
+    @Delete
+    fun delete(schedule: LockScheduleEntity)
 
     @Query("SELECT * FROM lock_schedule ORDER BY id DESC")
     fun getAll(): Flow<List<LockScheduleEntity>>

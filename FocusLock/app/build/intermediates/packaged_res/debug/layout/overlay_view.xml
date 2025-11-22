@@ -32,6 +32,14 @@
             android:gravity="center" />
 
         <Button
+            android:id="@+id/openWhitelistButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_whitelist_app"
+            android:textAllCaps="false"
+            android:layout_marginBottom="12dp" />
+
+        <Button
             android:id="@+id/forceUnlockButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

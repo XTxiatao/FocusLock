@@ -4,25 +4,38 @@ package com.focuslock.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
+import androidx.viewbinding.ViewBindings;
 import com.focuslock.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
+import java.lang.String;
 
 public final class FragmentAppLockBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final LinearLayout rootView;
 
-  private FragmentAppLockBinding(@NonNull FrameLayout rootView) {
+  @NonNull
+  public final Button configureWhitelistButton;
+
+  @NonNull
+  public final RecyclerView whitelistRecyclerView;
+
+  private FragmentAppLockBinding(@NonNull LinearLayout rootView,
+      @NonNull Button configureWhitelistButton, @NonNull RecyclerView whitelistRecyclerView) {
     this.rootView = rootView;
+    this.configureWhitelistButton = configureWhitelistButton;
+    this.whitelistRecyclerView = whitelistRecyclerView;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public LinearLayout getRoot() {
     return rootView;
   }
 
@@ -43,10 +56,26 @@ public final class FragmentAppLockBinding implements ViewBinding {
 
   @NonNull
   public static FragmentAppLockBinding bind(@NonNull View rootView) {
-    if (rootView == null) {
-      throw new NullPointerException("rootView");
-    }
+    // The body of this method is generated in a way you would not otherwise write.
+    // This is done to optimize the compiled bytecode for size and performance.
+    int id;
+    missingId: {
+      id = R.id.configureWhitelistButton;
+      Button configureWhitelistButton = ViewBindings.findChildViewById(rootView, id);
+      if (configureWhitelistButton == null) {
+        break missingId;
+      }
 
-    return new FragmentAppLockBinding((FrameLayout) rootView);
+      id = R.id.whitelistRecyclerView;
+      RecyclerView whitelistRecyclerView = ViewBindings.findChildViewById(rootView, id);
+      if (whitelistRecyclerView == null) {
+        break missingId;
+      }
+
+      return new FragmentAppLockBinding((LinearLayout) rootView, configureWhitelistButton,
+          whitelistRecyclerView);
+    }
+    String missingId = rootView.getResources().getResourceName(id);
+    throw new NullPointerException("Missing required view with ID: ".concat(missingId));
   }
 }

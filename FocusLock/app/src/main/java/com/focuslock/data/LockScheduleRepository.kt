@@ -32,7 +32,7 @@ class LockScheduleRepository(
 
     suspend fun delete(schedule: LockSchedule) {
         withContext(Dispatchers.IO) {
-            dao.delete(schedule.id)
+            dao.delete(schedule.toEntity())
         }
     }
 }

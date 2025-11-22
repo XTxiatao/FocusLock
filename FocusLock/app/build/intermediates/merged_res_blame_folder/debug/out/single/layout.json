@@ -1,5 +1,29 @@
 [
     {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_whitelist_dialog.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_whitelist_dialog.xml"
+    },
+    {
+        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/item_whitelist_app.xml",
+        "source": "com.focuslock.app-main-39:/layout/item_whitelist_app.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\fragment_device_lock.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_device_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_add_plan.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_whitelist_apps.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_whitelist_apps.xml"
+    },
+    {
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\fragment_reminder.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_reminder.xml"
+    },
+    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\activity_main.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\activity_main.xml"
     },
@@ -8,28 +32,20 @@
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\overlay_view.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/activity_main.xml",
-        "source": "com.focuslock.app-main-39:/layout/activity_main.xml"
-    },
-    {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_temporary_lock.xml",
         "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_temporary_lock.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_reminder.xml",
-        "source": "com.focuslock.app-main-39:/layout/fragment_reminder.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_app_selection.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_app_selection.xml"
     },
     {
-        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\dialog_add_plan.xml",
-        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\dialog_add_plan.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_whitelist_app.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\item_whitelist_app.xml"
     },
     {
-        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_app_lock.xml",
-        "source": "com.focuslock.app-main-39:/layout/fragment_app_lock.xml"
-    },
-    {
-        "merged": "com.focuslock.app-mergeDebugResources-36:/layout/fragment_device_lock.xml",
-        "source": "com.focuslock.app-main-39:/layout/fragment_device_lock.xml"
+        "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\fragment_app_lock.xml",
+        "source": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-main-39:\\layout\\fragment_app_lock.xml"
     },
     {
         "merged": "C:\\Users\\xtxia\\.gradle\\daemon\\8.5\\com.focuslock.app-mergeDebugResources-36:\\layout\\item_lock_schedule.xml",
