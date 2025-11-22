@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.focuslock.R
 import com.focuslock.databinding.ItemCompletedEntryBinding
 import com.focuslock.model.Reminder
 import java.time.ZoneId
@@ -29,11 +30,13 @@ class CompletedEntryAdapter(
 
         fun bind(reminder: Reminder) {
             val zone = ZoneId.systemDefault()
-            val time = TIME_FORMATTER.format(
-                java.time.Instant.ofEpochMilli(reminder.anchorDateTimeMillis).atZone(zone)
-            )
+            val timeText = reminder.anchorDateTimeMillis?.let {
+                TIME_FORMATTER.format(
+                    java.time.Instant.ofEpochMilli(it).atZone(zone)
+                )
+            } ?: binding.root.context.getString(R.string.reminder_no_due_time)
             binding.completedEntryTitle.text = reminder.title
-            binding.completedEntryTime.text = time
+            binding.completedEntryTime.text = timeText
             binding.root.setOnClickListener {
                 onReminderClick(reminder)
             }

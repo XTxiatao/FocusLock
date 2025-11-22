@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.focuslock.R
 import com.focuslock.databinding.ItemCompletedDayBinding
 import com.focuslock.model.Reminder
 import java.time.ZoneId
@@ -44,9 +45,13 @@ class CompletedDayAdapter(
 
         fun bind(group: CompletedDayGroup) {
             val zone = ZoneId.systemDefault()
-            val label = DATE_FORMATTER.format(
-                java.time.Instant.ofEpochMilli(group.dateMillis).atZone(zone)
-            )
+            val label = if (group.dateMillis == Long.MAX_VALUE) {
+                binding.root.context.getString(R.string.reminder_completed_floating_group_title)
+            } else {
+                DATE_FORMATTER.format(
+                    java.time.Instant.ofEpochMilli(group.dateMillis).atZone(zone)
+                )
+            }
             binding.completedDateLabel.text = label
             entryAdapter.submitList(group.reminders)
         }

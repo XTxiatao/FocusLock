@@ -34,10 +34,10 @@ class ReminderEntryAdapter(
         fun bind(reminder: Reminder) {
             val context = binding.root.context
             val zone = ZoneId.systemDefault()
-            val dueText = TIME_FORMATTER.format(
-                java.time.Instant.ofEpochMilli(reminder.anchorDateTimeMillis).atZone(zone)
-            )
-            val overdue = reminder.anchorDateTimeMillis < System.currentTimeMillis()
+            val dueText = reminder.anchorDateTimeMillis?.let {
+                TIME_FORMATTER.format(java.time.Instant.ofEpochMilli(it).atZone(zone))
+            } ?: binding.root.context.getString(R.string.reminder_no_due_time)
+            val overdue = reminder.anchorDateTimeMillis?.let { it < System.currentTimeMillis() } ?: false
             binding.reminderTime.text = dueText
             val timeColor = if (overdue) {
                 ContextCompat.getColor(context, R.color.reminder_due_overdue)

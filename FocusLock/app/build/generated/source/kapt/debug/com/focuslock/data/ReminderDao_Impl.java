@@ -54,7 +54,11 @@ public final class ReminderDao_Impl implements ReminderDao {
         } else {
           stmt.bindString(3, value.getDescription());
         }
-        stmt.bindLong(4, value.getAnchorDateTime());
+        if (value.getAnchorDateTime() == null) {
+          stmt.bindNull(4);
+        } else {
+          stmt.bindLong(4, value.getAnchorDateTime());
+        }
         if (value.getRecurrenceType() == null) {
           stmt.bindNull(5);
         } else {
@@ -100,7 +104,11 @@ public final class ReminderDao_Impl implements ReminderDao {
         } else {
           stmt.bindString(3, value.getDescription());
         }
-        stmt.bindLong(4, value.getAnchorDateTime());
+        if (value.getAnchorDateTime() == null) {
+          stmt.bindNull(4);
+        } else {
+          stmt.bindLong(4, value.getAnchorDateTime());
+        }
         if (value.getRecurrenceType() == null) {
           stmt.bindNull(5);
         } else {
@@ -190,8 +198,12 @@ public final class ReminderDao_Impl implements ReminderDao {
             } else {
               _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
             }
-            final long _tmpAnchorDateTime;
-            _tmpAnchorDateTime = _cursor.getLong(_cursorIndexOfAnchorDateTime);
+            final Long _tmpAnchorDateTime;
+            if (_cursor.isNull(_cursorIndexOfAnchorDateTime)) {
+              _tmpAnchorDateTime = null;
+            } else {
+              _tmpAnchorDateTime = _cursor.getLong(_cursorIndexOfAnchorDateTime);
+            }
             final String _tmpRecurrenceType;
             if (_cursor.isNull(_cursorIndexOfRecurrenceType)) {
               _tmpRecurrenceType = null;

@@ -177,6 +177,7 @@ string reminder_complete_action
 string reminder_complete_recurring_confirm
 string reminder_complete_single_confirm
 string reminder_completed_blocked
+string reminder_completed_floating_group_title
 string reminder_completed_label
 string reminder_delete_action
 string reminder_delete_confirm
@@ -189,6 +190,8 @@ string reminder_empty_state
 string reminder_end_label
 string reminder_end_required
 string reminder_end_switch
+string reminder_floating_group_title
+string reminder_no_due_time
 string reminder_pick_date
 string reminder_pick_time
 string reminder_recurrence_label

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.focuslock.R
 import com.focuslock.databinding.ItemReminderDayBinding
 import com.focuslock.model.Reminder
 import java.time.ZoneId
@@ -36,16 +37,20 @@ class ReminderDayAdapter(
         private val entryAdapter = ReminderEntryAdapter(onReminderClick, onCompleteClick)
 
         init {
-            binding.reminderEntryRecycler.adapter = entryAdapter
             binding.reminderEntryRecycler.layoutManager =
                 androidx.recyclerview.widget.LinearLayoutManager(binding.root.context)
+            binding.reminderEntryRecycler.adapter = entryAdapter
         }
 
         fun bind(group: ReminderDayGroup) {
             val zone = ZoneId.systemDefault()
-            val dateText = DATE_FORMATTER.format(
-                java.time.Instant.ofEpochMilli(group.dateMillis).atZone(zone)
-            )
+            val dateText = if (group.dateMillis == Long.MAX_VALUE) {
+                binding.root.context.getString(R.string.reminder_floating_group_title)
+            } else {
+                DATE_FORMATTER.format(
+                    java.time.Instant.ofEpochMilli(group.dateMillis).atZone(zone)
+                )
+            }
             binding.dateLabel.text = dateText
             entryAdapter.submitList(group.reminders)
         }

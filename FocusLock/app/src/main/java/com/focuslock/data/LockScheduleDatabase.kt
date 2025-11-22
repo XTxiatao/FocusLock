@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
         AppRestrictionPlanAppCrossRef::class,
         ReminderEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class LockScheduleDatabase : RoomDatabase() {

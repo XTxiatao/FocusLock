@@ -42,7 +42,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
 
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(5) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(6) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `lock_schedule` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_minutes` INTEGER NOT NULL, `end_minutes` INTEGER NOT NULL, `days_bitmask` INTEGER NOT NULL, `is_enabled` INTEGER NOT NULL)");
@@ -51,10 +51,10 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `app_restriction_plan_apps` (`planId` INTEGER NOT NULL, `packageName` TEXT NOT NULL, PRIMARY KEY(`planId`, `packageName`), FOREIGN KEY(`planId`) REFERENCES `app_restriction_plans`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`packageName`) REFERENCES `whitelisted_apps`(`packageName`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_planId` ON `app_restriction_plan_apps` (`planId`)");
         _db.execSQL("CREATE INDEX IF NOT EXISTS `index_app_restriction_plan_apps_packageName` ON `app_restriction_plan_apps` (`packageName`)");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `reminders` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `anchor_date_time` INTEGER NOT NULL, `recurrence_type` TEXT NOT NULL, `weekly_days_mask` INTEGER NOT NULL, `is_completed` INTEGER NOT NULL, `end_date_time` INTEGER)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `reminders` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `anchor_date_time` INTEGER, `recurrence_type` TEXT NOT NULL, `weekly_days_mask` INTEGER NOT NULL, `is_completed` INTEGER NOT NULL, `end_date_time` INTEGER)");
         _db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_reminders_title` ON `reminders` (`title`)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c596a08e93ae74780110bcff84a1f40')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0bcf9dba54599b14869a54345d3b2e6')");
       }
 
       @Override
@@ -165,7 +165,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
         _columnsReminders.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsReminders.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsReminders.put("description", new TableInfo.Column("description", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsReminders.put("anchor_date_time", new TableInfo.Column("anchor_date_time", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminders.put("anchor_date_time", new TableInfo.Column("anchor_date_time", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsReminders.put("recurrence_type", new TableInfo.Column("recurrence_type", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsReminders.put("weekly_days_mask", new TableInfo.Column("weekly_days_mask", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsReminders.put("is_completed", new TableInfo.Column("is_completed", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -182,7 +182,7 @@ public final class LockScheduleDatabase_Impl extends LockScheduleDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "6c596a08e93ae74780110bcff84a1f40", "c68650a0e7232b98875f264b5c7d8b25");
+    }, "d0bcf9dba54599b14869a54345d3b2e6", "3e5ebe9e854f6967b8dd2b95be34a1c9");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)

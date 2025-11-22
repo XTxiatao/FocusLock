@@ -71,13 +71,19 @@ class ReminderFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 reminderRepository.remindersFlow.collect { reminders ->
                     latestReminders = reminders
-                    val activeGroups = buildDayGroups(reminders.filter { !it.isCompleted })
-                    dayAdapter.submitList(activeGroups)
-                    binding.reminderRecyclerView.isVisible = activeGroups.isNotEmpty()
-                    binding.emptyRemindersView.isVisible = activeGroups.isEmpty()
+                    val (timedReminders, floatingReminders) = reminders
+                        .filter { !it.isCompleted }
+                        .partition { it.anchorDateTimeMillis != null }
+                    val activeGroups = buildDayGroups(timedReminders)
+                    val floatingGroups = buildFloatingGroup(floatingReminders)
+                    dayAdapter.submitList(activeGroups + floatingGroups)
+                    binding.reminderRecyclerView.isVisible = (activeGroups + floatingGroups).isNotEmpty()
+                    binding.emptyRemindersView.isVisible = (activeGroups + floatingGroups).isEmpty()
 
                     val completedList = reminders.filter { it.isCompleted }
-                    val completedGroups = buildCompletedGroups(completedList)
+                    val completedFloating = completedList.filter { it.anchorDateTimeMillis == null }
+                    val completedWithDates = completedList.filter { it.anchorDateTimeMillis != null }
+                    val completedGroups = buildCompletedGroups(completedWithDates) + buildCompletedFloatingGroup(completedFloating)
                     completedAdapter.submitList(completedGroups)
                     val subtitle = resources.getQuantityString(
                         R.plurals.reminder_archived_count,
@@ -96,7 +102,8 @@ class ReminderFragment : Fragment() {
     private fun buildDayGroups(reminders: List<Reminder>): List<ReminderDayGroup> {
         val zone = ZoneId.systemDefault()
         return reminders
-            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis).atZone(zone).toLocalDate() }
+            .filter { it.anchorDateTimeMillis != null }
+            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis!!).atZone(zone).toLocalDate() }
             .toSortedMap()
             .map { (date, list) ->
                 val startOfDay = date.atStartOfDay(zone).toInstant().toEpochMilli()
@@ -107,10 +114,21 @@ class ReminderFragment : Fragment() {
             }
     }
 
+    private fun buildFloatingGroup(reminders: List<Reminder>): List<ReminderDayGroup> =
+        reminders.takeIf { it.isNotEmpty() }?.let {
+            listOf(
+                ReminderDayGroup(
+                    dateMillis = Long.MAX_VALUE,
+                    reminders = it.sortedBy { reminder -> reminder.title }
+                )
+            )
+        } ?: emptyList()
+
     private fun buildCompletedGroups(reminders: List<Reminder>): List<CompletedDayGroup> {
         val zone = ZoneId.systemDefault()
         return reminders
-            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis).atZone(zone).toLocalDate() }
+            .filter { it.anchorDateTimeMillis != null }
+            .groupBy { java.time.Instant.ofEpochMilli(it.anchorDateTimeMillis!!).atZone(zone).toLocalDate() }
             .toSortedMap()
             .map { (date, list) ->
                 val startOfDay = date.atStartOfDay(zone).toInstant().toEpochMilli()
@@ -121,6 +139,17 @@ class ReminderFragment : Fragment() {
             }
     }
 
+    private fun buildCompletedFloatingGroup(reminders: List<Reminder>): List<CompletedDayGroup> {
+        return reminders.takeIf { it.isNotEmpty() }?.let {
+            listOf(
+                CompletedDayGroup(
+                    dateMillis = Long.MAX_VALUE,
+                    reminders = it.sortedBy { reminder -> reminder.title }
+                )
+            )
+        } ?: emptyList()
+    }
+
     private fun completeReminderFromPill(reminder: Reminder) {
         if (reminder.isCompleted) return
         viewLifecycleOwner.lifecycleScope.launch {
@@ -128,18 +157,22 @@ class ReminderFragment : Fragment() {
                 reminderRepository.updateReminder(reminder.copy(isCompleted = true))
             } else {
                 val nextAnchor = reminder.nextCycleAnchorMillis()
-                val endReached = reminder.endDateTimeMillis?.let { nextAnchor > it } ?: false
-                val updated = if (endReached) {
-                    reminder.copy(
-                        anchorDateTimeMillis = nextAnchor,
-                        isCompleted = true
-                    )
+                if (nextAnchor == null) {
+                    reminderRepository.updateReminder(reminder.copy(isCompleted = true))
                 } else {
-                    reminder.copy(
-                        anchorDateTimeMillis = nextAnchor
-                    )
+                    val endReached = reminder.endDateTimeMillis?.let { nextAnchor > it } ?: false
+                    val updated = if (endReached) {
+                        reminder.copy(
+                            anchorDateTimeMillis = nextAnchor,
+                            isCompleted = true
+                        )
+                    } else {
+                        reminder.copy(
+                            anchorDateTimeMillis = nextAnchor
+                        )
+                    }
+                    reminderRepository.updateReminder(updated)
                 }
-                reminderRepository.updateReminder(updated)
             }
         }
     }

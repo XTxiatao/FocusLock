@@ -17,7 +17,7 @@ data class ReminderEntity(
     val title: String,
     val description: String?,
     @ColumnInfo(name = "anchor_date_time")
-    val anchorDateTime: Long,
+    val anchorDateTime: Long?,
     @ColumnInfo(name = "recurrence_type")
     val recurrenceType: String,
     @ColumnInfo(name = "weekly_days_mask")

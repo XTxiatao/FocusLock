@@ -74,5 +74,5 @@ private fun Reminder.toEntity(): ReminderEntity {
 }
 
 private fun Reminder.sortKey(): Long {
-    return nextOccurrenceMillis() ?: anchorDateTimeMillis
+    return nextOccurrenceMillis() ?: anchorDateTimeMillis ?: Long.MAX_VALUE
 }

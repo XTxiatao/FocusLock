@@ -14,15 +14,15 @@ data class Reminder(
     val id: Long = 0,
     val title: String,
     val description: String,
-    val anchorDateTimeMillis: Long,
+    val anchorDateTimeMillis: Long?,
     val recurrence: ReminderRecurrence,
     val weeklyDaysMask: Int,
     val isCompleted: Boolean,
     val endDateTimeMillis: Long?
 ) {
 
-    fun anchorDateTime(zoneId: ZoneId = ZoneId.systemDefault()): ZonedDateTime {
-        return Instant.ofEpochMilli(anchorDateTimeMillis).atZone(zoneId)
+    fun anchorDateTime(zoneId: ZoneId = ZoneId.systemDefault()): ZonedDateTime? {
+        return anchorDateTimeMillis?.let { Instant.ofEpochMilli(it).atZone(zoneId) }
     }
 
     fun selectedDays(): List<DayOfWeek> {
@@ -32,7 +32,8 @@ data class Reminder(
 
     fun nextOccurrenceMillis(nowMillis: Long = System.currentTimeMillis()): Long? {
         val zone = ZoneId.systemDefault()
-        val anchor = anchorDateTime(zone)
+        val anchorMillis = anchorDateTimeMillis ?: return null
+        val anchor = anchorDateTime(zone) ?: return null
         val reference = Instant.ofEpochMilli(nowMillis).atZone(zone)
         val effectiveReference = if (reference.isBefore(anchor)) anchor else reference
         val time = anchor.toLocalTime()
@@ -51,11 +52,11 @@ data class Reminder(
     val isRepeating: Boolean
         get() = recurrence.isRepeating
 
-    fun nextCycleAnchorMillis(): Long {
+    fun nextCycleAnchorMillis(): Long? {
+        val anchor = anchorDateTime() ?: return null
         if (!isRepeating) {
             return anchorDateTimeMillis
         }
-        val anchor = anchorDateTime()
         return when (recurrence) {
             ReminderRecurrence.DAILY -> anchor.plusDays(1).toInstant().toEpochMilli()
             ReminderRecurrence.WEEKLY -> computeNextWeeklyAnchor(anchor)
